@@ -1,23 +1,26 @@
 {
-  "overview": "A bold multi-page lifestyle brand shopping site fusing Indian folk/Mughal, Japanese, Mexican, African, and vintage Americana aesthetics with streetwear and graffiti energy. Features a dual theme toggle — Be Funky for bold saturated energy and Chic Look for timeless refinement — both rooted in the same cultural fusion DNA.",
+  "overview": "ZOLA is a bold cultural-fusion lifestyle brand e-commerce platform blending Indian/Mughal, Japanese, Mexican, African, and vintage Americana aesthetics with streetwear energy. Features dual visual modes (Be Funky / Chic Look), full authentication, shopping cart, Stripe checkout, wishlist, and an admin dashboard for product and inventory management.",
   "features": [
-    "Dual theme toggle: Be Funky (bold/saturated) and Chic Look (timeless/refined), saved in browser",
-    "Homepage with hero section, brand tagline, and featured aesthetic showcase",
-    "Brand Story page narrating the five-culture fusion with decorative motifs",
-    "Product Lookbook with 12 placeholder items, category filtering, and hover effects",
-    "Newsletter signup with platform email confirmation",
-    "Cultural design palette: saffron, indigo, crimson, off-white with block print / paisley / mandala motifs"
+    "Dual theme modes: Be Funky (neon/street-art) and Chic Look (refined elegance)",
+    "Email/password authentication with persistent sessions",
+    "Product catalog with category filtering and product detail pages",
+    "Guest and logged-in shopping cart",
+    "Stripe-powered checkout with order confirmation",
+    "Wishlist for logged-in users",
+    "Admin dashboard: product CRUD + inventory management with low-stock alerts",
+    "Newsletter signup with confirmation email",
+    "Cultural motifs (block print, paisley, mandala) across all pages"
   ],
-  "category": "e-commerce-lifestyle",
+  "category": "e-commerce",
   "tags": [
-    "shopping",
-    "lifestyle",
     "fashion",
     "streetwear",
+    "e-commerce",
     "cultural-fusion",
+    "lifestyle",
     "dual-theme",
-    "lookbook",
-    "newsletter"
+    "admin-dashboard",
+    "stripe"
   ],
-  "last_updated": "2026-04-24T18:56:40.607Z"
+  "last_updated": "2026-04-24T19:27:30.583Z"
 }

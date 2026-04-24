@@ -91,6 +91,9 @@ export default {
         saffron: "4px 4px 0 oklch(var(--saffron))",
         indigo: "4px 4px 0 oklch(var(--indigo))",
         crimson: "4px 4px 0 oklch(var(--crimson))",
+        "glow-lime": "0 0 20px oklch(var(--lime) / 0.5), 0 0 40px oklch(var(--lime) / 0.25)",
+        "glow-hotpink": "0 0 20px oklch(var(--hotpink) / 0.5), 0 0 40px oklch(var(--hotpink) / 0.25)",
+        "glow-neonblue": "0 0 20px oklch(var(--neonblue) / 0.5), 0 0 40px oklch(var(--neonblue) / 0.25)",
       },
       keyframes: {
         "accordion-down": {

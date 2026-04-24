@@ -8,10 +8,310 @@
 
 import { IDL } from '@icp-sdk/core/candid';
 
-export const idlService = IDL.Service({});
+export const CartItem = IDL.Record({
+  'variantColor' : IDL.Opt(IDL.Text),
+  'productId' : IDL.Text,
+  'variantSize' : IDL.Opt(IDL.Text),
+  'quantity' : IDL.Nat,
+});
+export const ProductVariant = IDL.Record({
+  'color' : IDL.Opt(IDL.Text),
+  'size' : IDL.Opt(IDL.Text),
+});
+export const Product = IDL.Record({
+  'id' : IDL.Text,
+  'stockQuantity' : IDL.Nat,
+  'name' : IDL.Text,
+  'description' : IDL.Text,
+  'variants' : IDL.Vec(ProductVariant),
+  'imageUrl' : IDL.Text,
+  'category' : IDL.Text,
+  'price' : IDL.Nat,
+});
+export const OrderStatus = IDL.Variant({
+  'shipped' : IDL.Null,
+  'cancelled' : IDL.Null,
+  'pending' : IDL.Null,
+  'delivered' : IDL.Null,
+});
+export const ShippingAddress = IDL.Record({
+  'country' : IDL.Text,
+  'city' : IDL.Text,
+  'postalCode' : IDL.Text,
+  'name' : IDL.Text,
+  'line1' : IDL.Text,
+  'line2' : IDL.Opt(IDL.Text),
+  'state' : IDL.Text,
+});
+export const OrderItem = IDL.Record({
+  'variantColor' : IDL.Opt(IDL.Text),
+  'productId' : IDL.Text,
+  'productName' : IDL.Text,
+  'variantSize' : IDL.Opt(IDL.Text),
+  'quantity' : IDL.Nat,
+  'priceInCents' : IDL.Nat,
+});
+export const Order = IDL.Record({
+  'id' : IDL.Text,
+  'status' : OrderStatus,
+  'userId' : IDL.Principal,
+  'createdAt' : IDL.Int,
+  'totalInCents' : IDL.Nat,
+  'shippingAddress' : ShippingAddress,
+  'items' : IDL.Vec(OrderItem),
+  'stripeSessionId' : IDL.Opt(IDL.Text),
+});
+export const UserRole = IDL.Variant({
+  'admin' : IDL.Null,
+  'user' : IDL.Null,
+  'guest' : IDL.Null,
+});
+export const ShoppingItem = IDL.Record({
+  'productName' : IDL.Text,
+  'currency' : IDL.Text,
+  'quantity' : IDL.Nat,
+  'priceInCents' : IDL.Nat,
+  'productDescription' : IDL.Text,
+});
+export const Cart = IDL.Record({
+  'userId' : IDL.Principal,
+  'updatedAt' : IDL.Int,
+  'items' : IDL.Vec(CartItem),
+});
+export const StripeSessionStatus = IDL.Variant({
+  'completed' : IDL.Record({
+    'userPrincipal' : IDL.Opt(IDL.Text),
+    'response' : IDL.Text,
+  }),
+  'failed' : IDL.Record({ 'error' : IDL.Text }),
+});
+export const WishlistItem = IDL.Record({
+  'productId' : IDL.Text,
+  'addedAt' : IDL.Int,
+});
+export const StripeConfiguration = IDL.Record({
+  'allowedCountries' : IDL.Vec(IDL.Text),
+  'secretKey' : IDL.Text,
+});
+export const SubscribeResult = IDL.Variant({
+  'ok' : IDL.Null,
+  'err' : IDL.Text,
+});
+export const http_header = IDL.Record({
+  'value' : IDL.Text,
+  'name' : IDL.Text,
+});
+export const http_request_result = IDL.Record({
+  'status' : IDL.Nat,
+  'body' : IDL.Vec(IDL.Nat8),
+  'headers' : IDL.Vec(http_header),
+});
+export const TransformationInput = IDL.Record({
+  'context' : IDL.Vec(IDL.Nat8),
+  'response' : http_request_result,
+});
+export const TransformationOutput = IDL.Record({
+  'status' : IDL.Nat,
+  'body' : IDL.Vec(IDL.Nat8),
+  'headers' : IDL.Vec(http_header),
+});
+
+export const idlService = IDL.Service({
+  '_initializeAccessControl' : IDL.Func([], [], []),
+  'addToCart' : IDL.Func([CartItem], [], []),
+  'addToWishlist' : IDL.Func([IDL.Text], [], []),
+  'adminAddProduct' : IDL.Func([Product], [], []),
+  'adminDeleteProduct' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'adminGetAllOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
+  'adminGetLowStockProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+  'adminUpdateOrderStatus' : IDL.Func([IDL.Text, OrderStatus], [IDL.Bool], []),
+  'adminUpdateProduct' : IDL.Func([Product], [IDL.Bool], []),
+  'adminUpdateStock' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Bool], []),
+  'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'clearCart' : IDL.Func([], [], []),
+  'createCheckoutSession' : IDL.Func(
+      [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+      [IDL.Text],
+      [],
+    ),
+  'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+  'getCart' : IDL.Func([], [Cart], ['query']),
+  'getMyOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
+  'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
+  'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+  'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+  'getWishlist' : IDL.Func([], [IDL.Vec(WishlistItem)], ['query']),
+  'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+  'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+  'placeOrder' : IDL.Func(
+      [IDL.Vec(OrderItem), IDL.Nat, ShippingAddress, IDL.Opt(IDL.Text)],
+      [IDL.Text],
+      [],
+    ),
+  'removeFromCart' : IDL.Func([IDL.Text], [], []),
+  'removeFromWishlist' : IDL.Func([IDL.Text], [], []),
+  'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+  'subscribeNewsletter' : IDL.Func([IDL.Text], [SubscribeResult], []),
+  'transform' : IDL.Func(
+      [TransformationInput],
+      [TransformationOutput],
+      ['query'],
+    ),
+  'updateCartQuantity' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+});
 
 export const idlInitArgs = [];
 
-export const idlFactory = ({ IDL }) => { return IDL.Service({}); };
+export const idlFactory = ({ IDL }) => {
+  const CartItem = IDL.Record({
+    'variantColor' : IDL.Opt(IDL.Text),
+    'productId' : IDL.Text,
+    'variantSize' : IDL.Opt(IDL.Text),
+    'quantity' : IDL.Nat,
+  });
+  const ProductVariant = IDL.Record({
+    'color' : IDL.Opt(IDL.Text),
+    'size' : IDL.Opt(IDL.Text),
+  });
+  const Product = IDL.Record({
+    'id' : IDL.Text,
+    'stockQuantity' : IDL.Nat,
+    'name' : IDL.Text,
+    'description' : IDL.Text,
+    'variants' : IDL.Vec(ProductVariant),
+    'imageUrl' : IDL.Text,
+    'category' : IDL.Text,
+    'price' : IDL.Nat,
+  });
+  const OrderStatus = IDL.Variant({
+    'shipped' : IDL.Null,
+    'cancelled' : IDL.Null,
+    'pending' : IDL.Null,
+    'delivered' : IDL.Null,
+  });
+  const ShippingAddress = IDL.Record({
+    'country' : IDL.Text,
+    'city' : IDL.Text,
+    'postalCode' : IDL.Text,
+    'name' : IDL.Text,
+    'line1' : IDL.Text,
+    'line2' : IDL.Opt(IDL.Text),
+    'state' : IDL.Text,
+  });
+  const OrderItem = IDL.Record({
+    'variantColor' : IDL.Opt(IDL.Text),
+    'productId' : IDL.Text,
+    'productName' : IDL.Text,
+    'variantSize' : IDL.Opt(IDL.Text),
+    'quantity' : IDL.Nat,
+    'priceInCents' : IDL.Nat,
+  });
+  const Order = IDL.Record({
+    'id' : IDL.Text,
+    'status' : OrderStatus,
+    'userId' : IDL.Principal,
+    'createdAt' : IDL.Int,
+    'totalInCents' : IDL.Nat,
+    'shippingAddress' : ShippingAddress,
+    'items' : IDL.Vec(OrderItem),
+    'stripeSessionId' : IDL.Opt(IDL.Text),
+  });
+  const UserRole = IDL.Variant({
+    'admin' : IDL.Null,
+    'user' : IDL.Null,
+    'guest' : IDL.Null,
+  });
+  const ShoppingItem = IDL.Record({
+    'productName' : IDL.Text,
+    'currency' : IDL.Text,
+    'quantity' : IDL.Nat,
+    'priceInCents' : IDL.Nat,
+    'productDescription' : IDL.Text,
+  });
+  const Cart = IDL.Record({
+    'userId' : IDL.Principal,
+    'updatedAt' : IDL.Int,
+    'items' : IDL.Vec(CartItem),
+  });
+  const StripeSessionStatus = IDL.Variant({
+    'completed' : IDL.Record({
+      'userPrincipal' : IDL.Opt(IDL.Text),
+      'response' : IDL.Text,
+    }),
+    'failed' : IDL.Record({ 'error' : IDL.Text }),
+  });
+  const WishlistItem = IDL.Record({
+    'productId' : IDL.Text,
+    'addedAt' : IDL.Int,
+  });
+  const StripeConfiguration = IDL.Record({
+    'allowedCountries' : IDL.Vec(IDL.Text),
+    'secretKey' : IDL.Text,
+  });
+  const SubscribeResult = IDL.Variant({ 'ok' : IDL.Null, 'err' : IDL.Text });
+  const http_header = IDL.Record({ 'value' : IDL.Text, 'name' : IDL.Text });
+  const http_request_result = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(http_header),
+  });
+  const TransformationInput = IDL.Record({
+    'context' : IDL.Vec(IDL.Nat8),
+    'response' : http_request_result,
+  });
+  const TransformationOutput = IDL.Record({
+    'status' : IDL.Nat,
+    'body' : IDL.Vec(IDL.Nat8),
+    'headers' : IDL.Vec(http_header),
+  });
+  
+  return IDL.Service({
+    '_initializeAccessControl' : IDL.Func([], [], []),
+    'addToCart' : IDL.Func([CartItem], [], []),
+    'addToWishlist' : IDL.Func([IDL.Text], [], []),
+    'adminAddProduct' : IDL.Func([Product], [], []),
+    'adminDeleteProduct' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'adminGetAllOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
+    'adminGetLowStockProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+    'adminUpdateOrderStatus' : IDL.Func(
+        [IDL.Text, OrderStatus],
+        [IDL.Bool],
+        [],
+      ),
+    'adminUpdateProduct' : IDL.Func([Product], [IDL.Bool], []),
+    'adminUpdateStock' : IDL.Func([IDL.Text, IDL.Nat], [IDL.Bool], []),
+    'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'clearCart' : IDL.Func([], [], []),
+    'createCheckoutSession' : IDL.Func(
+        [IDL.Vec(ShoppingItem), IDL.Text, IDL.Text],
+        [IDL.Text],
+        [],
+      ),
+    'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
+    'getCart' : IDL.Func([], [Cart], ['query']),
+    'getMyOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
+    'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
+    'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
+    'getStripeSessionStatus' : IDL.Func([IDL.Text], [StripeSessionStatus], []),
+    'getWishlist' : IDL.Func([], [IDL.Vec(WishlistItem)], ['query']),
+    'isCallerAdmin' : IDL.Func([], [IDL.Bool], ['query']),
+    'isStripeConfigured' : IDL.Func([], [IDL.Bool], ['query']),
+    'placeOrder' : IDL.Func(
+        [IDL.Vec(OrderItem), IDL.Nat, ShippingAddress, IDL.Opt(IDL.Text)],
+        [IDL.Text],
+        [],
+      ),
+    'removeFromCart' : IDL.Func([IDL.Text], [], []),
+    'removeFromWishlist' : IDL.Func([IDL.Text], [], []),
+    'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
+    'subscribeNewsletter' : IDL.Func([IDL.Text], [SubscribeResult], []),
+    'transform' : IDL.Func(
+        [TransformationInput],
+        [TransformationOutput],
+        ['query'],
+      ),
+    'updateCartQuantity' : IDL.Func([IDL.Text, IDL.Nat], [], []),
+  });
+};
 
 export const init = ({ IDL }) => { return []; };

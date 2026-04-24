@@ -9,93 +9,125 @@
     --font-mono: "Geist Mono";
     --radius: 0.5rem;
 
-    /* ── Brand palette (OKLCH) ── */
-    /* Saffron  oklch(0.75 0.18 70)  → #F59E0B  */
-    /* Indigo   oklch(0.44 0.22 280) → #4F46E5  */
-    /* Crimson  oklch(0.50 0.24 25)  → #DC2626  */
-    /* Off-white oklch(0.98 0.01 90) → #FAF9F6  */
+    /* ── NEON FUNKY MODE (default) ── */
+    /* Electric Lime   oklch(0.88 0.30 130) → #CCFF00 */
+    /* Hot Pink        oklch(0.60 0.32 330) → #FF0090 */
+    /* Neon Blue       oklch(0.65 0.28 210) → #00D4FF */
+    /* Near-black      oklch(0.08 0.02 280) → #0A0A0A */
 
-    /* ── FUNKY default ── */
-    --background: 0.98 0.01 90;
-    --foreground: 0.2 0.1 280;
-    --card: 0.99 0.005 90;
-    --card-foreground: 0.2 0.1 280;
-    --popover: 0.99 0.005 90;
-    --popover-foreground: 0.2 0.1 280;
+    --background: 0.08 0.02 280;
+    --foreground: 0.92 0.02 70;
+    --card: 0.12 0.03 280;
+    --card-foreground: 0.92 0.02 70;
+    --popover: 0.12 0.03 280;
+    --popover-foreground: 0.92 0.02 70;
 
-    --primary: 0.44 0.22 280;
-    --primary-foreground: 0.98 0.01 90;
+    --primary: 0.65 0.28 210;
+    --primary-foreground: 0.08 0.02 280;
 
-    --secondary: 0.75 0.18 70;
-    --secondary-foreground: 0.15 0.05 280;
+    --secondary: 0.88 0.3 130;
+    --secondary-foreground: 0.08 0.02 280;
 
-    --muted: 0.94 0.02 80;
-    --muted-foreground: 0.45 0.06 280;
+    --muted: 0.2 0.04 280;
+    --muted-foreground: 0.75 0.1 70;
 
-    --accent: 0.75 0.18 70;
-    --accent-foreground: 0.15 0.05 280;
+    --accent: 0.6 0.32 330;
+    --accent-foreground: 0.08 0.02 280;
 
-    --destructive: 0.5 0.24 25;
-    --destructive-foreground: 0.98 0.01 90;
+    --destructive: 0.6 0.32 330;
+    --destructive-foreground: 0.92 0.02 70;
 
-    --border: 0.88 0.02 80;
-    --input: 0.93 0.02 80;
-    --ring: 0.75 0.18 70;
+    --border: 0.2 0.08 330;
+    --input: 0.15 0.06 280;
+    --ring: 0.88 0.3 130;
 
-    --chart-1: 0.75 0.18 70;
-    --chart-2: 0.44 0.22 280;
-    --chart-3: 0.5 0.24 25;
-    --chart-4: 0.62 0.14 155;
-    --chart-5: 0.58 0.16 310;
+    --chart-1: 0.88 0.3 130;
+    --chart-2: 0.65 0.28 210;
+    --chart-3: 0.6 0.32 330;
+    --chart-4: 0.75 0.25 20;
+    --chart-5: 0.7 0.2 45;
 
-    --sidebar: 0.98 0.01 90;
-    --sidebar-foreground: 0.2 0.1 280;
-    --sidebar-primary: 0.75 0.18 70;
-    --sidebar-primary-foreground: 0.15 0.05 280;
-    --sidebar-accent: 0.44 0.22 280;
-    --sidebar-accent-foreground: 0.98 0.01 90;
-    --sidebar-border: 0.88 0.02 80;
-    --sidebar-ring: 0.75 0.18 70;
+    --sidebar: 0.12 0.03 280;
+    --sidebar-foreground: 0.92 0.02 70;
+    --sidebar-primary: 0.65 0.28 210;
+    --sidebar-primary-foreground: 0.08 0.02 280;
+    --sidebar-accent: 0.6 0.32 330;
+    --sidebar-accent-foreground: 0.08 0.02 280;
+    --sidebar-border: 0.2 0.08 330;
+    --sidebar-ring: 0.88 0.3 130;
 
-    /* ── Brand tokens ── */
-    --saffron: 0.75 0.18 70;
-    --indigo: 0.44 0.22 280;
-    --crimson: 0.5 0.24 25;
-    --offwhite: 0.98 0.01 90;
+    /* ── Neon brand tokens ── */
+    --lime: 0.88 0.3 130;
+    --hotpink: 0.6 0.32 330;
+    --neonblue: 0.65 0.28 210;
+    --nearblack: 0.08 0.02 280;
 
     /* ── Funky mode specifics ── */
-    --pattern-opacity: 0.07;
-    --header-bg: 0.2 0.1 280;
-    --header-fg: 0.98 0.01 90;
-    --hero-bg: 0.44 0.22 280;
-    --border-accent-width: 4px;
-    --letter-spacing-hero: -0.02em;
+    --pattern-opacity: 0.08;
+    --header-bg: 0.12 0.03 280;
+    --header-fg: 0.88 0.3 130;
+    --footer-bg: 0.1 0.03 280;
+    --footer-fg: 0.88 0.3 130;
+    --hero-bg: 0.15 0.05 280;
+    --border-accent-width: 3px;
+    --letter-spacing-hero: -0.015em;
     --font-weight-heading: 800;
   }
 
-  /* ── CHIC mode overrides ── */
+  /* ── CHIC MODE OVERRIDES (refined palette) ── */
+  /* Saffron  oklch(0.76 0.18 72) → #F59E0B  */
+  /* Indigo   oklch(0.48 0.20 273) → #4F46E5  */
+  /* Crimson  oklch(0.54 0.24 22) → #DC2626  */
+  /* Off-white oklch(0.98 0.01 70) → #FAF9F6  */
   [data-theme="chic"] {
-    --background: 0.98 0.01 90;
-    --foreground: 0.25 0.05 280;
-    --card: 0.97 0.01 85;
-    --card-foreground: 0.25 0.05 280;
-    --primary: 0.44 0.16 280;
-    --primary-foreground: 0.98 0.01 90;
-    --secondary: 0.75 0.1 70;
-    --secondary-foreground: 0.2 0.04 280;
-    --accent: 0.75 0.1 70;
-    --accent-foreground: 0.2 0.04 280;
-    --muted: 0.95 0.01 85;
-    --muted-foreground: 0.5 0.04 280;
-    --border: 0.9 0.01 85;
+    --background: 0.98 0.01 70;
+    --foreground: 0.3 0.06 273;
+    --card: 0.97 0.01 75;
+    --card-foreground: 0.3 0.06 273;
+    --primary: 0.48 0.2 273;
+    --primary-foreground: 0.98 0.01 70;
+    --secondary: 0.76 0.18 72;
+    --secondary-foreground: 0.25 0.08 273;
+    --accent: 0.76 0.18 72;
+    --accent-foreground: 0.25 0.08 273;
+    --muted: 0.94 0.02 75;
+    --muted-foreground: 0.55 0.05 273;
+    --border: 0.9 0.02 75;
+    --input: 0.95 0.02 75;
+    --ring: 0.76 0.18 72;
+
+    --chart-1: 0.76 0.18 72;
+    --chart-2: 0.48 0.2 273;
+    --chart-3: 0.54 0.24 22;
+    --chart-4: 0.68 0.16 165;
+    --chart-5: 0.62 0.18 315;
+
+    --sidebar: 0.98 0.01 70;
+    --sidebar-foreground: 0.3 0.06 273;
+    --sidebar-primary: 0.76 0.18 72;
+    --sidebar-primary-foreground: 0.25 0.08 273;
+    --sidebar-accent: 0.48 0.2 273;
+    --sidebar-accent-foreground: 0.98 0.01 70;
+    --sidebar-border: 0.9 0.02 75;
+    --sidebar-ring: 0.76 0.18 72;
+
+    /* ── Chic brand tokens ── */
+    --saffron: 0.76 0.18 72;
+    --indigo: 0.48 0.2 273;
+    --crimson: 0.54 0.24 22;
+    --offwhite: 0.98 0.01 70;
+    --destructive: 0.54 0.24 22;
+    --destructive-foreground: 0.98 0.01 70;
 
     /* ── Chic mode specifics ── */
-    --pattern-opacity: 0.025;
-    --header-bg: 0.98 0.01 90;
-    --header-fg: 0.2 0.1 280;
-    --hero-bg: 0.97 0.02 85;
+    --pattern-opacity: 0.02;
+    --header-bg: 0.98 0.01 70;
+    --header-fg: 0.3 0.06 273;
+    --footer-bg: 0.94 0.02 75;
+    --footer-fg: 0.3 0.06 273;
+    --hero-bg: 0.97 0.01 75;
     --border-accent-width: 2px;
-    --letter-spacing-hero: 0.04em;
+    --letter-spacing-hero: 0.03em;
     --font-weight-heading: 600;
   }
 
@@ -109,7 +141,18 @@
   }
 }
 
-/* ── Google Fonts loaded via index.html link ── */
+@font-face {
+  font-family: "Bricolage Grotesque";
+  src: url("/assets/fonts/BricolageGrotesque.woff2") format("woff2");
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DM Sans";
+  src: url("/assets/fonts/DMSans.woff2") format("woff2");
+  font-display: swap;
+}
+
 @font-face {
   font-family: "Geist Mono";
   src: url("/assets/fonts/GeistMono.woff2") format("woff2");
@@ -132,27 +175,27 @@
         45deg,
         transparent,
         transparent 8px,
-        oklch(var(--saffron) / var(--pattern-opacity)) 8px,
-        oklch(var(--saffron) / var(--pattern-opacity)) 10px
+        oklch(var(--secondary) / var(--pattern-opacity)) 8px,
+        oklch(var(--secondary) / var(--pattern-opacity)) 10px
       ),
       repeating-linear-gradient(
         -45deg,
         transparent,
         transparent 8px,
-        oklch(var(--indigo) / calc(var(--pattern-opacity) * 0.5)) 8px,
-        oklch(var(--indigo) / calc(var(--pattern-opacity) * 0.5)) 10px
+        oklch(var(--primary) / calc(var(--pattern-opacity) * 0.6)) 8px,
+        oklch(var(--primary) / calc(var(--pattern-opacity) * 0.6)) 10px
       );
   }
 
   .pattern-paisley {
     background-image: radial-gradient(
         ellipse at 20% 50%,
-        oklch(var(--saffron) / var(--pattern-opacity)) 2px,
+        oklch(var(--secondary) / var(--pattern-opacity)) 2px,
         transparent 2px
       ),
       radial-gradient(
         ellipse at 80% 50%,
-        oklch(var(--indigo) / calc(var(--pattern-opacity) * 0.7)) 2px,
+        oklch(var(--primary) / calc(var(--pattern-opacity) * 0.7)) 2px,
         transparent 2px
       );
     background-size: 60px 60px;
@@ -160,21 +203,40 @@
 
   .pattern-mandala {
     background-image: repeating-conic-gradient(
-      oklch(var(--saffron) / var(--pattern-opacity)) 0deg 10deg,
+      oklch(var(--secondary) / var(--pattern-opacity)) 0deg 10deg,
       transparent 10deg 30deg
     );
     background-size: 80px 80px;
   }
 
+  /* ── Neon glow effects (Funky mode) ── */
+  [data-theme="funky"] .glow-lime {
+    text-shadow: 0 0 20px oklch(var(--lime) / 0.6), 0 0 40px
+      oklch(var(--lime) / 0.3);
+    color: oklch(var(--lime));
+  }
+
+  [data-theme="funky"] .glow-hotpink {
+    text-shadow: 0 0 20px oklch(var(--hotpink) / 0.6), 0 0 40px
+      oklch(var(--hotpink) / 0.3);
+    color: oklch(var(--hotpink));
+  }
+
+  [data-theme="funky"] .glow-neonblue {
+    text-shadow: 0 0 20px oklch(var(--neonblue) / 0.6), 0 0 40px
+      oklch(var(--neonblue) / 0.3);
+    color: oklch(var(--neonblue));
+  }
+
   /* ── Border accents ── */
   .border-cultural {
-    border-top: var(--border-accent-width) solid oklch(var(--saffron));
-    border-bottom: var(--border-accent-width) solid oklch(var(--saffron));
+    border-top: var(--border-accent-width) solid oklch(var(--secondary));
+    border-bottom: var(--border-accent-width) solid oklch(var(--secondary));
   }
 
   .border-cultural-indigo {
-    border-left: var(--border-accent-width) solid oklch(var(--indigo));
-    border-right: var(--border-accent-width) solid oklch(var(--indigo));
+    border-left: var(--border-accent-width) solid oklch(var(--primary));
+    border-right: var(--border-accent-width) solid oklch(var(--primary));
   }
 
   /* ── Typography modes ── */
@@ -199,18 +261,31 @@
   }
 
   /* ── Shadows ── */
-  .shadow-elevated-brand {
-    box-shadow: 0 20px 40px oklch(var(--indigo) / 0.15);
+  [data-theme="funky"] .shadow-elevated-brand {
+    box-shadow: 0 0 20px oklch(var(--hotpink) / 0.4), 0 0 40px
+      oklch(var(--primary) / 0.2);
   }
-  .shadow-subtle-brand {
+
+  [data-theme="funky"] .shadow-subtle-brand {
+    box-shadow: 0 0 12px oklch(var(--lime) / 0.3);
+  }
+
+  [data-theme="chic"] .shadow-elevated-brand {
+    box-shadow: 0 20px 40px oklch(var(--indigo) / 0.12);
+  }
+
+  [data-theme="chic"] .shadow-subtle-brand {
     box-shadow: 0 2px 8px oklch(var(--indigo) / 0.08);
   }
+
   .shadow-saffron {
     box-shadow: 4px 4px 0 oklch(var(--saffron));
   }
+
   .shadow-indigo {
     box-shadow: 4px 4px 0 oklch(var(--indigo));
   }
+
   .shadow-crimson {
     box-shadow: 4px 4px 0 oklch(var(--crimson));
   }
@@ -227,24 +302,28 @@
   .card-brand {
     @apply bg-card rounded-lg border border-border transition-smooth;
   }
+
   [data-theme="funky"] .card-brand:hover {
-    border-color: oklch(var(--saffron));
-    box-shadow: 4px 4px 0 oklch(var(--saffron));
-    transform: translate(-2px, -2px);
+    border-color: oklch(var(--hotpink));
+    box-shadow: 0 0 20px oklch(var(--hotpink) / 0.4), 0 0 40px
+      oklch(var(--lime) / 0.2);
+    transform: translate(0, -4px);
   }
+
   [data-theme="chic"] .card-brand:hover {
     box-shadow: 0 8px 24px oklch(var(--indigo) / 0.12);
     transform: translateY(-3px);
   }
 
-  /* ── Collection cards — funky image overlay ── */
-  .collection-card-overlay {
+  /* ── Collection cards — funky neon overlay ── */
+  [data-theme="funky"] .collection-card-overlay {
     background: linear-gradient(
       to bottom,
-      transparent 40%,
-      oklch(var(--indigo) / 0.85) 100%
+      transparent 30%,
+      oklch(var(--hotpink) / 0.7) 100%
     );
   }
+
   [data-theme="chic"] .collection-card-overlay {
     background: linear-gradient(
       to bottom,

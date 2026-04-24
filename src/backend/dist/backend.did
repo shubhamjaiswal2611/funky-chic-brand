@@ -1,2 +1,158 @@
+type http_request_result = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type http_header = 
+ record {
+   name: text;
+   value: text;
+ };
+type WishlistItem = 
+ record {
+   addedAt: int;
+   productId: text;
+ };
+type UserRole = 
+ variant {
+   admin;
+   guest;
+   user;
+ };
+type TransformationOutput = 
+ record {
+   body: blob;
+   headers: vec http_header;
+   status: nat;
+ };
+type TransformationInput = 
+ record {
+   context: blob;
+   response: http_request_result;
+ };
+type SubscribeResult = 
+ variant {
+   err: text;
+   ok;
+ };
+type StripeSessionStatus = 
+ variant {
+   completed: record {
+                response: text;
+                userPrincipal: opt text;
+              };
+   failed: record {error: text;};
+ };
+type StripeConfiguration = 
+ record {
+   allowedCountries: vec text;
+   secretKey: text;
+ };
+type ShoppingItem = 
+ record {
+   currency: text;
+   priceInCents: nat;
+   productDescription: text;
+   productName: text;
+   quantity: nat;
+ };
+type ShippingAddress = 
+ record {
+   city: text;
+   country: text;
+   line1: text;
+   line2: opt text;
+   name: text;
+   postalCode: text;
+   state: text;
+ };
+type ProductVariant = 
+ record {
+   color: opt text;
+   size: opt text;
+ };
+type Product = 
+ record {
+   category: text;
+   description: text;
+   id: text;
+   imageUrl: text;
+   name: text;
+   price: nat;
+   stockQuantity: nat;
+   variants: vec ProductVariant;
+ };
+type OrderStatus = 
+ variant {
+   cancelled;
+   delivered;
+   pending;
+   shipped;
+ };
+type OrderItem = 
+ record {
+   priceInCents: nat;
+   productId: text;
+   productName: text;
+   quantity: nat;
+   variantColor: opt text;
+   variantSize: opt text;
+ };
+type Order = 
+ record {
+   createdAt: int;
+   id: text;
+   items: vec OrderItem;
+   shippingAddress: ShippingAddress;
+   status: OrderStatus;
+   stripeSessionId: opt text;
+   totalInCents: nat;
+   userId: principal;
+ };
+type CartItem = 
+ record {
+   productId: text;
+   quantity: nat;
+   variantColor: opt text;
+   variantSize: opt text;
+ };
+type Cart = 
+ record {
+   items: vec CartItem;
+   updatedAt: int;
+   userId: principal;
+ };
 service : {
+  _initializeAccessControl: () -> ();
+  addToCart: (item: CartItem) -> ();
+  addToWishlist: (productId: text) -> ();
+  adminAddProduct: (product: Product) -> ();
+  adminDeleteProduct: (id: text) -> (bool);
+  adminGetAllOrders: () -> (vec Order) query;
+  adminGetLowStockProducts: () -> (vec Product) query;
+  adminUpdateOrderStatus: (orderId: text, status: OrderStatus) -> (bool);
+  adminUpdateProduct: (product: Product) -> (bool);
+  adminUpdateStock: (id: text, quantity: nat) -> (bool);
+  assignCallerUserRole: (user: principal, role: UserRole) -> ();
+  clearCart: () -> ();
+  createCheckoutSession: (items: vec ShoppingItem, successUrl: text,
+   cancelUrl: text) -> (text);
+  getCallerUserRole: () -> (UserRole) query;
+  getCart: () -> (Cart) query;
+  getMyOrders: () -> (vec Order) query;
+  getProduct: (id: text) -> (opt Product) query;
+  getProducts: () -> (vec Product) query;
+  getStripeSessionStatus: (sessionId: text) -> (StripeSessionStatus);
+  getWishlist: () -> (vec WishlistItem) query;
+  isCallerAdmin: () -> (bool) query;
+  isStripeConfigured: () -> (bool) query;
+  placeOrder: (items: vec OrderItem, totalInCents: nat, shippingAddress:
+   ShippingAddress, stripeSessionId: opt text) -> (text);
+  removeFromCart: (productId: text) -> ();
+  removeFromWishlist: (productId: text) -> ();
+  setStripeConfiguration: (config: StripeConfiguration) -> ();
+  subscribeNewsletter: (email: text) -> (SubscribeResult);
+  transform: (input: TransformationInput) -> (TransformationOutput) query;
+  updateCartQuantity: (productId: text, quantity: nat) -> ();
 }

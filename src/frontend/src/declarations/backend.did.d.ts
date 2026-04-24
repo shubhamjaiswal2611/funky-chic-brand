@@ -10,7 +10,135 @@ import type { ActorMethod } from '@icp-sdk/core/agent';
 import type { IDL } from '@icp-sdk/core/candid';
 import type { Principal } from '@icp-sdk/core/principal';
 
-export interface _SERVICE {}
+export interface Cart {
+  'userId' : Principal,
+  'updatedAt' : bigint,
+  'items' : Array<CartItem>,
+}
+export interface CartItem {
+  'variantColor' : [] | [string],
+  'productId' : string,
+  'variantSize' : [] | [string],
+  'quantity' : bigint,
+}
+export interface Order {
+  'id' : string,
+  'status' : OrderStatus,
+  'userId' : Principal,
+  'createdAt' : bigint,
+  'totalInCents' : bigint,
+  'shippingAddress' : ShippingAddress,
+  'items' : Array<OrderItem>,
+  'stripeSessionId' : [] | [string],
+}
+export interface OrderItem {
+  'variantColor' : [] | [string],
+  'productId' : string,
+  'productName' : string,
+  'variantSize' : [] | [string],
+  'quantity' : bigint,
+  'priceInCents' : bigint,
+}
+export type OrderStatus = { 'shipped' : null } |
+  { 'cancelled' : null } |
+  { 'pending' : null } |
+  { 'delivered' : null };
+export interface Product {
+  'id' : string,
+  'stockQuantity' : bigint,
+  'name' : string,
+  'description' : string,
+  'variants' : Array<ProductVariant>,
+  'imageUrl' : string,
+  'category' : string,
+  'price' : bigint,
+}
+export interface ProductVariant {
+  'color' : [] | [string],
+  'size' : [] | [string],
+}
+export interface ShippingAddress {
+  'country' : string,
+  'city' : string,
+  'postalCode' : string,
+  'name' : string,
+  'line1' : string,
+  'line2' : [] | [string],
+  'state' : string,
+}
+export interface ShoppingItem {
+  'productName' : string,
+  'currency' : string,
+  'quantity' : bigint,
+  'priceInCents' : bigint,
+  'productDescription' : string,
+}
+export interface StripeConfiguration {
+  'allowedCountries' : Array<string>,
+  'secretKey' : string,
+}
+export type StripeSessionStatus = {
+    'completed' : { 'userPrincipal' : [] | [string], 'response' : string }
+  } |
+  { 'failed' : { 'error' : string } };
+export type SubscribeResult = { 'ok' : null } |
+  { 'err' : string };
+export interface TransformationInput {
+  'context' : Uint8Array,
+  'response' : http_request_result,
+}
+export interface TransformationOutput {
+  'status' : bigint,
+  'body' : Uint8Array,
+  'headers' : Array<http_header>,
+}
+export type UserRole = { 'admin' : null } |
+  { 'user' : null } |
+  { 'guest' : null };
+export interface WishlistItem { 'productId' : string, 'addedAt' : bigint }
+export interface http_header { 'value' : string, 'name' : string }
+export interface http_request_result {
+  'status' : bigint,
+  'body' : Uint8Array,
+  'headers' : Array<http_header>,
+}
+export interface _SERVICE {
+  '_initializeAccessControl' : ActorMethod<[], undefined>,
+  'addToCart' : ActorMethod<[CartItem], undefined>,
+  'addToWishlist' : ActorMethod<[string], undefined>,
+  'adminAddProduct' : ActorMethod<[Product], undefined>,
+  'adminDeleteProduct' : ActorMethod<[string], boolean>,
+  'adminGetAllOrders' : ActorMethod<[], Array<Order>>,
+  'adminGetLowStockProducts' : ActorMethod<[], Array<Product>>,
+  'adminUpdateOrderStatus' : ActorMethod<[string, OrderStatus], boolean>,
+  'adminUpdateProduct' : ActorMethod<[Product], boolean>,
+  'adminUpdateStock' : ActorMethod<[string, bigint], boolean>,
+  'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'clearCart' : ActorMethod<[], undefined>,
+  'createCheckoutSession' : ActorMethod<
+    [Array<ShoppingItem>, string, string],
+    string
+  >,
+  'getCallerUserRole' : ActorMethod<[], UserRole>,
+  'getCart' : ActorMethod<[], Cart>,
+  'getMyOrders' : ActorMethod<[], Array<Order>>,
+  'getProduct' : ActorMethod<[string], [] | [Product]>,
+  'getProducts' : ActorMethod<[], Array<Product>>,
+  'getStripeSessionStatus' : ActorMethod<[string], StripeSessionStatus>,
+  'getWishlist' : ActorMethod<[], Array<WishlistItem>>,
+  'isCallerAdmin' : ActorMethod<[], boolean>,
+  'isStripeConfigured' : ActorMethod<[], boolean>,
+  'placeOrder' : ActorMethod<
+    [Array<OrderItem>, bigint, ShippingAddress, [] | [string]],
+    string
+  >,
+  'removeFromCart' : ActorMethod<[string], undefined>,
+  'removeFromWishlist' : ActorMethod<[string], undefined>,
+  'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
+  'subscribeNewsletter' : ActorMethod<[string], SubscribeResult>,
+  'transform' : ActorMethod<[TransformationInput], TransformationOutput>,
+  'updateCartQuantity' : ActorMethod<[string, bigint], undefined>,
+}
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];
 export declare const idlFactory: IDL.InterfaceFactory;
