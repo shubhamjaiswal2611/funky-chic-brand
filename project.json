@@ -1,0 +1,23 @@
+{
+  "overview": "A bold multi-page lifestyle brand shopping site fusing Indian folk/Mughal, Japanese, Mexican, African, and vintage Americana aesthetics with streetwear and graffiti energy. Features a dual theme toggle — Be Funky for bold saturated energy and Chic Look for timeless refinement — both rooted in the same cultural fusion DNA.",
+  "features": [
+    "Dual theme toggle: Be Funky (bold/saturated) and Chic Look (timeless/refined), saved in browser",
+    "Homepage with hero section, brand tagline, and featured aesthetic showcase",
+    "Brand Story page narrating the five-culture fusion with decorative motifs",
+    "Product Lookbook with 12 placeholder items, category filtering, and hover effects",
+    "Newsletter signup with platform email confirmation",
+    "Cultural design palette: saffron, indigo, crimson, off-white with block print / paisley / mandala motifs"
+  ],
+  "category": "e-commerce-lifestyle",
+  "tags": [
+    "shopping",
+    "lifestyle",
+    "fashion",
+    "streetwear",
+    "cultural-fusion",
+    "dual-theme",
+    "lookbook",
+    "newsletter"
+  ],
+  "last_updated": "2026-04-24T18:56:40.607Z"
+}
