@@ -37,7 +37,7 @@ function CheckoutPageInner() {
   const { actor } = useBackend();
   const navigate = useNavigate();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
   const { items, getTotal, clearCart } = useCartStore();
 
   const [form, setForm] = useState<ShippingAddress>({
@@ -57,14 +57,14 @@ function CheckoutPageInner() {
   const taxCents = Math.round(subtotalCents * 0.1);
   const totalCents = subtotalCents + taxCents;
 
-  const priceColor = isFunky
+  const priceColor = isSignal
     ? "oklch(var(--secondary))"
     : "oklch(var(--primary))";
-  const ctaBg = isFunky ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
-  const ctaFg = isFunky
+  const ctaBg = isSignal ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
+  const ctaFg = isSignal
     ? "oklch(0.98 0 0)"
     : "oklch(var(--primary-foreground))";
-  const accentColor = isFunky ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
+  const accentColor = isSignal ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
 
   // Stripe checkout session flow
   const checkoutMutation = useMutation({
@@ -586,8 +586,8 @@ function CheckoutPageInner() {
 
 export default function Checkout() {
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
-  const accentColor = isFunky ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
+  const isSignal = mode === "signal";
+  const accentColor = isSignal ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
 
   return (
     <div

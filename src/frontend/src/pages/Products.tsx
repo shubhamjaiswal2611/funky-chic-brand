@@ -1,162 +1,176 @@
+import { ProductMockup } from "@/components/ProductMockup";
 import { Input } from "@/components/ui/input";
 import { Skeleton } from "@/components/ui/skeleton";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "@tanstack/react-router";
 import { Search, X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { type CSSProperties, useState } from "react";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import ProductCard from "../components/ProductCard";
 import { useBackend } from "../hooks/useBackend";
 import { useThemeStore } from "../store/themeStore";
 import type { Product } from "../types/index";
 
-const CATEGORIES = ["All", "Apparel", "Accessories", "Lifestyle", "Fusion Art"];
+const CATEGORIES = ["All", "Tees", "Hoodies", "Shorts", "Lowers"];
 
 // Placeholder products for when backend returns empty
 const PLACEHOLDER_PRODUCTS: Product[] = [
   {
     id: "p1",
-    name: "Tokyo Drift Hoodie",
-    category: "Apparel",
-    price: BigInt(12800),
+    name: "Battery: 3% Tee",
+    category: "Tees",
+    price: BigInt(2499),
     description:
-      "Oversized cut adorned with ukiyo-e wave motifs and graffiti kanji — where Harajuku meets Brooklyn.",
+      "240 GSM oversized tee. Social battery icon at 3% — because some days the signal is just gone.",
     imageUrl: "",
-    stockQuantity: BigInt(15),
+    stockQuantity: BigInt(50),
     variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "obsession",
+    series: "Social Battery Series",
   },
   {
     id: "p2",
-    name: "Mumbai Block Print Kurta",
-    category: "Apparel",
-    price: BigInt(9500),
+    name: "Recharge Failed Hoodie",
+    category: "Hoodies",
+    price: BigInt(3999),
     description:
-      "Hand-block-printed cotton kurta in bold Mughal floral geometry — tailored for the streets.",
+      "400 GSM dropped-shoulder hoodie. System alert: recharge sequence corrupted. Wear it when recovery isn't loading.",
     imageUrl: "",
-    stockQuantity: BigInt(8),
-    variants: [
-      { size: "S" },
-      { size: "M" },
-      { size: "L" },
-      { color: "Saffron" },
-      { color: "Indigo" },
-    ],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "isolation",
+    series: "Social Battery Series",
   },
   {
     id: "p3",
-    name: "Sahara Denim Jacket",
-    category: "Apparel",
-    price: BigInt(16500),
+    name: "Interaction Overload Shorts",
+    category: "Shorts",
+    price: BigInt(1999),
     description:
-      "Woven Kente-stripe panels meet raw indigo denim — a cross-continent fusion born from West African looms.",
+      "Relaxed-fit shorts. Interaction limit reached. Stepping offline — physically and mentally.",
     imageUrl: "",
-    stockQuantity: BigInt(6),
-    variants: [{ size: "S" }, { size: "M" }, { size: "L" }],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "burnout",
+    series: "Social Battery Series",
   },
   {
     id: "p4",
-    name: "Oaxacan Embroidery Tee",
-    category: "Apparel",
-    price: BigInt(7200),
+    name: "Missing Identity Tee",
+    category: "Tees",
+    price: BigInt(2499),
     description:
-      "Organic cotton heavyweight tee with hand-embroidered Zapotec floral borders — artisan craft meets everyday wear.",
+      "240 GSM oversized tee. Identity file not found. Memory Corruption Series — for when the self is unavailable.",
     imageUrl: "",
-    stockQuantity: BigInt(20),
-    variants: [
-      { size: "XS" },
-      { size: "S" },
-      { size: "M" },
-      { size: "L" },
-      { size: "XL" },
-    ],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "burnout",
+    series: "Memory Corruption Series",
   },
   {
     id: "p5",
-    name: "Kyoto Silk Bandana",
-    category: "Accessories",
-    price: BigInt(3800),
+    name: "Memory Leak Hoodie",
+    category: "Hoodies",
+    price: BigInt(3999),
     description:
-      "100% silk scarf featuring shibori indigo-dye patterns inspired by Kyoto artisan dyehouses.",
+      "400 GSM heavyweight hoodie. Archive corrupted. Fragments of who you were, slowly dissolving.",
     imageUrl: "",
-    stockQuantity: BigInt(30),
-    variants: [{ color: "Indigo" }, { color: "Crimson" }],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "obsession",
+    series: "Memory Corruption Series",
   },
   {
     id: "p6",
-    name: "Brass Mandala Cuff",
-    category: "Accessories",
-    price: BigInt(5500),
+    name: "Archive Lost Lowers",
+    category: "Lowers",
+    price: BigInt(1999),
     description:
-      "Recycled brass bracelet engraved with an 8-pointed mandala drawn from Rajasthani temple architecture.",
+      "Utility-inspired relaxed lowers. The archive is gone. What remains is the instinct.",
     imageUrl: "",
-    stockQuantity: BigInt(12),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "burnout",
+    series: "Memory Corruption Series",
   },
   {
     id: "p7",
-    name: "Graffiti Kente Cap",
-    category: "Accessories",
-    price: BigInt(4800),
+    name: "Between Dreams Tee",
+    category: "Tees",
+    price: BigInt(2499),
     description:
-      "6-panel structured cap combining hand-painted graffiti lettering with authentic Ghanaian Kente-inspired trim.",
+      "240 GSM oversized tee. Dreamstate Division. Neither awake nor asleep — in the space between signals.",
     imageUrl: "",
-    stockQuantity: BigInt(18),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "escape",
+    series: "Dreamstate Division",
   },
   {
     id: "p8",
-    name: "Batik Canvas Tote",
-    category: "Accessories",
-    price: BigInt(6200),
+    name: "Artificial Reality Hoodie",
+    category: "Hoodies",
+    price: BigInt(3999),
     description:
-      "Wax-resist batik canvas tote in Javanese parang patterns — holds your world, tells its stories.",
+      "400 GSM dropped-shoulder hoodie. Dreamstate Division. The simulation is more real than the real.",
     imageUrl: "",
-    stockQuantity: BigInt(25),
-    variants: [{ color: "Natural" }, { color: "Indigo" }],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "escape",
+    series: "Dreamstate Division",
   },
   {
     id: "p9",
-    name: "Folk Art Incense Set",
-    category: "Lifestyle",
-    price: BigInt(4200),
+    name: "Sleep Division Shorts",
+    category: "Shorts",
+    price: BigInt(1999),
     description:
-      "Curated incense from Jaipur oud makers and Oaxacan copal harvesters — ritual meets slow living.",
+      "Relaxed-fit shorts. Dreamstate Division. Comfort for those existing between sleep cycles and signals.",
     imageUrl: "",
-    stockQuantity: BigInt(40),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "overthinking",
+    series: "Dreamstate Division",
   },
   {
     id: "p10",
-    name: "Mughal Garden Candle",
-    category: "Lifestyle",
-    price: BigInt(5800),
+    name: "Emotion Overload Tee",
+    category: "Tees",
+    price: BigInt(2499),
     description:
-      "Soy wax candle in hand-thrown terracotta vessel, scented with rose, vetiver and oud.",
+      "240 GSM oversized tee. Human Error Series. Too many feelings running at once — system destabilized.",
     imageUrl: "",
-    stockQuantity: BigInt(20),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "overthinking",
+    series: "Human Error Series",
   },
   {
     id: "p11",
-    name: "Tokyo × Jaipur Print",
-    category: "Fusion Art",
-    price: BigInt(8900),
+    name: "Human System Failure Hoodie",
+    category: "Hoodies",
+    price: BigInt(3999),
     description:
-      "Limited giclée print marrying Hokusai wave energy with Rajasthani miniature pigment work — numbered edition of 100.",
+      "400 GSM heavyweight hoodie. Human Error Series. Stability corrupted. Reboot not available.",
     imageUrl: "",
-    stockQuantity: BigInt(5),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "chaos",
+    series: "Human Error Series",
   },
   {
     id: "p12",
-    name: "Griot Sticker Pack",
-    category: "Fusion Art",
-    price: BigInt(1800),
+    name: "Chaos Tee",
+    category: "Tees",
+    price: BigInt(2499),
     description:
-      "12 die-cut vinyl stickers fusing West African griot symbols with Tokyo street-art tag aesthetics.",
+      "240 GSM oversized tee. Instinct Symbol Series. Chaos is the first instinct — before logic, before fear.",
     imageUrl: "",
-    stockQuantity: BigInt(60),
-    variants: [],
+    stockQuantity: BigInt(50),
+    variants: [{ size: "S" }, { size: "M" }, { size: "L" }, { size: "XL" }],
+    emotion: "chaos",
+    series: "Instinct Protocol",
   },
 ];
 
@@ -242,12 +256,92 @@ function ProductSkeleton() {
   );
 }
 
+const MOODS = [
+  "Chaos",
+  "Isolation",
+  "Obsession",
+  "Escape",
+  "Overthinking",
+  "Burnout",
+] as const;
+type Mood = (typeof MOODS)[number];
+
+const MOOD_TOKEN: Record<Mood, string> = {
+  Chaos: "var(--chaos)",
+  Isolation: "var(--isolation)",
+  Obsession: "var(--obsession)",
+  Escape: "var(--escape)",
+  Overthinking: "var(--overthinking)",
+  Burnout: "var(--burnout)",
+};
+
+function MoodChip({
+  mood,
+  isActive,
+  onClick,
+}: {
+  mood: Mood | null;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const token = mood ? MOOD_TOKEN[mood] : undefined;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-ocid={
+        mood ? `products.mood.${mood.toLowerCase()}` : "products.mood.clear"
+      }
+      className={`mood-chip flex items-center gap-1.5 shrink-0 ${isActive ? "active" : ""}`}
+    >
+      {mood ? (
+        <>
+          <span
+            className="inline-block w-2 h-2 rounded-full"
+            style={{ backgroundColor: token ? `oklch(${token})` : undefined }}
+          />
+          <span>{mood}</span>
+        </>
+      ) : (
+        <>
+          <X size={12} />
+          <span>All Moods</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export default function Products() {
   const { actor, isFetching: actorFetching } = useBackend();
   const [activeCategory, setActiveCategory] = useState("All");
+  const [activeMood, setActiveMood] = useState<Mood | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
+
+  // Sync mood to/from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const moodParam = params.get("mood");
+    if (moodParam) {
+      const normalized =
+        moodParam.charAt(0).toUpperCase() + moodParam.slice(1).toLowerCase();
+      if (MOODS.includes(normalized as Mood)) {
+        setActiveMood(normalized as Mood);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (activeMood) {
+      url.searchParams.set("mood", activeMood.toLowerCase());
+    } else {
+      url.searchParams.delete("mood");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [activeMood]);
 
   const { data: backendProducts = [], isLoading } = useQuery<Product[]>({
     queryKey: ["products"],
@@ -262,7 +356,7 @@ export default function Products() {
   const products =
     backendProducts.length > 0 ? backendProducts : PLACEHOLDER_PRODUCTS;
 
-  const filtered = products
+  const categoryAndSearchFiltered = products
     .filter((p) => activeCategory === "All" || p.category === activeCategory)
     .filter(
       (p) =>
@@ -270,6 +364,17 @@ export default function Products() {
         p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
         p.description.toLowerCase().includes(searchQuery.toLowerCase()),
     );
+
+  const matched = activeMood
+    ? categoryAndSearchFiltered.filter(
+        (p) => (p.emotion ?? "").toLowerCase() === activeMood.toLowerCase(),
+      )
+    : [];
+  const others = activeMood
+    ? categoryAndSearchFiltered.filter(
+        (p) => (p.emotion ?? "").toLowerCase() !== activeMood.toLowerCase(),
+      )
+    : categoryAndSearchFiltered;
 
   return (
     <div
@@ -279,14 +384,14 @@ export default function Products() {
     >
       {/* ── Header Banner ── */}
       <header
-        className={`relative overflow-hidden py-14 md:py-20 ${isFunky ? "pattern-mandala" : "border-b border-border"}`}
+        className={`relative overflow-hidden py-14 md:py-20 ${isSignal ? "pattern-mandala" : "border-b border-border"}`}
         style={{ backgroundColor: "oklch(var(--card))" }}
       >
         {/* Decorative elements */}
         <MandalaDecor
           className="absolute -right-16 top-1/2 -translate-y-1/2 w-80 h-80 pointer-events-none"
           style={{
-            color: isFunky
+            color: isSignal
               ? "oklch(var(--lime) / 0.15)"
               : "oklch(var(--primary) / 0.06)",
           }}
@@ -294,7 +399,7 @@ export default function Products() {
         <MandalaDecor
           className="absolute -left-20 top-1/2 -translate-y-1/2 w-64 h-64 pointer-events-none opacity-70"
           style={{
-            color: isFunky
+            color: isSignal
               ? "oklch(var(--hotpink) / 0.12)"
               : "oklch(var(--secondary) / 0.08)",
           }}
@@ -302,14 +407,14 @@ export default function Products() {
         <BlockPrintDecor
           className="absolute right-1/4 top-4 w-20 h-20 pointer-events-none opacity-50"
           style={{
-            color: isFunky
+            color: isSignal
               ? "oklch(var(--neonblue) / 0.25)"
               : "oklch(var(--secondary) / 0.12)",
           }}
         />
 
         {/* Funky: neon top border */}
-        {isFunky && (
+        {isSignal && (
           <div
             className="absolute top-0 left-0 right-0 h-1"
             style={{
@@ -326,7 +431,7 @@ export default function Products() {
             initial={{ opacity: 0, y: -8 }}
             animate={{ opacity: 1, y: 0 }}
           >
-            Global Culture · Streetwear Energy
+            Emotional Archive · Signal Series
           </motion.p>
 
           <motion.h1
@@ -335,7 +440,7 @@ export default function Products() {
             transition={{ delay: 0.1 }}
             className="heading-brand text-6xl md:text-8xl mb-4"
             style={
-              isFunky
+              isSignal
                 ? {
                     color: "oklch(var(--lime))",
                     textShadow:
@@ -344,21 +449,7 @@ export default function Products() {
                 : { color: "oklch(var(--foreground))" }
             }
           >
-            {isFunky ? (
-              <>
-                SHOP{" "}
-                <span
-                  style={{
-                    color: "oklch(var(--hotpink))",
-                    textShadow: "0 0 30px oklch(var(--hotpink) / 0.5)",
-                  }}
-                >
-                  ALL
-                </span>
-              </>
-            ) : (
-              "The Shop"
-            )}
+            SHOP THE ARCHIVE
           </motion.h1>
 
           <motion.p
@@ -368,14 +459,14 @@ export default function Products() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
           >
-            {isFunky
-              ? "No rules. No borders. Pure culture — pick your vibe."
-              : "A considered collection where global craft meets timeless style."}
+            {isSignal
+              ? "Access the archive. Choose your emotional state."
+              : "A curated archive of emotional series drops — wear what you feel."}
           </motion.p>
         </div>
 
         {/* Chic: bottom decorative line */}
-        {!isFunky && (
+        {!isSignal && (
           <div
             className="absolute bottom-0 left-1/2 -translate-x-1/2 h-[3px] w-24 rounded-full"
             style={{ backgroundColor: "oklch(var(--secondary))" }}
@@ -386,12 +477,12 @@ export default function Products() {
       {/* ── Search + Filters ── */}
       <div
         className={`sticky top-0 z-20 backdrop-blur-sm transition-theme ${
-          isFunky
+          isSignal
             ? "border-b border-border/40"
             : "border-b border-border bg-background/95"
         }`}
         style={
-          isFunky ? { backgroundColor: "oklch(var(--background) / 0.94)" } : {}
+          isSignal ? { backgroundColor: "oklch(var(--background) / 0.94)" } : {}
         }
       >
         <div className="container mx-auto px-4 py-3 space-y-3">
@@ -411,7 +502,7 @@ export default function Products() {
               className="pl-9 pr-9 font-body text-sm h-9"
               style={{
                 backgroundColor: "oklch(var(--input))",
-                borderColor: isFunky
+                borderColor: isSignal
                   ? searchQuery
                     ? "oklch(var(--lime))"
                     : "oklch(var(--border))"
@@ -431,6 +522,23 @@ export default function Products() {
             )}
           </div>
 
+          {/* Mood chips */}
+          <div className="flex gap-2 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden justify-center">
+            <MoodChip
+              mood={null}
+              isActive={activeMood === null}
+              onClick={() => setActiveMood(null)}
+            />
+            {MOODS.map((m) => (
+              <MoodChip
+                key={m}
+                mood={m}
+                isActive={activeMood === m}
+                onClick={() => setActiveMood(m)}
+              />
+            ))}
+          </div>
+
           {/* Category tabs */}
           <div
             className="flex gap-1.5 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden justify-center"
@@ -447,7 +555,7 @@ export default function Products() {
                   className="shrink-0 px-4 py-1.5 rounded-full font-body font-semibold text-xs uppercase tracking-wider transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                   style={
                     isActive
-                      ? isFunky
+                      ? isSignal
                         ? {
                             backgroundColor: "oklch(var(--hotpink))",
                             color: "oklch(var(--accent-foreground))",
@@ -473,28 +581,121 @@ export default function Products() {
 
       {/* ── Main Content ── */}
       <main className="container mx-auto px-4 py-10">
-        {/* Result count */}
-        <motion.p
-          key={`${activeCategory}-${searchQuery}`}
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          className="font-body text-xs uppercase tracking-widest mb-6 font-semibold"
-          style={{ color: "oklch(var(--muted-foreground))" }}
-        >
-          {isLoading || actorFetching
-            ? "Loading..."
-            : `${filtered.length} ${filtered.length === 1 ? "item" : "items"}${activeCategory !== "All" ? ` · ${activeCategory}` : ""}${searchQuery ? ` matching "${searchQuery}"` : ""}`}
-        </motion.p>
+        {/* Matched section */}
+        {activeMood && matched.length > 0 && (
+          <section className="mb-10">
+            <motion.p
+              key={`matched-${activeCategory}-${activeMood}-${searchQuery}`}
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="font-body text-xs uppercase tracking-widest mb-6 font-semibold"
+              style={{ color: "oklch(var(--muted-foreground))" }}
+            >
+              {matched.length} {matched.length === 1 ? "item" : "items"} matches
+              your vibe · {activeMood}
+            </motion.p>
+            <motion.div
+              key={`matched-grid-${activeCategory}-${activeMood}-${searchQuery}`}
+              data-ocid="products.list.matched"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+            >
+              {matched.map((product, i) => (
+                <Link
+                  key={product.id}
+                  to="/product/$id"
+                  params={{ id: product.id }}
+                  data-ocid={`products.item_link.matched.${i + 1}`}
+                >
+                  <motion.div
+                    initial={{ opacity: 0, y: 24 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: (i % 8) * 0.05 }}
+                  >
+                    <ProductCard product={product} index={i} />
+                  </motion.div>
+                </Link>
+              ))}
+            </motion.div>
+          </section>
+        )}
 
-        {/* Grid */}
-        {isLoading || actorFetching ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-            {Array.from({ length: 8 }).map((_, i) => (
-              // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
-              <ProductSkeleton key={i} />
-            ))}
-          </div>
-        ) : filtered.length === 0 ? (
+        {/* Others / All section */}
+        {others.length > 0 && (
+          <section>
+            {activeMood && (
+              <motion.p
+                key={`others-${activeCategory}-${activeMood}-${searchQuery}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="font-body text-xs uppercase tracking-widest mb-6 font-semibold"
+                style={{ color: "oklch(var(--muted-foreground))" }}
+              >
+                {others.length} {others.length === 1 ? "item" : "items"} ·{" "}
+                {activeMood ? "All Drops" : "Full Archive"}
+                {activeCategory !== "All" ? ` · ${activeCategory}` : ""}
+                {searchQuery ? ` matching "${searchQuery}"` : ""}
+              </motion.p>
+            )}
+            {!activeMood && (
+              <motion.p
+                key={`count-${activeCategory}-${searchQuery}`}
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                className="font-body text-xs uppercase tracking-widest mb-6 font-semibold"
+                style={{ color: "oklch(var(--muted-foreground))" }}
+              >
+                {isLoading || actorFetching
+                  ? "Loading..."
+                  : `${others.length} ${others.length === 1 ? "item" : "items"}${activeCategory !== "All" ? ` · ${activeCategory}` : ""}${searchQuery ? ` matching "${searchQuery}"` : ""}`}
+              </motion.p>
+            )}
+
+            {isLoading || actorFetching ? (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                {Array.from({ length: 8 }).map((_, i) => (
+                  // biome-ignore lint/suspicious/noArrayIndexKey: skeleton placeholders
+                  <ProductSkeleton key={i} />
+                ))}
+              </div>
+            ) : (
+              <AnimatePresence mode="wait">
+                <motion.div
+                  key={`grid-${activeCategory}-${activeMood ?? "all"}-${searchQuery}`}
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.18 }}
+                  className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
+                  data-ocid="products.list"
+                >
+                  {others.map((product, i) => (
+                    <Link
+                      key={product.id}
+                      to="/product/$id"
+                      params={{ id: product.id }}
+                      data-ocid={`products.item_link.${i + 1}`}
+                    >
+                      <motion.div
+                        initial={{ opacity: 0, y: 24 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ delay: (i % 8) * 0.05 }}
+                      >
+                        <ProductCard product={product} index={i} />
+                      </motion.div>
+                    </Link>
+                  ))}
+                </motion.div>
+              </AnimatePresence>
+            )}
+          </section>
+        )}
+
+        {/* Empty state */}
+        {matched.length === 0 && others.length === 0 && (
           <AnimatePresence mode="wait">
             <motion.div
               key="empty"
@@ -537,43 +738,14 @@ export default function Products() {
               )}
             </motion.div>
           </AnimatePresence>
-        ) : (
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={`${activeCategory}-${searchQuery}`}
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.18 }}
-              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6"
-              data-ocid="products.list"
-            >
-              {filtered.map((product, i) => (
-                <Link
-                  key={product.id}
-                  to="/product/$id"
-                  params={{ id: product.id }}
-                  data-ocid={`products.item_link.${i + 1}`}
-                >
-                  <motion.div
-                    initial={{ opacity: 0, y: 24 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ delay: (i % 8) * 0.05 }}
-                  >
-                    <ProductCard product={product} index={i} />
-                  </motion.div>
-                </Link>
-              ))}
-            </motion.div>
-          </AnimatePresence>
         )}
       </main>
 
       {/* ── Cultural band footer ── */}
       <div
-        className={`py-8 mt-4 pattern-block-print ${isFunky ? "" : "border-t border-border"}`}
+        className={`py-8 mt-4 pattern-block-print ${isSignal ? "" : "border-t border-border"}`}
         style={
-          isFunky
+          isSignal
             ? {
                 backgroundColor: "oklch(var(--card))",
                 borderTop: "3px solid oklch(var(--hotpink))",
@@ -585,14 +757,14 @@ export default function Products() {
           <p
             className="heading-brand text-xs md:text-sm tracking-[0.25em]"
             style={{
-              color: isFunky
+              color: isSignal
                 ? "oklch(var(--lime))"
                 : "oklch(var(--muted-foreground))",
             }}
           >
-            {isFunky
-              ? "⚡ WEAR THE WORLD — FIVE CULTURES · ZERO LIMITS ⚡"
-              : "Wear the world — crafted with care, worn with intention"}
+            {isSignal
+              ? "⚡ WEAR THE SIGNAL — FIVE SERIES · ZERO LIMITS ⚡"
+              : "Wear the archive — designed with emotion, worn with intent"}
           </p>
         </div>
       </div>

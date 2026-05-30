@@ -21,6 +21,7 @@ export interface CartItem {
   'variantSize' : [] | [string],
   'quantity' : bigint,
 }
+export interface LoreDrop { 'targetTimestamp' : bigint, 'title' : string }
 export interface Order {
   'id' : string,
   'status' : OrderStatus,
@@ -46,9 +47,11 @@ export type OrderStatus = { 'shipped' : null } |
 export interface Product {
   'id' : string,
   'stockQuantity' : bigint,
+  'emotion' : string,
   'name' : string,
   'description' : string,
   'variants' : Array<ProductVariant>,
+  'series' : string,
   'imageUrl' : string,
   'category' : string,
   'price' : bigint,
@@ -121,6 +124,7 @@ export interface _SERVICE {
   >,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCart' : ActorMethod<[], Cart>,
+  'getLoreDrop' : ActorMethod<[], [] | [LoreDrop]>,
   'getMyOrders' : ActorMethod<[], Array<Order>>,
   'getProduct' : ActorMethod<[string], [] | [Product]>,
   'getProducts' : ActorMethod<[], Array<Product>>,
@@ -134,6 +138,7 @@ export interface _SERVICE {
   >,
   'removeFromCart' : ActorMethod<[string], undefined>,
   'removeFromWishlist' : ActorMethod<[string], undefined>,
+  'setLoreDrop' : ActorMethod<[bigint, string], undefined>,
   'setStripeConfiguration' : ActorMethod<[StripeConfiguration], undefined>,
   'subscribeNewsletter' : ActorMethod<[string], SubscribeResult>,
   'transform' : ActorMethod<[TransformationInput], TransformationOutput>,

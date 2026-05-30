@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/alert-dialog";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { AlertTriangle, Package, Settings, ShoppingBag } from "lucide-react";
+import {
+  AlertTriangle,
+  Clock,
+  Package,
+  Settings,
+  ShoppingBag,
+} from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 import { OrderStatus } from "../backend.d";
@@ -19,7 +25,7 @@ import AdminInventoryTab from "../components/admin/AdminInventoryTab";
 import AdminOrdersTab from "../components/admin/AdminOrdersTab";
 import AdminProductDialog from "../components/admin/AdminProductDialog";
 import AdminProductsTab from "../components/admin/AdminProductsTab";
-import { useBackend } from "../hooks/useBackend";
+import { getLoreDrop, setLoreDrop, useBackend } from "../hooks/useBackend";
 import { useThemeStore } from "../store/themeStore";
 import type { Product } from "../types/index";
 
@@ -32,6 +38,8 @@ const EMPTY_PRODUCT: Product = {
   price: BigInt(0),
   stockQuantity: BigInt(0),
   variants: [],
+  emotion: "",
+  series: "",
 };
 
 function MandalaDecoration({ isFunky }: { isFunky: boolean }) {
@@ -169,12 +177,20 @@ function AdminContent() {
   const { actor } = useBackend();
   const queryClient = useQueryClient();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isFunky = mode === "signal";
 
   const [editingProduct, setEditingProduct] = useState<Product | null>(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<Product>(EMPTY_PRODUCT);
   const [deleteId, setDeleteId] = useState<string | null>(null);
+
+  // ── Lore Drop state ──
+  const [dropDate, setDropDate] = useState("");
+  const [dropTitle, setDropTitle] = useState("");
+  const [_currentDrop, _setCurrentDrop] = useState<{
+    targetTimestamp: bigint;
+    title: string;
+  } | null>(null);
 
   // ── Queries ──────────────────────────────────────────────────
   const { data: products = [], isLoading: productsLoading } = useQuery<
@@ -194,6 +210,15 @@ function AdminContent() {
   const { data: orders = [], isLoading: ordersLoading } = useQuery({
     queryKey: ["admin-orders"],
     queryFn: async () => (actor ? actor.adminGetAllOrders() : []),
+    enabled: !!actor,
+  });
+
+  const { data: loreDropData, isLoading: loreDropLoading } = useQuery({
+    queryKey: ["admin-lore-drop"],
+    queryFn: async () => {
+      if (!actor) return null;
+      return getLoreDrop(actor);
+    },
     enabled: !!actor,
   });
 
@@ -266,6 +291,21 @@ function AdminContent() {
     onError: () => toast.error("Failed to update status"),
   });
 
+  const loreDropMutation = useMutation({
+    mutationFn: async ({
+      targetMs,
+      title,
+    }: { targetMs: number; title: string }) => {
+      if (!actor) throw new Error("No actor");
+      await setLoreDrop(actor, targetMs, title);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["admin-lore-drop"] });
+      toast.success("Lore drop saved!");
+    },
+    onError: () => toast.error("Failed to save lore drop"),
+  });
+
   // ── Handlers ──────────────────────────────────────────────────
   const openAddDialog = () => {
     setEditingProduct(null);
@@ -296,6 +336,31 @@ function AdminContent() {
   const pendingCount = orders.filter(
     (o) => o.status === OrderStatus.pending,
   ).length;
+
+  const handleSaveLoreDrop = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!dropDate || !dropTitle.trim()) {
+      toast.error("Please fill in both date and title");
+      return;
+    }
+    const targetMs = new Date(dropDate).getTime();
+    if (Number.isNaN(targetMs)) {
+      toast.error("Invalid date");
+      return;
+    }
+    loreDropMutation.mutate({ targetMs, title: dropTitle.trim() });
+  };
+
+  const formatLoreDropDate = (ts: bigint) => {
+    const ms = Number(ts / BigInt(1_000_000));
+    return new Date(ms).toLocaleString(undefined, {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+  };
 
   return (
     <div
@@ -423,6 +488,13 @@ function AdminContent() {
             >
               Orders
             </TabsTrigger>
+            <TabsTrigger
+              value="lore"
+              data-ocid="admin.lore_tab"
+              className="font-body uppercase tracking-widest text-xs font-semibold"
+            >
+              Lore Drop
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="products">
@@ -456,6 +528,171 @@ function AdminContent() {
                 updateOrderStatusMutation.mutate({ orderId, status })
               }
             />
+          </TabsContent>
+
+          <TabsContent value="lore">
+            <div
+              className="card-brand p-6 md:p-8"
+              data-ocid="admin.lore_drop.panel"
+            >
+              <div className="flex items-center gap-3 mb-6">
+                <Clock
+                  size={20}
+                  style={{
+                    color: isFunky
+                      ? "oklch(var(--lime))"
+                      : "oklch(var(--primary))",
+                  }}
+                />
+                <h2
+                  className="heading-brand text-xl md:text-2xl"
+                  style={{
+                    color: isFunky
+                      ? "oklch(var(--lime))"
+                      : "oklch(var(--foreground))",
+                    textShadow: isFunky
+                      ? "0 0 12px oklch(var(--lime) / 0.4)"
+                      : "none",
+                  }}
+                >
+                  Lore Drop Schedule
+                </h2>
+              </div>
+
+              {loreDropLoading ? (
+                <p
+                  className="font-body text-sm"
+                  style={{ color: "oklch(var(--muted-foreground))" }}
+                >
+                  Loading current drop…
+                </p>
+              ) : loreDropData ? (
+                <div
+                  className="mb-6 p-4 rounded-lg"
+                  style={{
+                    backgroundColor: isFunky
+                      ? "oklch(var(--lime) / 0.08)"
+                      : "oklch(var(--primary) / 0.06)",
+                    border: isFunky
+                      ? "1px solid oklch(var(--lime) / 0.25)"
+                      : "1px solid oklch(var(--primary) / 0.2)",
+                  }}
+                >
+                  <p
+                    className="font-body text-xs uppercase tracking-widest mb-1"
+                    style={{ color: "oklch(var(--muted-foreground))" }}
+                  >
+                    Current Countdown Target
+                  </p>
+                  <p
+                    className="font-display text-lg font-bold"
+                    style={{
+                      color: isFunky
+                        ? "oklch(var(--lime))"
+                        : "oklch(var(--primary))",
+                    }}
+                  >
+                    {loreDropData.title}
+                  </p>
+                  <p
+                    className="font-mono text-sm mt-1"
+                    style={{ color: "oklch(var(--muted-foreground))" }}
+                  >
+                    {formatLoreDropDate(loreDropData.targetTimestamp)}
+                  </p>
+                </div>
+              ) : (
+                <div
+                  className="mb-6 p-4 rounded-lg"
+                  style={{
+                    backgroundColor: "oklch(var(--muted) / 0.4)",
+                    border: "1px solid oklch(var(--border))",
+                  }}
+                >
+                  <p
+                    className="font-body text-sm"
+                    style={{ color: "oklch(var(--muted-foreground))" }}
+                  >
+                    No lore drop scheduled yet.
+                  </p>
+                </div>
+              )}
+
+              <form onSubmit={handleSaveLoreDrop} className="space-y-5">
+                <div>
+                  <label
+                    htmlFor="drop-date"
+                    className="block font-body text-xs uppercase tracking-widest mb-2"
+                    style={{ color: "oklch(var(--muted-foreground))" }}
+                  >
+                    Target Launch Date
+                  </label>
+                  <input
+                    id="drop-date"
+                    type="datetime-local"
+                    value={dropDate}
+                    onChange={(e) => setDropDate(e.target.value)}
+                    required
+                    data-ocid="admin.lore_drop.date_input"
+                    className="w-full rounded-md px-3 py-2.5 font-body text-sm outline-none transition-smooth"
+                    style={{
+                      backgroundColor: "oklch(var(--input))",
+                      color: "oklch(var(--foreground))",
+                      border: isFunky
+                        ? "1px solid oklch(var(--border) / 0.6)"
+                        : "1px solid oklch(var(--border))",
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <label
+                    htmlFor="drop-title"
+                    className="block font-body text-xs uppercase tracking-widest mb-2"
+                    style={{ color: "oklch(var(--muted-foreground))" }}
+                  >
+                    Drop Title
+                  </label>
+                  <input
+                    id="drop-title"
+                    type="text"
+                    value={dropTitle}
+                    onChange={(e) => setDropTitle(e.target.value)}
+                    placeholder="DROP_004 — Memory Fragment"
+                    required
+                    data-ocid="admin.lore_drop.title_input"
+                    className="w-full rounded-md px-3 py-2.5 font-body text-sm outline-none transition-smooth"
+                    style={{
+                      backgroundColor: "oklch(var(--input))",
+                      color: "oklch(var(--foreground))",
+                      border: isFunky
+                        ? "1px solid oklch(var(--border) / 0.6)"
+                        : "1px solid oklch(var(--border))",
+                    }}
+                  />
+                </div>
+
+                <button
+                  type="submit"
+                  disabled={loreDropMutation.isPending}
+                  data-ocid="admin.lore_drop.save_button"
+                  className="inline-flex items-center gap-2 px-5 py-2.5 rounded-md font-body text-sm font-semibold uppercase tracking-wider transition-smooth"
+                  style={{
+                    backgroundColor: isFunky
+                      ? "oklch(var(--lime))"
+                      : "oklch(var(--primary))",
+                    color: isFunky
+                      ? "oklch(var(--nearblack))"
+                      : "oklch(var(--primary-foreground))",
+                    boxShadow: isFunky
+                      ? "0 0 16px oklch(var(--lime) / 0.4)"
+                      : "none",
+                  }}
+                >
+                  {loreDropMutation.isPending ? "Saving…" : "Save Drop Date"}
+                </button>
+              </form>
+            </div>
           </TabsContent>
         </Tabs>
       </div>

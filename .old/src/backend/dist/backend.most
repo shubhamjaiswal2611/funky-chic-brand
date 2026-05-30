@@ -1,4 +1,4 @@
-// Version: 1.0.0
+// Version: 3.0.0
 type CartItem__1044444615 =
   {
     productId : Text;
@@ -8,26 +8,41 @@ type CartItem__1044444615 =
   };
 type Cart__949090555 =
   {items : [CartItem__1044444615]; updatedAt : Int; userId : Principal};
-type Data__791452850<K, V> =
-  {var count : Nat__490723111; kvs : [var ?(K, V)]};
-type Internal__8484328<K, V> =
-  {children : [var ?Node__46230540<K, V>]; data : Data__791452850<K, V>};
-type Leaf__809889148<K, V> = {data : Data__791452850<K, V>};
-type List__415060402<T> = List__790383201<T>;
-type List__790383201<T> =
+type Data__1058404250<K, V> =
+  {var count : Nat__377626606; kvs : [var ?(K, V)]};
+type Internal__324281475<K, V> =
+  {children : [var ?Node__26180913<K, V>]; data : Data__1058404250<K, V>};
+type Leaf__229566841<K, V> = {data : Data__1058404250<K, V>};
+type List__550111830<T> = List__897946561<T>;
+type List__897946561<T> =
   {
-    var blockIndex : Nat__490723111;
+    var blockIndex : Nat__377626606;
     var blocks : [var [var ?T]];
-    var elementIndex : Nat__490723111
+    var elementIndex : Nat__377626606
   };
-type Map__158565046<K, V> = Map__297112838<K, V>;
-type Map__297112838<K, V> =
-  {var root : Node__46230540<K, V>; var size : Nat__490723111};
-type Map__605269027<K, V> = Map__158565046<K, V>;
-type Nat__490723111 = Nat__920180692;
+type LoreDrop__1004854861 = {targetTimestamp : Int; title : Text};
+type Map__151839099<K, V> = Map__543080657<K, V>;
+type Map__337027143<K, V> = Map__151839099<K, V>;
+type Map__543080657<K, V> =
+  {var root : Node__26180913<K, V>; var size : Nat__377626606};
+type Nat__377626606 = Nat__920180692;
 type Nat__920180692 = Nat;
-type Node__46230540<K, V> =
-  {#internal : Internal__8484328<K, V>; #leaf : Leaf__809889148<K, V>};
+type Node__26180913<K, V> =
+  {#internal : Internal__324281475<K, V>; #leaf : Leaf__229566841<K, V>};
+type OldProductVariant__403668291 = {color : ?Text; size : ?Text};
+type OldProduct__278484740 =
+  {
+    category : Text;
+    description : Text;
+    emotion : Text;
+    id : Text;
+    imageUrl : Text;
+    name : Text;
+    price : Nat;
+    series : Text;
+    stockQuantity : Nat;
+    variants : [OldProductVariant__403668291]
+  };
 type OrderItem__241319351 =
   {
     priceInCents : Nat;
@@ -54,10 +69,12 @@ type Product__750902660 =
   {
     category : Text;
     description : Text;
+    emotion : Text;
     id : Text;
     imageUrl : Text;
     name : Text;
     price : Nat;
+    series : Text;
     stockQuantity : Nat;
     variants : [ProductVariant__876448272]
   };
@@ -76,38 +93,70 @@ type StripeConfiguration__87721349 =
 type Subscriber__306124878 = {email : Text; subscribedAt : Int};
 type UserRole__1073662873 = {#admin; #guest; #user};
 type WishlistItem__653467741 = {addedAt : Int; productId : Text};
-actor {
+actor ({
   stable accessControlState :
     {
       var adminAssigned : Bool;
-      userRoles : Map__605269027<Principal, UserRole__1073662873>
+      userRoles : Map__337027143<Principal, UserRole__1073662873>
     };
   stable carts :
     {
-      var root : Node__46230540<Principal, Cart__949090555>;
-      var size : Nat__490723111
+      var root : Node__26180913<Principal, Cart__949090555>;
+      var size : Nat__377626606
     };
+  stable loreDropState : {var loreDrop : ?LoreDrop__1004854861};
   stable orderCounter : {var value : Nat};
   stable orders :
     {
-      var root : Node__46230540<Text, Order__141779993>;
-      var size : Nat__490723111
+      var root : Node__26180913<Text, Order__141779993>;
+      var size : Nat__377626606
     };
-  stable products :
-    {
-      var root : Node__46230540<Text, Product__750902660>;
-      var size : Nat__490723111
-    };
+  in products : Map__337027143<Text, OldProduct__278484740>;
   stable var stripeConfiguration : ?StripeConfiguration__87721349;
   stable subscribers :
     {
-      var root : Node__46230540<Text, Subscriber__306124878>;
-      var size : Nat__490723111
+      var root : Node__26180913<Text, Subscriber__306124878>;
+      var size : Nat__377626606
     };
   stable wishlists :
     {
       var root :
-        Node__46230540<Principal, List__415060402<WishlistItem__653467741>>;
-      var size : Nat__490723111
+        Node__26180913<Principal, List__550111830<WishlistItem__653467741>>;
+      var size : Nat__377626606
     }
-};
+}, {
+  stable accessControlState :
+    {
+      var adminAssigned : Bool;
+      userRoles : Map__337027143<Principal, UserRole__1073662873>
+    };
+  stable carts :
+    {
+      var root : Node__26180913<Principal, Cart__949090555>;
+      var size : Nat__377626606
+    };
+  stable loreDropState : {var loreDrop : ?LoreDrop__1004854861};
+  stable orderCounter : {var value : Nat};
+  stable orders :
+    {
+      var root : Node__26180913<Text, Order__141779993>;
+      var size : Nat__377626606
+    };
+  stable products :
+    {
+      var root : Node__26180913<Text, Product__750902660>;
+      var size : Nat__377626606
+    };
+  stable var stripeConfiguration : ?StripeConfiguration__87721349;
+  stable subscribers :
+    {
+      var root : Node__26180913<Text, Subscriber__306124878>;
+      var size : Nat__377626606
+    };
+  stable wishlists :
+    {
+      var root :
+        Node__26180913<Principal, List__550111830<WishlistItem__653467741>>;
+      var size : Nat__377626606
+    }
+}) ;

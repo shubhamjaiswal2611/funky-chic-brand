@@ -76,10 +76,12 @@ type Product =
  record {
    category: text;
    description: text;
+   emotion: text;
    id: text;
    imageUrl: text;
    name: text;
    price: nat;
+   series: text;
    stockQuantity: nat;
    variants: vec ProductVariant;
  };
@@ -109,6 +111,11 @@ type Order =
    stripeSessionId: opt text;
    totalInCents: nat;
    userId: principal;
+ };
+type LoreDrop = 
+ record {
+   targetTimestamp: int;
+   title: text;
  };
 type CartItem = 
  record {
@@ -140,6 +147,7 @@ service : {
    cancelUrl: text) -> (text);
   getCallerUserRole: () -> (UserRole) query;
   getCart: () -> (Cart) query;
+  getLoreDrop: () -> (opt LoreDrop) query;
   getMyOrders: () -> (vec Order) query;
   getProduct: (id: text) -> (opt Product) query;
   getProducts: () -> (vec Product) query;
@@ -151,6 +159,7 @@ service : {
    ShippingAddress, stripeSessionId: opt text) -> (text);
   removeFromCart: (productId: text) -> ();
   removeFromWishlist: (productId: text) -> ();
+  setLoreDrop: (target: int, title: text) -> ();
   setStripeConfiguration: (config: StripeConfiguration) -> ();
   subscribeNewsletter: (email: text) -> (SubscribeResult);
   transform: (input: TransformationInput) -> (TransformationOutput) query;

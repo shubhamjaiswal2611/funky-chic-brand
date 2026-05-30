@@ -1,3 +1,8 @@
+import {
+  type ProductCategory,
+  ProductMockup,
+  type ProductSeries,
+} from "@/components/ProductMockup";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -40,6 +45,15 @@ const CATEGORY_COLORS: Record<string, CSSProperties> = {
   },
 } as const;
 
+const EMOTION_TOKEN: Record<string, string> = {
+  Chaos: "var(--chaos)",
+  Isolation: "var(--isolation)",
+  Obsession: "var(--obsession)",
+  Escape: "var(--escape)",
+  Overthinking: "var(--overthinking)",
+  Burnout: "var(--burnout)",
+};
+
 export default function ProductCard({ product, index = 0 }: ProductCardProps) {
   const { isAuthenticated } = useAuth();
   const { addItem: addToCart } = useCartStore();
@@ -49,14 +63,15 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     isInWishlist,
   } = useWishlistStore();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isFunky = mode === "signal";
   const wishlisted = isInWishlist(product.id);
-  const [imgError, setImgError] = useState(false);
-
   const priceInCents = Number(product.price);
   const priceDisplay = `$${(priceInCents / 100).toFixed(0)}`;
   const categoryStyle =
     CATEGORY_COLORS[product.category] ?? CATEGORY_COLORS.Apparel;
+
+  const emotion = product.emotion ?? "";
+  const emotionToken = EMOTION_TOKEN[emotion] ?? "var(--muted-foreground)";
 
   const handleAddToCart = () => {
     addToCart({
@@ -96,24 +111,12 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
     >
       {/* Image */}
       <div className="relative overflow-hidden aspect-[4/5] bg-muted">
-        {!imgError && product.imageUrl ? (
-          <img
-            src={product.imageUrl}
-            alt={product.name}
-            className="w-full h-full object-cover transition-smooth group-hover:scale-105"
-            onError={() => setImgError(true)}
-          />
-        ) : (
-          <div
-            className="w-full h-full flex items-center justify-center pattern-block-print"
-            style={{ backgroundColor: "oklch(var(--muted))" }}
-          >
-            <ShoppingBag
-              size={40}
-              style={{ color: "oklch(var(--muted-foreground) / 0.4)" }}
-            />
-          </div>
-        )}
+        <ProductMockup
+          series={product.series as ProductSeries}
+          category={product.category as ProductCategory}
+          emotion={product.emotion ?? undefined}
+          className="w-full h-full transition-smooth group-hover:scale-105"
+        />
 
         {/* Overlay on hover */}
         <div className="absolute inset-0 collection-card-overlay opacity-0 group-hover:opacity-100 transition-smooth" />
@@ -204,6 +207,22 @@ export default function ProductCard({ product, index = 0 }: ProductCardProps) {
         >
           {product.name}
         </h3>
+
+        {/* Emotion tag */}
+        {emotion && (
+          <div className="flex items-center gap-1.5">
+            <span
+              className="inline-block w-1.5 h-1.5 rounded-full"
+              style={{ backgroundColor: `oklch(${emotionToken})` }}
+            />
+            <span
+              className="font-body text-[10px] uppercase tracking-widest"
+              style={{ color: `oklch(${emotionToken})` }}
+            >
+              {emotion}
+            </span>
+          </div>
+        )}
 
         {/* Description */}
         <p

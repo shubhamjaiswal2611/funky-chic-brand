@@ -94,6 +94,6 @@ export const useCartStore = create<CartState>()(
 
       getCount: () => get().items.reduce((sum, item) => sum + item.quantity, 0),
     }),
-    { name: "zola-cart" },
+    { name: "altinstinct-cart" },
   ),
 );

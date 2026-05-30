@@ -1,249 +1,326 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "@tanstack/react-router";
-import { ArrowRight, ChevronRight, Sparkles, Star, Zap } from "lucide-react";
+import {
+  ArrowRight,
+  ChevronRight,
+  Cpu,
+  Database,
+  HardDrive,
+  Layers,
+  Play,
+} from "lucide-react";
 import { motion } from "motion/react";
+import { useEffect, useState } from "react";
+import { useBackend } from "../hooks/useBackend";
 import { useThemeStore } from "../store/themeStore";
+import type { LoreDrop } from "../types";
+
+// ── Emotional colour system
+const EC = {
+  chaos: "oklch(var(--chaos))",
+  isolation: "oklch(var(--isolation))",
+  obsession: "oklch(var(--obsession))",
+  escape: "oklch(var(--escape))",
+  overthinking: "oklch(var(--overthinking))",
+  burnout: "oklch(var(--burnout))",
+};
 
 // ── Data ──────────────────────────────────────────────────────────────────────
 
 const categories = [
   {
     id: 1,
-    title: "Apparel",
-    description: "Block prints meet streetwear silhouettes",
-    img: "/assets/generated/category-apparel.dim_600x600.jpg",
-    motif: "block-print",
-    accent: "oklch(var(--saffron))",
-    icon: Zap,
+    title: "Tees",
+    description: "Oversized 240 GSM statement tees",
+    icon: Layers,
+    gradient:
+      "linear-gradient(135deg, oklch(var(--obsession))33 0%, oklch(var(--isolation))55 100%)",
+    accentColor: "oklch(var(--obsession))",
   },
   {
     id: 2,
-    title: "Accessories",
-    description: "Statement pieces from five continents",
-    img: "/assets/generated/category-accessories.dim_600x600.jpg",
-    motif: "paisley",
-    accent: "oklch(var(--crimson))",
-    icon: Star,
+    title: "Hoodies",
+    description: "400 GSM heavyweight drop-shoulder",
+    icon: Cpu,
+    gradient:
+      "linear-gradient(135deg, oklch(var(--chaos))33 0%, oklch(var(--overthinking))55 100%)",
+    accentColor: "oklch(var(--chaos))",
   },
   {
     id: 3,
-    title: "Lifestyle",
-    description: "Bring the culture home",
-    img: "/assets/generated/category-lifestyle.dim_600x600.jpg",
-    motif: "mandala",
-    accent: "oklch(var(--indigo))",
-    icon: Sparkles,
+    title: "Shorts",
+    description: "Minimal symbolic utility shorts",
+    icon: Database,
+    gradient:
+      "linear-gradient(135deg, oklch(var(--escape))33 0%, oklch(var(--isolation))55 100%)",
+    accentColor: "oklch(var(--escape))",
   },
   {
     id: 4,
-    title: "Fusion Art",
-    description: "Mughal meets Ukiyo-e meets Adinkra",
-    img: "/assets/generated/category-fusion-art.dim_600x600.jpg",
-    motif: "block-print",
-    accent: "oklch(0.55 0.18 155)",
-    icon: Star,
+    title: "Lowers",
+    description: "Utility-inspired relaxed silhouettes",
+    icon: HardDrive,
+    gradient:
+      "linear-gradient(135deg, oklch(var(--burnout))44 0%, oklch(var(--overthinking))44 100%)",
+    accentColor: "oklch(var(--overthinking))",
   },
 ];
 
 const featuredProducts = [
   {
     id: 1,
-    name: "Tokyo Streets Hoodie",
-    collection: "Tokyo Streets",
-    price: "$145",
+    name: "Battery: 3% Tee",
+    collection: "Social Battery Series",
+    price: "Rs.1,499",
     tag: "New Drop",
-    tagColor: "oklch(var(--indigo))",
-    img: "/assets/generated/product-tokyo-streets.dim_600x800.jpg",
-    accentColor: "oklch(var(--indigo))",
+    tagColor: EC.obsession,
+    accentColor: EC.obsession,
+    gradient:
+      "linear-gradient(160deg, oklch(0.12 0.03 130) 0%, oklch(0.06 0.02 130) 100%)",
     description:
-      "Wave-washed indigo heavy-cotton hoodie with hand-screened Japanese seigaiha and Indian block-print chest panel.",
+      "When your social battery hits critical. 240 GSM oversized tee with battery-UI back print and micro-logo chest.",
   },
   {
     id: 2,
-    name: "Mumbai Blues Overshirt",
-    collection: "Mumbai Blues",
-    price: "$98",
+    name: "Recharge Failed Hoodie",
+    collection: "Social Battery Series",
+    price: "Rs.2,999",
     tag: "Fan Fav",
-    tagColor: "oklch(var(--crimson))",
-    img: "/assets/generated/product-mumbai-blues.dim_600x800.jpg",
-    accentColor: "oklch(var(--crimson))",
+    tagColor: EC.isolation,
+    accentColor: EC.isolation,
+    gradient:
+      "linear-gradient(160deg, oklch(0.10 0.03 210) 0%, oklch(0.06 0.02 210) 100%)",
     description:
-      "Crimson heritage cotton overshirt with buta motif allover block print. Every piece is hand-stamped, no two are identical.",
+      "400 GSM dropped-shoulder hoodie. System error signal print across the back. Interaction overload never looked this good.",
   },
   {
     id: 3,
-    name: "Kyoto Noir Jacket",
-    collection: "Kyoto Noir",
-    price: "$210",
-    tag: "Signature",
-    tagColor: "oklch(0.25 0.08 280)",
-    img: "/assets/generated/product-kyoto-noir.dim_600x800.jpg",
-    accentColor: "oklch(0.25 0.08 280)",
+    name: "Missing Identity Tee",
+    collection: "Memory Corruption Series",
+    price: "Rs.1,799",
+    tag: "Limited",
+    tagColor: EC.burnout,
+    accentColor: EC.burnout,
+    gradient:
+      "linear-gradient(160deg, oklch(0.14 0.02 260) 0%, oklch(0.08 0.01 260) 100%)",
     description:
-      "Minimalist sumi-ink jacket with kente trim at cuffs. Where silence meets ceremony. Limited to 200 pieces worldwide.",
+      "VHS-corrupted identity graphic. Pixel erosion print on 240 GSM oversized tee. Memory leak never felt so wearable.",
   },
 ];
 
 const collections = [
   {
     id: 1,
-    title: "Tokyo Streets",
-    subtitle: "Eclectic multi-cultural hoodies",
-    tag: "New Drop",
-    accentColor: "oklch(var(--indigo))",
-    img: "/assets/generated/product-tokyo-streets.dim_600x800.jpg",
+    title: "Emotional Archive",
+    subtitle: "Chaos · Isolation · Escape",
+    tag: "Featured",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--overthinking))44 0%, oklch(0.08 0.02 290) 100%)",
+    accentColor: EC.overthinking,
   },
   {
     id: 2,
-    title: "Mumbai Blues",
-    subtitle: "Heritage block print overshirts",
-    tag: "Fan Fav",
-    accentColor: "oklch(var(--crimson))",
-    img: "/assets/generated/product-mumbai-blues.dim_600x800.jpg",
+    title: "Dreamstate Division",
+    subtitle: "Surreal architecture · Dream dimensions",
+    tag: "New Drop",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--isolation))44 0%, oklch(0.06 0.02 210) 100%)",
+    accentColor: EC.isolation,
   },
   {
     id: 3,
-    title: "Mexico City Art",
-    subtitle: "Neon graffiti-meets-Otomi graphics",
-    tag: "Limited",
-    accentColor: "oklch(0.55 0.18 155)",
-    img: "/assets/generated/category-fusion-art.dim_600x600.jpg",
+    title: "Human Error Series",
+    subtitle: "System failures · Emotional reports",
+    tag: "Fan Fav",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--chaos))44 0%, oklch(0.08 0.02 30) 100%)",
+    accentColor: EC.chaos,
   },
   {
     id: 4,
-    title: "Sahara Vibes",
-    subtitle: "Wax print patterns & Nankingrose",
-    tag: "Essentials",
-    accentColor: "oklch(var(--saffron))",
-    img: "/assets/generated/category-apparel.dim_600x600.jpg",
+    title: "Instinct Protocol",
+    subtitle: "Obsession · Signal · Silence",
+    tag: "Signature",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--obsession))33 0%, oklch(0.06 0.02 125) 100%)",
+    accentColor: EC.obsession,
   },
   {
     id: 5,
-    title: "Kyoto Noir",
-    subtitle: "Minimalist sumi-ink & kimono cuts",
-    tag: "Signature",
-    accentColor: "oklch(0.25 0.08 280)",
-    img: "/assets/generated/product-kyoto-noir.dim_600x800.jpg",
-  },
-  {
-    id: 6,
-    title: "Accra Pulse",
-    subtitle: "Kente-collab prints & cultural drops",
-    tag: "Collab",
-    accentColor: "oklch(var(--crimson))",
-    img: "/assets/generated/category-accessories.dim_600x600.jpg",
+    title: "Memory Corruption",
+    subtitle: "VHS textures · Corrupted identity",
+    tag: "Limited",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--burnout))55 0%, oklch(0.09 0.01 260) 100%)",
+    accentColor: EC.burnout,
   },
 ];
 
+const manifestoBadges = [
+  "EMOTIONAL",
+  "FUTURISTIC",
+  "ALTERNATIVE",
+  "CINEMATIC",
+  "SYMBOLIC",
+];
+
+// ── Reel series data ─────────────────────────────────────────────────────────
+const reelSeries = [
+  {
+    id: 1,
+    name: "Emotional Archive",
+    emotion: "chaos",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--chaos)) 0%, oklch(0.08 0.02 30) 100%)",
+  },
+  {
+    id: 2,
+    name: "Dreamstate Division",
+    emotion: "escape",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--escape)) 0%, oklch(0.08 0.02 300) 100%)",
+  },
+  {
+    id: 3,
+    name: "Human Error Series",
+    emotion: "overthinking",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--overthinking)) 0%, oklch(0.08 0.02 290) 100%)",
+  },
+  {
+    id: 4,
+    name: "Instinct Protocol",
+    emotion: "obsession",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--obsession)) 0%, oklch(0.06 0.02 125) 100%)",
+  },
+  {
+    id: 5,
+    name: "Memory Corruption",
+    emotion: "isolation",
+    gradient:
+      "linear-gradient(135deg, oklch(var(--isolation)) 0%, oklch(0.06 0.02 270) 100%)",
+  },
+];
+
+// ── Countdown helpers ───────────────────────────────────────────────────────
+function formatCountdown(ms: number) {
+  if (ms <= 0) return { days: 0, hours: 0, minutes: 0, seconds: 0 };
+  const days = Math.floor(ms / 86400000);
+  const hours = Math.floor((ms % 86400000) / 3600000);
+  const minutes = Math.floor((ms % 3600000) / 60000);
+  const seconds = Math.floor((ms % 60000) / 1000);
+  return { days, hours, minutes, seconds };
+}
+
 // ── SVG Motifs ───────────────────────────────────────────────────────────────
 
-function BlockPrintMotif({ className }: { className?: string }) {
+function SystemGridMotif({
+  className,
+  style,
+}: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 80 80"
       className={className}
+      style={style}
       fill="none"
       aria-hidden="true"
     >
-      <title>Block print motif</title>
-      <rect
-        x="10"
-        y="10"
-        width="60"
-        height="60"
-        rx="4"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="2"
-      />
-      <rect
-        x="22"
-        y="22"
-        width="36"
-        height="36"
-        rx="2"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1.5"
-      />
-      <circle
-        cx="40"
-        cy="40"
-        r="8"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1.5"
-      />
-      <line
-        x1="10"
-        y1="40"
-        x2="30"
-        y2="40"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1"
-      />
-      <line
-        x1="50"
-        y1="40"
-        x2="70"
-        y2="40"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1"
-      />
-      <line
-        x1="40"
-        y1="10"
-        x2="40"
-        y2="30"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1"
-      />
-      <line
-        x1="40"
-        y1="50"
-        x2="40"
-        y2="70"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1"
-      />
+      <title>System grid motif</title>
+      {([0, 20, 40, 60, 80] as number[]).map((x) => (
+        <line
+          key={`v-${x}`}
+          x1={x}
+          y1="0"
+          x2={x}
+          y2="80"
+          stroke="currentColor"
+          strokeWidth="0.5"
+          opacity="0.4"
+        />
+      ))}
+      {([0, 20, 40, 60, 80] as number[]).map((y) => (
+        <line
+          key={`h-${y}`}
+          x1="0"
+          y1={y}
+          x2="80"
+          y2={y}
+          stroke="currentColor"
+          strokeWidth="0.5"
+          opacity="0.4"
+        />
+      ))}
+      <circle cx="40" cy="40" r="10" stroke="currentColor" strokeWidth="1.5" />
+      <circle cx="40" cy="40" r="2" fill="currentColor" />
+      <circle cx="20" cy="20" r="2" fill="currentColor" opacity="0.6" />
+      <circle cx="60" cy="20" r="2" fill="currentColor" opacity="0.6" />
+      <circle cx="20" cy="60" r="2" fill="currentColor" opacity="0.6" />
+      <circle cx="60" cy="60" r="2" fill="currentColor" opacity="0.6" />
     </svg>
   );
 }
 
-function MandalaMotif({ className }: { className?: string }) {
+function SignalBarsMotif({
+  className,
+  style,
+}: { className?: string; style?: React.CSSProperties }) {
   return (
     <svg
       viewBox="0 0 80 80"
       className={className}
+      style={style}
       fill="none"
       aria-hidden="true"
     >
-      <title>Mandala motif</title>
-      <circle
-        cx="40"
-        cy="40"
-        r="30"
-        stroke="oklch(0.75 0.18 70)"
-        strokeWidth="1.5"
+      <title>Signal bars motif</title>
+      <rect
+        x="8"
+        y="55"
+        width="10"
+        height="17"
+        rx="1"
+        fill="currentColor"
+        opacity="0.9"
       />
-      <circle
-        cx="40"
-        cy="40"
-        r="20"
-        stroke="oklch(0.44 0.22 280)"
+      <rect
+        x="23"
+        y="42"
+        width="10"
+        height="30"
+        rx="1"
+        fill="currentColor"
+        opacity="0.7"
+      />
+      <rect
+        x="38"
+        y="28"
+        width="10"
+        height="44"
+        rx="1"
+        fill="currentColor"
+        opacity="0.5"
+      />
+      <rect
+        x="53"
+        y="14"
+        width="10"
+        height="58"
+        rx="1"
+        fill="currentColor"
+        opacity="0.3"
+      />
+      <line
+        x1="4"
+        y1="76"
+        x2="76"
+        y2="76"
+        stroke="currentColor"
         strokeWidth="1"
+        opacity="0.3"
       />
-      <circle cx="40" cy="40" r="6" fill="oklch(0.75 0.18 70)" opacity="0.5" />
-      {[0, 45, 90, 135, 180, 225, 270, 315].map((deg) => (
-        <line
-          key={deg}
-          x1="40"
-          y1="10"
-          x2="40"
-          y2="20"
-          stroke="oklch(0.75 0.18 70)"
-          strokeWidth="1.5"
-          transform={`rotate(${deg} 40 40)`}
-        />
-      ))}
     </svg>
   );
 }
@@ -252,95 +329,178 @@ function MandalaMotif({ className }: { className?: string }) {
 
 export default function Home() {
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
+
+  const heroAccent = isSignal ? EC.obsession : "oklch(var(--primary))";
+  const heroBorder = isSignal
+    ? `1px solid ${EC.obsession}66`
+    : "1px solid oklch(var(--border))";
+
+  // ── Lore Drop Countdown state ────────────────────────────────────────────
+  const { actor } = useBackend();
+  const [loreDrop, setLoreDrop] = useState<LoreDrop | null>(null);
+  const [now, setNow] = useState(Date.now());
+
+  useEffect(() => {
+    let cancelled = false;
+    async function fetchLore() {
+      if (!actor) return;
+      try {
+        const result = await actor.getLoreDrop();
+        if (!cancelled) setLoreDrop(result ?? null);
+      } catch {
+        // ignore
+      }
+    }
+    fetchLore();
+    return () => {
+      cancelled = true;
+    };
+  }, [actor]);
+
+  useEffect(() => {
+    const id = setInterval(() => setNow(Date.now()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  const targetMs =
+    loreDrop != null
+      ? Number(loreDrop.targetTimestamp) / 1_000_000
+      : Date.now() + 7 * 86400000;
+  const remaining = targetMs - now;
+  const countdown = formatCountdown(remaining);
+  const isZero = remaining <= 0;
 
   return (
     <div data-ocid="home.page">
       {/* ── HERO ──────────────────────────────────────────────── */}
       <section
         data-ocid="home.hero_section"
-        className="relative overflow-hidden border-cultural"
-        style={{ minHeight: "520px" }}
+        className="relative overflow-hidden"
+        style={{
+          minHeight: "90vh",
+          background: isSignal
+            ? "linear-gradient(145deg, oklch(0.05 0.02 280) 0%, oklch(0.08 0.04 280) 50%, oklch(0.06 0.03 210) 100%)"
+            : "linear-gradient(145deg, oklch(0.10 0.02 260) 0%, oklch(0.14 0.03 260) 100%)",
+        }}
       >
+        {/* Background grid */}
         <div
-          className="absolute inset-0 bg-cover bg-center bg-no-repeat"
+          className="absolute inset-0 pointer-events-none"
           style={{
-            backgroundImage: `url('/assets/generated/hero-streetwear-fusion.dim_1400x600.jpg')`,
+            backgroundImage: `linear-gradient(${heroAccent}0f 1px, transparent 1px), linear-gradient(90deg, ${heroAccent}0f 1px, transparent 1px)`,
+            backgroundSize: "60px 60px",
+            opacity: isSignal ? 0.5 : 0.2,
           }}
         />
-        {/* Overlay */}
+        {/* Glow orbs */}
         <div
-          className="absolute inset-0"
+          className="absolute pointer-events-none"
           style={{
-            background: isFunky
-              ? "linear-gradient(135deg, oklch(var(--indigo) / 0.88) 0%, oklch(var(--crimson) / 0.35) 100%)"
-              : "linear-gradient(135deg, oklch(0.08 0.06 280 / 0.80) 0%, oklch(var(--indigo) / 0.55) 100%)",
+            top: "-10%",
+            right: "-5%",
+            width: "50vw",
+            height: "50vw",
+            borderRadius: "50%",
+            background: isSignal
+              ? `radial-gradient(circle, ${EC.obsession}22 0%, transparent 70%)`
+              : "radial-gradient(circle, oklch(var(--primary) / 0.1) 0%, transparent 70%)",
           }}
         />
-        {/* Pattern overlay */}
-        <div className="absolute inset-0 pattern-block-print opacity-30" />
+        <div
+          className="absolute pointer-events-none"
+          style={{
+            bottom: "-5%",
+            left: "-5%",
+            width: "40vw",
+            height: "40vw",
+            borderRadius: "50%",
+            background: isSignal
+              ? `radial-gradient(circle, ${EC.isolation}22 0%, transparent 70%)`
+              : "radial-gradient(circle, oklch(var(--secondary) / 0.08) 0%, transparent 70%)",
+          }}
+        />
 
         <div
-          className="relative container mx-auto px-4 flex flex-col justify-end"
-          style={{ minHeight: "520px", paddingBottom: "64px" }}
+          className="relative container mx-auto px-4 flex flex-col justify-center"
+          style={{
+            minHeight: "90vh",
+            paddingTop: "80px",
+            paddingBottom: "80px",
+          }}
         >
-          <motion.div
-            className="max-w-2xl"
-            initial={{ opacity: 0, y: 32 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.65, ease: [0.16, 1, 0.3, 1] }}
-          >
-            {isFunky ? (
-              <h1
-                className="heading-brand text-5xl md:text-7xl lg:text-8xl mb-6"
-                style={{ color: "oklch(var(--offwhite))", lineHeight: 1 }}
-              >
-                Embrace
-                <br />
-                the Beat.
-                <br />
-                <span style={{ color: "oklch(var(--saffron))" }}>
-                  Fuse the World.
-                </span>
-              </h1>
-            ) : (
-              <h1
-                className="heading-brand text-4xl md:text-6xl lg:text-7xl mb-6"
-                style={{ color: "oklch(var(--offwhite))", lineHeight: 1.1 }}
-              >
-                Culture.
-                <br />
-                Craft.
-                <br />
-                <span style={{ color: "oklch(var(--saffron))" }}>
-                  Connection.
-                </span>
-              </h1>
-            )}
-            <p
-              className="font-body text-base md:text-lg mb-8 max-w-lg"
-              style={{ color: "oklch(var(--offwhite) / 0.8)" }}
+          <div className="max-w-4xl">
+            <motion.div
+              initial={{ opacity: 0, x: -16 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.4 }}
+              className="flex items-center gap-3 mb-8"
             >
-              {isFunky
-                ? "Where Indian block prints collide with Tokyo streets, Accra energy, and Mexico City murals. Fashion without borders."
-                : "A curated collection at the intersection of global folk heritage and timeless contemporary design."}
-            </p>
-            <div className="flex flex-wrap gap-3">
+              <span
+                className="inline-block w-2 h-2 rounded-full animate-pulse"
+                style={{ backgroundColor: heroAccent }}
+              />
+              <span
+                className="font-mono text-xs uppercase tracking-[0.2em]"
+                style={{ color: heroAccent }}
+              >
+                {isSignal ? "SIGNAL_ACTIVE" : "ARCHIVE_OPEN"}
+              </span>
+            </motion.div>
+
+            <motion.h1
+              className="font-display font-black uppercase leading-none mb-6"
+              style={{
+                fontSize: "clamp(3.5rem, 12vw, 10rem)",
+                letterSpacing: "-0.03em",
+                color: "oklch(var(--foreground))",
+              }}
+              initial={{ opacity: 0, y: 40 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.65,
+                delay: 0.1,
+                ease: [0.16, 1, 0.3, 1],
+              }}
+            >
+              ALT<span style={{ color: heroAccent }}>INSTINCT</span>
+            </motion.h1>
+
+            <motion.p
+              className="font-body text-base md:text-xl mb-10 max-w-2xl leading-relaxed"
+              style={{ color: "oklch(var(--foreground) / 0.65)" }}
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.55, delay: 0.25 }}
+            >
+              Alternative Digital Emotion Culture &mdash;{" "}
+              <span style={{ color: "oklch(var(--foreground) / 0.9)" }}>
+                where emotions become clothing and identity becomes the signal.
+              </span>
+            </motion.p>
+
+            <motion.div
+              className="flex flex-wrap gap-3"
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.38 }}
+            >
               <Link to="/lookbook">
                 <Button
                   data-ocid="home.hero_cta_primary"
                   size="lg"
-                  className="font-display font-bold uppercase tracking-wide transition-smooth"
+                  className="font-display font-black uppercase tracking-wider transition-smooth"
                   style={{
-                    backgroundColor: "oklch(var(--saffron))",
-                    color: "oklch(0.15 0.05 280)",
-                    boxShadow: isFunky
-                      ? "4px 4px 0 oklch(var(--offwhite) / 0.35)"
-                      : "0 4px 14px oklch(var(--saffron) / 0.35)",
+                    backgroundColor: heroAccent,
+                    color: "oklch(0.08 0.02 280)",
                     border: "none",
+                    boxShadow: isSignal
+                      ? `0 0 24px ${EC.obsession}66, 4px 4px 0 oklch(0.08 0.02 280 / 0.3)`
+                      : "0 4px 16px oklch(var(--primary) / 0.3)",
+                    letterSpacing: "0.12em",
                   }}
                 >
-                  Explore Lookbook <ArrowRight size={16} className="ml-1" />
+                  ENTER SYSTEM <ArrowRight size={16} className="ml-2" />
                 </Button>
               </Link>
               <Link to="/brand-story">
@@ -348,41 +508,131 @@ export default function Home() {
                   data-ocid="home.hero_cta_secondary"
                   size="lg"
                   variant="outline"
-                  className="font-display font-bold uppercase tracking-wide border-2 transition-smooth"
+                  className="font-display font-black uppercase tracking-wider border-2 transition-smooth"
                   style={{
-                    borderColor: "oklch(var(--offwhite) / 0.55)",
-                    color: "oklch(var(--offwhite))",
-                    backgroundColor: "oklch(var(--offwhite) / 0.08)",
+                    borderColor: "oklch(var(--foreground) / 0.3)",
+                    color: "oklch(var(--foreground))",
+                    backgroundColor: "transparent",
+                    letterSpacing: "0.12em",
                   }}
                 >
-                  Our Story <ChevronRight size={16} className="ml-1" />
+                  ACCESS ARCHIVE <ChevronRight size={16} className="ml-1" />
                 </Button>
               </Link>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         </div>
       </section>
 
-      {/* ── CATEGORY SHOWCASE GRID ────────────────────────────── */}
+      {/* ── LORE DROP COUNTDOWN ───────────────────────────────── */}
       <section
-        data-ocid="home.categories_section"
-        className="py-16 bg-background pattern-paisley"
+        data-ocid="home.lore_countdown_section"
+        className="py-20 bg-background"
+        style={{ borderBottom: heroBorder }}
       >
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-10"
+            className="mb-12 text-center"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
             <p
-              className="font-display font-bold text-xs uppercase tracking-widest mb-2"
-              style={{ color: "oklch(var(--saffron))" }}
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-3"
+              style={{ color: heroAccent }}
             >
-              Browse by World
+              {isSignal ? "INCOMING_SIGNAL" : "NEXT_DROP"}
             </p>
-            <h2 className="heading-brand text-3xl md:text-4xl text-foreground">
-              {isFunky ? "Shop The Universe" : "Explore Collections"}
+            <h2
+              className="font-display font-black uppercase text-foreground"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {isSignal ? "SIGNAL INCOMING" : "NEXT DROP"}
+            </h2>
+            <p
+              className="font-body text-sm md:text-base mt-3 max-w-md mx-auto"
+              style={{ color: "oklch(var(--foreground) / 0.55)" }}
+            >
+              A new chapter is loading. Stay tuned.
+            </p>
+          </motion.div>
+
+          <motion.div
+            className="flex flex-wrap justify-center gap-4 md:gap-6"
+            initial={{ opacity: 0, y: 20 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ delay: 0.15 }}
+          >
+            {isZero ? (
+              <div
+                className="text-center"
+                data-ocid="home.countdown.zero_state"
+              >
+                <span
+                  className="font-display font-black uppercase text-2xl md:text-4xl"
+                  style={{
+                    color: heroAccent,
+                    textShadow: isSignal ? `0 0 24px ${heroAccent}88` : "none",
+                  }}
+                >
+                  SIGNAL INCOMING
+                </span>
+              </div>
+            ) : (
+              <>
+                {[
+                  { value: countdown.days, label: "DAYS" },
+                  { value: countdown.hours, label: "HOURS" },
+                  { value: countdown.minutes, label: "MINUTES" },
+                  { value: countdown.seconds, label: "SECONDS" },
+                ].map((unit, i) => (
+                  <div
+                    key={unit.label}
+                    data-ocid={`home.countdown.item.${i + 1}`}
+                    className="countdown-container"
+                  >
+                    <span className="countdown-digit">
+                      {String(unit.value).padStart(2, "0")}
+                    </span>
+                    <span className="countdown-label">{unit.label}</span>
+                  </div>
+                ))}
+              </>
+            )}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ── SELECT YOUR SIGNAL ────────────────────────────────── */}
+      <section
+        data-ocid="home.categories_section"
+        className="py-20 bg-background"
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="mb-12"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-3"
+              style={{ color: heroAccent }}
+            >
+              FORM_SELECT
+            </p>
+            <h2
+              className="font-display font-black uppercase text-foreground"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {isSignal ? "SELECT YOUR SIGNAL" : "CHOOSE YOUR FORM"}
             </h2>
           </motion.div>
 
@@ -398,54 +648,43 @@ export default function Home() {
                     viewport={{ once: true }}
                     transition={{ delay: i * 0.09 }}
                     className="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth"
-                    style={{ aspectRatio: "1 / 1" }}
+                    style={{
+                      aspectRatio: "1 / 1",
+                      background: cat.gradient,
+                      border: isSignal
+                        ? `1px solid ${cat.accentColor}44`
+                        : "1px solid oklch(var(--border))",
+                    }}
                   >
-                    <img
-                      src={cat.img}
-                      alt={cat.title}
-                      className="absolute inset-0 w-full h-full object-cover transition-smooth group-hover:scale-108"
-                      style={{
-                        transition: "transform 0.5s cubic-bezier(0.4,0,0.2,1)",
-                      }}
-                    />
-                    {/* Overlay */}
                     <div
-                      className="absolute inset-0 transition-smooth"
+                      className="absolute inset-0 pointer-events-none opacity-20"
                       style={{
-                        background: isFunky
-                          ? `linear-gradient(to bottom, transparent 30%, ${cat.accent}cc 100%)`
-                          : "linear-gradient(to bottom, transparent 40%, oklch(0.1 0.05 280 / 0.72) 100%)",
+                        backgroundImage: `linear-gradient(${cat.accentColor}33 1px, transparent 1px), linear-gradient(90deg, ${cat.accentColor}33 1px, transparent 1px)`,
+                        backgroundSize: "20px 20px",
                       }}
                     />
-                    {/* Pattern border */}
                     <div
-                      className="absolute inset-0 rounded-xl pointer-events-none"
+                      className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth"
                       style={{
-                        border: `3px solid ${cat.accent}`,
-                        opacity: isFunky ? 0.8 : 0.3,
+                        background: `radial-gradient(circle at 50% 80%, ${cat.accentColor}22 0%, transparent 70%)`,
                       }}
                     />
-                    <div className="absolute bottom-0 left-0 right-0 p-4">
+                    <div className="absolute bottom-0 left-0 right-0 p-5">
                       <div
-                        className="w-8 h-8 rounded-full flex items-center justify-center mb-2"
+                        className="w-8 h-8 rounded-lg flex items-center justify-center mb-3"
                         style={{
-                          backgroundColor: `${cat.accent}`,
-                          boxShadow: isFunky
-                            ? `0 0 12px ${cat.accent}`
-                            : "none",
+                          backgroundColor: `${cat.accentColor}22`,
+                          border: `1px solid ${cat.accentColor}55`,
                         }}
                       >
-                        <Icon size={14} color="oklch(var(--offwhite))" />
+                        <Icon size={14} style={{ color: cat.accentColor }} />
                       </div>
-                      <p
-                        className="font-display font-black text-lg uppercase tracking-tight leading-tight"
-                        style={{ color: "oklch(var(--offwhite))" }}
-                      >
+                      <p className="font-display font-black text-xl uppercase tracking-tight leading-tight text-foreground">
                         {cat.title}
                       </p>
                       <p
-                        className="font-body text-xs mt-1 line-clamp-1"
-                        style={{ color: "oklch(var(--offwhite) / 0.75)" }}
+                        className="font-mono text-xs mt-1 line-clamp-1"
+                        style={{ color: "oklch(var(--foreground) / 0.5)" }}
                       >
                         {cat.description}
                       </p>
@@ -458,114 +697,134 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURED PRODUCTS ─────────────────────────────────── */}
+      {/* ── LATEST TRANSMISSIONS ──────────────────────────────── */}
       <section
         data-ocid="home.featured_products_section"
-        className="py-16 bg-muted/40 pattern-block-print border-cultural"
+        className="py-20 bg-muted/30"
+        style={{ borderTop: heroBorder, borderBottom: heroBorder }}
       >
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-12"
+            className="mb-12"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
           >
             <p
-              className="font-display font-bold text-xs uppercase tracking-widest mb-2"
-              style={{ color: "oklch(var(--crimson))" }}
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-3"
+              style={{ color: heroAccent }}
             >
-              Selected Pieces
+              TRANSMISSION_LOG
             </p>
-            <h2 className="heading-brand text-3xl md:text-4xl text-foreground">
-              {isFunky ? "Front-Line Drops" : "Featured Collection"}
+            <h2
+              className="font-display font-black uppercase text-foreground"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              {isSignal ? "LATEST TRANSMISSIONS" : "FRESH FROM THE ARCHIVE"}
             </h2>
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {featuredProducts.map((product, i) => {
-              const cardShadow = isFunky
-                ? `4px 4px 0 ${product.accentColor}`
-                : "0 2px 16px oklch(var(--indigo) / 0.1)";
-              return (
-                <motion.div
-                  key={product.id}
-                  data-ocid={`home.featured_product.item.${i + 1}`}
-                  initial={{ opacity: 0, y: 24 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.12 }}
-                  className="card-brand overflow-hidden group cursor-pointer"
-                  style={{
-                    boxShadow: cardShadow,
-                  }}
+            {featuredProducts.map((product, i) => (
+              <motion.div
+                key={product.id}
+                data-ocid={`home.featured_product.item.${i + 1}`}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.12 }}
+                className="group rounded-xl overflow-hidden cursor-pointer"
+                style={{
+                  border: isSignal
+                    ? `1px solid ${product.accentColor}44`
+                    : "1px solid oklch(var(--border))",
+                  background: "oklch(var(--card))",
+                }}
+              >
+                <div
+                  className="relative overflow-hidden"
+                  style={{ aspectRatio: "3/4", background: product.gradient }}
                 >
-                  {/* Image */}
-                  <div className="relative overflow-hidden aspect-[3/4]">
-                    <img
-                      src={product.img}
-                      alt={product.name}
-                      className="w-full h-full object-cover transition-smooth group-hover:scale-105"
-                    />
-                    {/* Color accent top bar */}
-                    <div
-                      className="absolute top-0 left-0 right-0 h-1"
-                      style={{ backgroundColor: product.accentColor }}
-                    />
-                    <Badge
-                      className="absolute top-3 left-3 font-display font-bold text-xs uppercase tracking-wider border-none"
+                  <div
+                    className="absolute inset-0 pointer-events-none"
+                    style={{
+                      backgroundImage: `linear-gradient(${product.accentColor}22 1px, transparent 1px), linear-gradient(90deg, ${product.accentColor}22 1px, transparent 1px)`,
+                      backgroundSize: "30px 30px",
+                    }}
+                  />
+                  <div
+                    className="absolute inset-0"
+                    style={{
+                      background: `radial-gradient(circle at 50% 50%, ${product.accentColor}33 0%, transparent 60%)`,
+                    }}
+                  />
+                  <div
+                    className="absolute top-0 left-0 right-0 h-0.5"
+                    style={{ backgroundColor: product.accentColor }}
+                  />
+                  <Badge
+                    className="absolute top-3 left-3 font-mono font-bold text-xs uppercase tracking-wider"
+                    style={{
+                      backgroundColor: `${product.tagColor}22`,
+                      color: product.tagColor,
+                      border: `1px solid ${product.tagColor}55`,
+                    }}
+                  >
+                    {product.tag}
+                  </Badge>
+                  <div className="absolute bottom-4 left-0 right-0 flex justify-center">
+                    <span
+                      className="font-mono text-xs uppercase tracking-[0.15em] px-3 py-1 rounded"
                       style={{
-                        backgroundColor: product.tagColor,
-                        color: "oklch(var(--offwhite))",
+                        backgroundColor: `${product.accentColor}22`,
+                        color: product.accentColor,
+                        border: `1px solid ${product.accentColor}44`,
                       }}
                     >
-                      {product.tag}
-                    </Badge>
+                      {product.collection}
+                    </span>
                   </div>
+                </div>
 
-                  {/* Info */}
-                  <div className="p-5">
-                    <p
-                      className="font-display font-bold text-xs uppercase tracking-widest mb-1"
+                <div className="p-5">
+                  <h3
+                    className="font-display font-black text-lg uppercase text-foreground mb-2"
+                    style={{ letterSpacing: "-0.01em" }}
+                  >
+                    {product.name}
+                  </h3>
+                  <p className="font-body text-sm text-muted-foreground mb-4 line-clamp-2">
+                    {product.description}
+                  </p>
+                  <div className="flex items-center justify-between">
+                    <span
+                      className="font-display font-black text-2xl"
                       style={{ color: product.accentColor }}
                     >
-                      {product.collection}
-                    </p>
-                    <h3 className="heading-brand text-xl text-foreground mb-2">
-                      {product.name}
-                    </h3>
-                    <p className="font-body text-sm text-muted-foreground mb-4 line-clamp-2">
-                      {product.description}
-                    </p>
-                    <div className="flex items-center justify-between">
-                      <span
-                        className="font-display font-black text-2xl"
+                      {product.price}
+                    </span>
+                    <Link to="/lookbook">
+                      <Button
+                        data-ocid={`home.featured_product.view_button.${i + 1}`}
+                        size="sm"
+                        className="font-mono font-bold uppercase tracking-wider transition-smooth"
                         style={{
-                          color: isFunky
-                            ? product.accentColor
-                            : "oklch(var(--foreground))",
+                          backgroundColor: `${product.accentColor}22`,
+                          color: product.accentColor,
+                          border: `1px solid ${product.accentColor}55`,
+                          letterSpacing: "0.1em",
                         }}
                       >
-                        {product.price}
-                      </span>
-                      <Link to="/lookbook">
-                        <Button
-                          data-ocid={`home.featured_product.view_button.${i + 1}`}
-                          size="sm"
-                          className="font-display font-bold uppercase tracking-wide transition-smooth"
-                          style={{
-                            backgroundColor: product.accentColor,
-                            color: "oklch(var(--offwhite))",
-                            border: "none",
-                          }}
-                        >
-                          View
-                        </Button>
-                      </Link>
-                    </div>
+                        VIEW
+                      </Button>
+                    </Link>
                   </div>
-                </motion.div>
-              );
-            })}
+                </div>
+              </motion.div>
+            ))}
           </div>
 
           <div className="flex justify-center mt-10">
@@ -574,39 +833,113 @@ export default function Home() {
                 data-ocid="home.view_all_products_button"
                 variant="outline"
                 size="lg"
-                className="font-display font-bold uppercase tracking-widest border-2 transition-smooth"
-                style={{
-                  borderColor: "oklch(var(--indigo))",
-                  color: "oklch(var(--indigo))",
-                }}
+                className="font-mono font-bold uppercase tracking-widest border transition-smooth"
+                style={{ borderColor: heroAccent, color: heroAccent }}
               >
-                View Full Lookbook <ArrowRight size={16} className="ml-2" />
+                VIEW ALL DROPS <ArrowRight size={16} className="ml-2" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── COLLECTIONS GRID ──────────────────────────────────── */}
+      {/* ── CINEMATIC ARCHIVE (Reel Gallery) ────────────────── */}
       <section
-        data-ocid="home.collections_section"
-        className="py-16 bg-background"
+        data-ocid="home.reel_gallery_section"
+        className="py-20 bg-muted/30"
+        style={{ borderTop: heroBorder, borderBottom: heroBorder }}
       >
         <div className="container mx-auto px-4">
           <motion.div
-            className="text-center mb-10"
+            className="mb-12"
             initial={{ opacity: 0, y: 16 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
             <p
-              className="font-display font-bold text-xs uppercase tracking-widest mb-2"
-              style={{ color: "oklch(var(--saffron))" }}
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-3"
+              style={{ color: heroAccent }}
             >
-              Global Drops
+              ARCHIVE_REELS
             </p>
-            <h2 className="heading-brand text-3xl md:text-4xl text-foreground">
-              {isFunky ? "Collections Grid" : "World Collections"}
+            <h2
+              className="font-display font-black uppercase text-foreground"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              CINEMATIC ARCHIVE
+            </h2>
+          </motion.div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {reelSeries.map((series, i) => (
+              <motion.div
+                key={series.id}
+                data-ocid={`home.reel.item.${i + 1}`}
+                initial={{ opacity: 0, y: 24 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.1 }}
+                className="reel-card group"
+                style={{
+                  background: series.gradient,
+                  border: isSignal
+                    ? `1px solid ${EC[series.emotion as keyof typeof EC]}44`
+                    : "1px solid oklch(var(--border))",
+                }}
+              >
+                {/* Dark gradient overlay from bottom */}
+                <div
+                  className="absolute inset-0 pointer-events-none"
+                  style={{
+                    background:
+                      "linear-gradient(to top, oklch(0 0 0 / 0.55) 0%, oklch(0 0 0 / 0.1) 60%, oklch(0 0 0 / 0) 100%)",
+                  }}
+                />
+                {/* Play icon */}
+                <div className="reel-play">
+                  <Play size={40} fill="white" stroke="white" strokeWidth={0} />
+                </div>
+                {/* Series label */}
+                <div className="reel-label">
+                  <span className="font-display font-black uppercase text-sm tracking-wide">
+                    {series.name}
+                  </span>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ── THE ARCHIVES ──────────────────────────────────────── */}
+      <section
+        data-ocid="home.collections_section"
+        className="py-20 bg-background"
+      >
+        <div className="container mx-auto px-4">
+          <motion.div
+            className="mb-12"
+            initial={{ opacity: 0, y: 16 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+          >
+            <p
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-3"
+              style={{ color: heroAccent }}
+            >
+              ARCHIVE_INDEX
+            </p>
+            <h2
+              className="font-display font-black uppercase text-foreground"
+              style={{
+                fontSize: "clamp(1.8rem, 5vw, 3rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              THE ARCHIVES
             </h2>
           </motion.div>
 
@@ -615,45 +948,53 @@ export default function Home() {
               <Link to="/lookbook" key={col.id} className="block">
                 <motion.div
                   data-ocid={`home.collection.item.${i + 1}`}
-                  initial={{ opacity: 0, scale: 0.96 }}
+                  initial={{ opacity: 0, scale: 0.97 }}
                   whileInView={{ opacity: 1, scale: 1 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.07 }}
                   className="group relative overflow-hidden rounded-xl cursor-pointer"
-                  style={{ aspectRatio: "4/3" }}
+                  style={{
+                    aspectRatio: "4/3",
+                    background: col.gradient,
+                    border: isSignal
+                      ? `1px solid ${col.accentColor}44`
+                      : "1px solid oklch(var(--border))",
+                  }}
                 >
-                  <img
-                    src={col.img}
-                    alt={col.title}
-                    className="absolute inset-0 w-full h-full object-cover transition-smooth group-hover:scale-105"
-                  />
-                  <div className="collection-card-overlay absolute inset-0" />
                   <div
-                    className="absolute inset-0 rounded-xl pointer-events-none"
+                    className="absolute inset-0 pointer-events-none"
                     style={{
-                      border: `3px solid ${col.accentColor}`,
-                      opacity: isFunky ? 0.7 : 0.25,
+                      backgroundImage: `linear-gradient(${col.accentColor}22 1px, transparent 1px), linear-gradient(90deg, ${col.accentColor}22 1px, transparent 1px)`,
+                      backgroundSize: "24px 24px",
                     }}
                   />
-                  <div className="absolute bottom-0 left-0 right-0 p-4">
+                  <div
+                    className="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth"
+                    style={{
+                      background: `radial-gradient(circle at 50% 50%, ${col.accentColor}22 0%, transparent 70%)`,
+                    }}
+                  />
+                  <div
+                    className="absolute top-0 left-0 right-0 h-px"
+                    style={{ backgroundColor: col.accentColor }}
+                  />
+                  <div className="absolute bottom-0 left-0 right-0 p-5">
                     <Badge
-                      className="mb-2 text-xs font-display font-bold uppercase tracking-wider border-none"
+                      className="mb-2 text-xs font-mono font-bold uppercase tracking-wider"
                       style={{
-                        backgroundColor: col.accentColor,
-                        color: "oklch(var(--offwhite))",
+                        backgroundColor: `${col.accentColor}22`,
+                        color: col.accentColor,
+                        border: `1px solid ${col.accentColor}44`,
                       }}
                     >
                       {col.tag}
                     </Badge>
-                    <p
-                      className="font-display font-black text-xl uppercase tracking-tight"
-                      style={{ color: "oklch(var(--offwhite))" }}
-                    >
+                    <p className="font-display font-black text-xl uppercase tracking-tight text-foreground">
                       {col.title}
                     </p>
                     <p
-                      className="font-body text-xs mt-1 line-clamp-1"
-                      style={{ color: "oklch(var(--offwhite) / 0.8)" }}
+                      className="font-mono text-xs mt-1 line-clamp-1"
+                      style={{ color: "oklch(var(--foreground) / 0.5)" }}
                     >
                       {col.subtitle}
                     </p>
@@ -669,125 +1010,147 @@ export default function Home() {
                 data-ocid="home.view_all_button"
                 variant="outline"
                 size="lg"
-                className="font-display font-bold uppercase tracking-widest border-2 transition-smooth"
-                style={{
-                  borderColor: "oklch(var(--indigo))",
-                  color: "oklch(var(--indigo))",
-                }}
+                className="font-mono font-bold uppercase tracking-widest border transition-smooth"
+                style={{ borderColor: heroAccent, color: heroAccent }}
               >
-                See All Drops <ArrowRight size={16} className="ml-2" />
+                OPEN FULL ARCHIVE <ArrowRight size={16} className="ml-2" />
               </Button>
             </Link>
           </div>
         </div>
       </section>
 
-      {/* ── BRAND STORY CALLOUT ───────────────────────────────── */}
+      {/* ── MANIFESTO CALLOUT ────────────────────────────────── */}
       <section
         data-ocid="home.brand_callout_section"
-        className="py-16 bg-muted/30 pattern-mandala"
+        className="py-20 bg-muted/30"
+        style={{ borderTop: heroBorder }}
       >
         <div className="container mx-auto px-4">
           <motion.div
-            className="rounded-2xl overflow-hidden"
+            className="rounded-2xl overflow-hidden p-8 md:p-16 text-center"
             style={{
-              backgroundColor: "oklch(var(--indigo))",
-              border: isFunky
-                ? "3px solid oklch(var(--saffron))"
-                : "1px solid oklch(var(--indigo) / 0.3)",
-              boxShadow: isFunky
-                ? "8px 8px 0 oklch(var(--saffron) / 0.3)"
-                : "0 20px 60px oklch(var(--indigo) / 0.25)",
+              background: isSignal
+                ? "linear-gradient(135deg, oklch(0.10 0.04 280) 0%, oklch(0.12 0.05 280) 100%)"
+                : "linear-gradient(135deg, oklch(var(--card)) 0%, oklch(var(--muted)) 100%)",
+              border: heroBorder,
+              boxShadow: isSignal
+                ? `0 0 60px ${EC.obsession}22, inset 0 1px 0 ${EC.obsession}22`
+                : "0 20px 60px oklch(var(--foreground) / 0.05)",
             }}
             initial={{ opacity: 0, y: 24 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <div className="flex flex-col md:flex-row items-center gap-0 md:gap-8 p-8 md:p-12">
-              {/* Decorative motif left */}
-              <div className="hidden lg:block w-28 flex-shrink-0 opacity-60">
-                <BlockPrintMotif className="w-full" />
-              </div>
-
-              {/* Image */}
-              <div className="w-full md:w-72 flex-shrink-0 rounded-xl overflow-hidden aspect-video mb-6 md:mb-0">
-                <img
-                  src="/assets/generated/hero-streetwear-fusion.dim_1400x600.jpg"
-                  alt="ZOLA Cultural Fusion"
-                  className="w-full h-full object-cover"
-                />
-              </div>
-
-              {/* Text */}
-              <div className="flex-1 text-center md:text-left">
-                <p
-                  className="font-display font-bold text-xs uppercase tracking-widest mb-3"
-                  style={{ color: "oklch(var(--saffron) / 0.7)" }}
-                >
-                  Our Why
-                </p>
-                <h2
-                  className="heading-brand text-3xl md:text-4xl mb-4"
-                  style={{ color: "oklch(var(--saffron))" }}
-                >
-                  Our Cultural
-                  <br />
-                  Fusion
-                </h2>
-                <p
-                  className="font-body text-sm leading-relaxed mb-6 max-w-md"
-                  style={{ color: "oklch(var(--offwhite) / 0.8)" }}
-                >
-                  Celebrate a brand built with diverse artists collaborating
-                  across cultural heritage. We unite traditions from Mumbai to
-                  Mexico City to Accra — weaving stories into every garment,
-                  every print, every stitch.
-                </p>
-                <Link to="/brand-story">
-                  <Button
-                    data-ocid="home.brand_story_cta"
-                    className="font-display font-bold uppercase tracking-wide transition-smooth"
-                    style={{
-                      backgroundColor: "oklch(var(--saffron))",
-                      color: "oklch(0.15 0.05 280)",
-                      border: "none",
-                      boxShadow: isFunky
-                        ? "3px 3px 0 oklch(var(--offwhite) / 0.25)"
-                        : "none",
-                    }}
-                  >
-                    Discover Our Story <ArrowRight size={14} className="ml-1" />
-                  </Button>
-                </Link>
-              </div>
-
-              {/* Decorative motif right */}
-              <div className="hidden lg:block w-28 flex-shrink-0 opacity-60">
-                <MandalaMotif className="w-full" />
-              </div>
+            <div className="flex justify-center gap-8 mb-10 opacity-30">
+              <SystemGridMotif
+                className="w-12 h-12"
+                style={{ color: heroAccent }}
+              />
+              <SignalBarsMotif
+                className="w-12 h-12"
+                style={{ color: heroAccent }}
+              />
+              <SystemGridMotif
+                className="w-12 h-12"
+                style={{ color: heroAccent }}
+              />
             </div>
+
+            <p
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-6"
+              style={{ color: heroAccent }}
+            >
+              MANIFESTO_v2.0
+            </p>
+            <h2
+              className="font-display font-black uppercase text-foreground mb-2"
+              style={{
+                fontSize: "clamp(1.4rem, 4vw, 2.8rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              EMOTIONS ARE SYSTEMS.
+            </h2>
+            <h2
+              className="font-display font-black uppercase mb-2"
+              style={{
+                fontSize: "clamp(1.4rem, 4vw, 2.8rem)",
+                letterSpacing: "-0.02em",
+                color: heroAccent,
+              }}
+            >
+              IDENTITY IS THE SIGNAL.
+            </h2>
+            <h2
+              className="font-display font-black uppercase text-foreground mb-10"
+              style={{
+                fontSize: "clamp(1.4rem, 4vw, 2.8rem)",
+                letterSpacing: "-0.02em",
+              }}
+            >
+              ALTINSTINCT IS THE ARCHIVE.
+            </h2>
+
+            <div className="flex flex-wrap justify-center gap-3 mb-10">
+              {manifestoBadges.map((badge, i) => (
+                <motion.span
+                  key={badge}
+                  data-ocid={`home.manifesto_badge.${i + 1}`}
+                  initial={{ opacity: 0, scale: 0.9 }}
+                  whileInView={{ opacity: 1, scale: 1 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.08 }}
+                  className="font-mono text-xs uppercase tracking-[0.15em] px-4 py-2 rounded-full"
+                  style={{
+                    backgroundColor: `${heroAccent}15`,
+                    color: heroAccent,
+                    border: `1px solid ${heroAccent}44`,
+                  }}
+                >
+                  {badge}
+                </motion.span>
+              ))}
+            </div>
+
+            <Link to="/brand-story">
+              <Button
+                data-ocid="home.brand_story_cta"
+                className="font-mono font-bold uppercase tracking-widest transition-smooth"
+                style={{
+                  backgroundColor: heroAccent,
+                  color: "oklch(0.08 0.02 280)",
+                  border: "none",
+                  boxShadow: isSignal ? `0 0 20px ${heroAccent}55` : "none",
+                  letterSpacing: "0.12em",
+                }}
+              >
+                READ THE MANIFESTO <ArrowRight size={14} className="ml-1" />
+              </Button>
+            </Link>
           </motion.div>
         </div>
       </section>
 
-      {/* ── NEWSLETTER TEASER ─────────────────────────────────── */}
+      {/* ── JOIN THE SIGNAL ───────────────────────────────────── */}
       <section
         data-ocid="home.newsletter_teaser_section"
-        className="relative py-20 overflow-hidden pattern-mandala"
-        style={{ backgroundColor: "oklch(var(--offwhite))" }}
+        className="relative py-24 overflow-hidden bg-background"
+        style={{ borderTop: heroBorder }}
       >
-        {/* Decorative background motifs */}
         <div
-          className="absolute left-4 top-1/2 -translate-y-1/2 w-48 h-48 opacity-10 hidden md:block"
+          className="absolute left-8 top-1/2 -translate-y-1/2 w-40 h-40 hidden md:block"
           aria-hidden="true"
+          style={{ color: heroAccent, opacity: 0.08 }}
         >
-          <MandalaMotif className="w-full h-full" />
+          <SystemGridMotif className="w-full h-full" />
         </div>
         <div
-          className="absolute right-4 top-1/2 -translate-y-1/2 w-48 h-48 opacity-10 hidden md:block"
+          className="absolute right-8 top-1/2 -translate-y-1/2 w-40 h-40 hidden md:block"
           aria-hidden="true"
+          style={{ color: heroAccent, opacity: 0.08 }}
         >
-          <BlockPrintMotif className="w-full h-full" />
+          <SignalBarsMotif className="w-full h-full" />
         </div>
 
         <div className="container mx-auto px-4 text-center relative">
@@ -796,64 +1159,71 @@ export default function Home() {
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
           >
-            <p className="font-display font-black text-3xl md:text-5xl uppercase tracking-tight text-foreground mb-1">
-              The Zola Tribe
-            </p>
             <p
-              className="heading-brand text-2xl md:text-4xl mb-4"
+              className="font-mono text-xs uppercase tracking-[0.2em] mb-4"
+              style={{ color: heroAccent }}
+            >
+              SIGNAL_BROADCAST
+            </p>
+            <h2
+              className="font-display font-black uppercase text-foreground mb-2"
               style={{
-                color: isFunky
-                  ? "oklch(var(--indigo))"
-                  : "oklch(var(--indigo) / 0.8)",
+                fontSize: "clamp(2rem, 6vw, 4.5rem)",
+                letterSpacing: "-0.03em",
               }}
             >
-              Stay Inspired. Join the Fusion
-            </p>
+              {isSignal ? "JOIN THE SIGNAL" : "ACCESS THE ARCHIVE"}
+            </h2>
             <p
               className="font-body text-sm md:text-base mb-8 max-w-sm mx-auto"
-              style={{ color: "oklch(var(--foreground) / 0.6)" }}
+              style={{ color: "oklch(var(--foreground) / 0.55)" }}
             >
-              Drop alerts, culture features, and early access to limited collabs
-              — delivered to your inbox.
+              Drop alerts, archive releases, and early access to limited-run
+              pieces &mdash; delivered straight to your inbox.
             </p>
             <Link to="/newsletter">
               <Button
                 data-ocid="home.newsletter_join_button"
                 size="lg"
-                className="font-display font-bold uppercase tracking-widest text-base transition-smooth"
+                className="font-mono font-black uppercase tracking-widest text-base transition-smooth"
                 style={{
-                  backgroundColor: "oklch(var(--indigo))",
-                  color: "oklch(var(--offwhite))",
+                  backgroundColor: heroAccent,
+                  color: "oklch(0.08 0.02 280)",
                   border: "none",
-                  boxShadow: isFunky
-                    ? "4px 4px 0 oklch(var(--saffron))"
-                    : "0 8px 24px oklch(var(--indigo) / 0.25)",
+                  boxShadow: isSignal
+                    ? `0 0 28px ${heroAccent}55, 4px 4px 0 oklch(0.08 0.02 280 / 0.2)`
+                    : "0 8px 24px oklch(var(--primary) / 0.25)",
+                  letterSpacing: "0.12em",
                 }}
               >
-                Join the Tribe
+                SUBSCRIBE TO SIGNAL
               </Button>
             </Link>
-            <div className="flex justify-center items-center gap-3 mt-6">
-              <span
-                className="font-body text-sm font-semibold"
-                style={{ color: "oklch(var(--indigo))" }}
-              >
-                Indigo
-              </span>
-              <span className="font-body text-sm text-muted-foreground">·</span>
-              <span
-                className="font-body text-sm font-semibold"
-                style={{ color: "oklch(var(--saffron))" }}
-              >
-                Saffron
-              </span>
-              <span className="font-body text-sm text-muted-foreground">·</span>
-              <span
-                className="font-body text-sm font-semibold"
-                style={{ color: "oklch(var(--crimson))" }}
-              >
-                Crimson
-              </span>
+
+            <div className="flex justify-center items-center gap-4 mt-8 flex-wrap">
+              {(
+                [
+                  ["CHAOS", EC.chaos],
+                  ["ISOLATION", EC.isolation],
+                  ["OBSESSION", EC.obsession],
+                  ["ESCAPE", EC.escape],
+                  ["OVERTHINKING", EC.overthinking],
+                  ["BURNOUT", EC.burnout],
+                ] as [string, string][]
+              ).map(([label, color]) => (
+                <div key={label} className="flex items-center gap-1.5">
+                  <span
+                    className="w-2 h-2 rounded-full inline-block"
+                    style={{ backgroundColor: color }}
+                  />
+                  <span
+                    className="font-mono text-xs uppercase tracking-widest"
+                    style={{ color: "oklch(var(--foreground) / 0.4)" }}
+                  >
+                    {label}
+                  </span>
+                </div>
+              ))}
             </div>
           </motion.div>
         </div>

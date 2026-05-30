@@ -120,6 +120,9 @@ export default {
           "0%, 100%": { opacity: "1" },
           "50%": { opacity: "0.7" },
         },
+        "pulse-glow": { '0%, 100%': { boxShadow: '0 0 20px oklch(var(--accent) / 0.5), inset 0 0 12px oklch(var(--border) / 0.3)' }, '50%': { boxShadow: '0 0 30px oklch(var(--accent) / 0.8), inset 0 0 12px oklch(var(--border) / 0.3)' } },
+        "reel-hover": { '0%': { transform: 'translateY(0) scale(1)' }, '100%': { transform: 'translateY(-4px) scale(1.01)' } },
+        "countdown-tick": { '0%': { transform: 'scale(1)' }, '50%': { transform: 'scale(1.05)' }, '100%': { transform: 'scale(1)' } },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",

@@ -21,9 +21,11 @@ export const ProductVariant = IDL.Record({
 export const Product = IDL.Record({
   'id' : IDL.Text,
   'stockQuantity' : IDL.Nat,
+  'emotion' : IDL.Text,
   'name' : IDL.Text,
   'description' : IDL.Text,
   'variants' : IDL.Vec(ProductVariant),
+  'series' : IDL.Text,
   'imageUrl' : IDL.Text,
   'category' : IDL.Text,
   'price' : IDL.Nat,
@@ -77,6 +79,10 @@ export const Cart = IDL.Record({
   'userId' : IDL.Principal,
   'updatedAt' : IDL.Int,
   'items' : IDL.Vec(CartItem),
+});
+export const LoreDrop = IDL.Record({
+  'targetTimestamp' : IDL.Int,
+  'title' : IDL.Text,
 });
 export const StripeSessionStatus = IDL.Variant({
   'completed' : IDL.Record({
@@ -136,6 +142,7 @@ export const idlService = IDL.Service({
     ),
   'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
   'getCart' : IDL.Func([], [Cart], ['query']),
+  'getLoreDrop' : IDL.Func([], [IDL.Opt(LoreDrop)], ['query']),
   'getMyOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
   'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
   'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
@@ -150,6 +157,7 @@ export const idlService = IDL.Service({
     ),
   'removeFromCart' : IDL.Func([IDL.Text], [], []),
   'removeFromWishlist' : IDL.Func([IDL.Text], [], []),
+  'setLoreDrop' : IDL.Func([IDL.Int, IDL.Text], [], []),
   'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
   'subscribeNewsletter' : IDL.Func([IDL.Text], [SubscribeResult], []),
   'transform' : IDL.Func(
@@ -176,9 +184,11 @@ export const idlFactory = ({ IDL }) => {
   const Product = IDL.Record({
     'id' : IDL.Text,
     'stockQuantity' : IDL.Nat,
+    'emotion' : IDL.Text,
     'name' : IDL.Text,
     'description' : IDL.Text,
     'variants' : IDL.Vec(ProductVariant),
+    'series' : IDL.Text,
     'imageUrl' : IDL.Text,
     'category' : IDL.Text,
     'price' : IDL.Nat,
@@ -232,6 +242,10 @@ export const idlFactory = ({ IDL }) => {
     'userId' : IDL.Principal,
     'updatedAt' : IDL.Int,
     'items' : IDL.Vec(CartItem),
+  });
+  const LoreDrop = IDL.Record({
+    'targetTimestamp' : IDL.Int,
+    'title' : IDL.Text,
   });
   const StripeSessionStatus = IDL.Variant({
     'completed' : IDL.Record({
@@ -289,6 +303,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'getCallerUserRole' : IDL.Func([], [UserRole], ['query']),
     'getCart' : IDL.Func([], [Cart], ['query']),
+    'getLoreDrop' : IDL.Func([], [IDL.Opt(LoreDrop)], ['query']),
     'getMyOrders' : IDL.Func([], [IDL.Vec(Order)], ['query']),
     'getProduct' : IDL.Func([IDL.Text], [IDL.Opt(Product)], ['query']),
     'getProducts' : IDL.Func([], [IDL.Vec(Product)], ['query']),
@@ -303,6 +318,7 @@ export const idlFactory = ({ IDL }) => {
       ),
     'removeFromCart' : IDL.Func([IDL.Text], [], []),
     'removeFromWishlist' : IDL.Func([IDL.Text], [], []),
+    'setLoreDrop' : IDL.Func([IDL.Int, IDL.Text], [], []),
     'setStripeConfiguration' : IDL.Func([StripeConfiguration], [], []),
     'subscribeNewsletter' : IDL.Func([IDL.Text], [SubscribeResult], []),
     'transform' : IDL.Func(

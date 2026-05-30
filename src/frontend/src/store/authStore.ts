@@ -23,7 +23,7 @@ export const useAuthStore = create<AuthState>()(
       setIsAdmin: (isAdmin) => set({ isAdmin }),
       reset: () => set({ role: UserRole.guest, isAdmin: false }),
     }),
-    { name: "zola-auth-state" },
+    { name: "altinstinct-auth-state" },
   ),
 );
 

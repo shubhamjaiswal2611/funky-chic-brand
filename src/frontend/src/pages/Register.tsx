@@ -9,11 +9,11 @@ import { useAuth } from "../store/authStore";
 import { useThemeStore } from "../store/themeStore";
 
 // Paisley / block-print SVG header decoration
-function PaisleyDecor({ isFunky }: { isFunky: boolean }) {
-  const c1 = isFunky
+function PaisleyDecor({ isSignal }: { isSignal: boolean }) {
+  const c1 = isSignal
     ? "oklch(0.88 0.3 130 / 0.2)"
     : "oklch(0.76 0.18 72 / 0.15)";
-  const c2 = isFunky
+  const c2 = isSignal
     ? "oklch(0.6 0.32 330 / 0.15)"
     : "oklch(0.48 0.2 273 / 0.1)";
   return (
@@ -48,7 +48,7 @@ export default function Register() {
   const { isAuthenticated, isInitializing, isLoggingIn, login } = useAuth();
   const navigate = useNavigate();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -76,8 +76,8 @@ export default function Register() {
     login();
   };
 
-  const accentColor = isFunky ? "oklch(var(--lime))" : "oklch(var(--primary))";
-  const accentBg = isFunky ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
+  const accentColor = isSignal ? "oklch(var(--lime))" : "oklch(var(--primary))";
+  const accentBg = isSignal ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
 
   return (
     <div
@@ -86,7 +86,7 @@ export default function Register() {
       data-ocid="register.page"
     >
       {/* Background glow blobs */}
-      {isFunky && (
+      {isSignal && (
         <>
           <div
             className="absolute top-[-8%] right-[-5%] w-80 h-80 rounded-full blur-[140px] pointer-events-none"
@@ -106,7 +106,7 @@ export default function Register() {
         className="card-brand shadow-elevated-brand p-8 sm:p-10 max-w-md w-full mx-4 relative overflow-hidden"
         data-ocid="register.panel"
       >
-        <PaisleyDecor isFunky={isFunky} />
+        <PaisleyDecor isSignal={isSignal} />
 
         {/* Back link */}
         <Link
@@ -124,14 +124,16 @@ export default function Register() {
           <Sparkles
             size={22}
             style={{
-              color: isFunky ? "oklch(var(--lime))" : "oklch(var(--secondary))",
+              color: isSignal
+                ? "oklch(var(--lime))"
+                : "oklch(var(--secondary))",
             }}
           />
           <h1
             className="heading-brand text-3xl md:text-4xl"
             style={{ color: "oklch(var(--foreground))" }}
           >
-            {isFunky ? "JOIN THE CREW." : "CREATE ACCOUNT"}
+            {isSignal ? "JOIN THE CREW." : "CREATE ACCOUNT"}
           </h1>
         </div>
 
@@ -139,7 +141,7 @@ export default function Register() {
           className="font-body text-sm leading-relaxed mb-7"
           style={{ color: "oklch(var(--muted-foreground))" }}
         >
-          {isFunky
+          {isSignal
             ? "Drop your details and become part of the movement. Free. Bold. Yours."
             : "Create your account to save favourites, track orders, and enjoy a curated experience."}
         </p>
@@ -294,17 +296,17 @@ export default function Register() {
             className="w-full font-body font-bold uppercase tracking-widest text-sm py-6 mt-2 transition-smooth"
             style={{
               backgroundColor: accentBg,
-              color: isFunky
+              color: isSignal
                 ? "oklch(0.98 0 0)"
                 : "oklch(var(--primary-foreground))",
-              boxShadow: isFunky
+              boxShadow: isSignal
                 ? "0 0 28px oklch(0.6 0.32 330 / 0.45)"
                 : "none",
             }}
           >
             {isInitializing || isLoggingIn
               ? "Creating account…"
-              : isFunky
+              : isSignal
                 ? "CREATE & JOIN →"
                 : "Create Account"}
           </Button>

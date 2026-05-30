@@ -12,6 +12,8 @@ export interface Product {
   price: bigint; // price in cents
   stockQuantity: bigint;
   variants: ProductVariant[];
+  emotion: string;
+  series: string;
 }
 
 export interface ProductVariant {
@@ -71,4 +73,9 @@ export interface Order {
 export interface User {
   role: import("../backend.d").UserRole;
   isAdmin: boolean;
+}
+
+export interface LoreDrop {
+  targetTimestamp: bigint;
+  title: string;
 }

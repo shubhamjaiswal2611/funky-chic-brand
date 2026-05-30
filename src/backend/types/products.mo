@@ -13,5 +13,7 @@ module {
     imageUrl : Text;
     variants : [ProductVariant];
     stockQuantity : Nat;
+    emotion : Text;
+    series : Text;
   };
 };

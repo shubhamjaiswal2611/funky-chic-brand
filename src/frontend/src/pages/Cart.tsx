@@ -7,7 +7,7 @@ import { useCartStore } from "../store/cartStore";
 import { useThemeStore } from "../store/themeStore";
 
 // Cultural motif SVG header accent
-function MotifAccent({ isFunky }: { isFunky: boolean }) {
+function MotifAccent({ isSignal }: { isSignal: boolean }) {
   return (
     <svg
       width="100%"
@@ -19,7 +19,7 @@ function MotifAccent({ isFunky }: { isFunky: boolean }) {
       style={{ display: "block" }}
     >
       <title>{"decorative motif"}</title>
-      {isFunky ? (
+      {isSignal ? (
         // Graffiti-style zigzag neon
         <polyline
           points="0,12 25,4 50,20 75,4 100,20 125,4 150,20 175,4 200,20 225,4 250,20 275,4 300,20 325,4 350,20 375,4 400,20 425,4 450,20 475,4 500,20 525,4 550,20 575,4 600,20 625,4 650,20 675,4 700,20 725,4 750,20 775,4 800,20"
@@ -48,21 +48,21 @@ function MotifAccent({ isFunky }: { isFunky: boolean }) {
 export default function Cart() {
   const { items, removeItem, updateQuantity, getTotal } = useCartStore();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
   const navigate = useNavigate();
 
   const subtotalCents = getTotal();
   const taxCents = Math.round(subtotalCents * 0.1);
   const totalCents = subtotalCents + taxCents;
 
-  const accentColor = isFunky
+  const accentColor = isSignal
     ? "oklch(var(--lime))"
     : "oklch(var(--indigo, 0.48 0.2 273))";
-  const priceColor = isFunky
+  const priceColor = isSignal
     ? "oklch(var(--secondary))"
     : "oklch(var(--primary))";
-  const ctaBg = isFunky ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
-  const ctaFg = isFunky
+  const ctaBg = isSignal ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
+  const ctaFg = isSignal
     ? "oklch(0.98 0 0)"
     : "oklch(var(--primary-foreground))";
 
@@ -98,7 +98,7 @@ export default function Cart() {
             </p>
           )}
         </div>
-        <MotifAccent isFunky={isFunky} />
+        <MotifAccent isSignal={isSignal} />
       </div>
 
       <div className="container mx-auto px-4 py-10 max-w-5xl">
@@ -166,7 +166,7 @@ export default function Cart() {
                         width: "88px",
                         height: "88px",
                         backgroundColor: "oklch(var(--muted))",
-                        border: isFunky
+                        border: isSignal
                           ? "2px solid oklch(var(--hotpink) / 0.3)"
                           : "1px solid oklch(var(--border))",
                       }}

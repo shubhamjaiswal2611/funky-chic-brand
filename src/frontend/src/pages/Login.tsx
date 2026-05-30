@@ -9,8 +9,8 @@ import { useAuth } from "../store/authStore";
 import { useThemeStore } from "../store/themeStore";
 
 // Mandala SVG decoration
-function MandalaDecor({ isFunky }: { isFunky: boolean }) {
-  const color = isFunky
+function MandalaDecor({ isSignal }: { isSignal: boolean }) {
+  const color = isSignal
     ? "oklch(0.88 0.3 130 / 0.18)"
     : "oklch(0.76 0.18 72 / 0.12)";
   return (
@@ -53,7 +53,7 @@ export default function Login() {
   const { isAuthenticated, isInitializing, isLoggingIn, login } = useAuth();
   const navigate = useNavigate();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -77,10 +77,10 @@ export default function Login() {
     login();
   };
 
-  const accentColor = isFunky
+  const accentColor = isSignal
     ? "oklch(var(--hotpink))"
     : "oklch(var(--primary))";
-  const secondaryColor = isFunky
+  const secondaryColor = isSignal
     ? "oklch(var(--lime))"
     : "oklch(var(--secondary))";
 
@@ -91,7 +91,7 @@ export default function Login() {
       data-ocid="login.page"
     >
       {/* Background glow blobs (funky mode) */}
-      {isFunky && (
+      {isSignal && (
         <>
           <div
             className="absolute top-[-10%] left-[-5%] w-72 h-72 rounded-full blur-[120px] pointer-events-none"
@@ -111,7 +111,7 @@ export default function Login() {
         className="card-brand shadow-elevated-brand p-8 sm:p-10 max-w-md w-full mx-4 relative overflow-hidden"
         data-ocid="login.panel"
       >
-        <MandalaDecor isFunky={isFunky} />
+        <MandalaDecor isSignal={isSignal} />
 
         {/* Logo */}
         <div className="flex items-center gap-2 mb-8">
@@ -119,10 +119,10 @@ export default function Login() {
           <span
             className="font-display text-2xl font-black uppercase tracking-tight"
             style={{
-              color: isFunky ? "oklch(var(--lime))" : "oklch(var(--indigo))",
+              color: isSignal ? "oklch(var(--lime))" : "oklch(var(--indigo))",
             }}
           >
-            ZOLA
+            AltInstinct
           </span>
         </div>
 
@@ -131,14 +131,14 @@ export default function Login() {
           className="heading-brand text-3xl md:text-4xl mb-1"
           style={{ color: "oklch(var(--foreground))" }}
         >
-          {isFunky ? "COME IN, REBEL." : "WELCOME BACK"}
+          {isSignal ? "COME IN, REBEL." : "WELCOME BACK"}
         </h1>
         <p
           className="font-body text-sm leading-relaxed mb-7"
           style={{ color: "oklch(var(--muted-foreground))" }}
         >
           Sign in to access your wishlist, track orders, and unlock the full
-          ZOLA experience.{" "}
+          AltInstinct experience.{" "}
           <span style={{ color: "oklch(var(--muted-foreground))" }}>
             Guests can still browse the full collection.
           </span>
@@ -242,10 +242,10 @@ export default function Login() {
             className="w-full font-body font-bold uppercase tracking-widest text-sm py-6 mt-2 transition-smooth"
             style={{
               backgroundColor: accentColor,
-              color: isFunky
+              color: isSignal
                 ? "oklch(0.98 0 0)"
                 : "oklch(var(--primary-foreground))",
-              boxShadow: isFunky
+              boxShadow: isSignal
                 ? "0 0 24px oklch(0.6 0.32 330 / 0.5)"
                 : "none",
             }}
@@ -254,7 +254,7 @@ export default function Login() {
               ? "Loading…"
               : isLoggingIn
                 ? "Signing in…"
-                : isFunky
+                : isSignal
                   ? "LET ME IN →"
                   : "Sign In"}
           </Button>

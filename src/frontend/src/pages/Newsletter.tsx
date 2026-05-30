@@ -19,18 +19,18 @@ const perks = [
   },
   {
     icon: "◈",
-    title: "Culture Stories",
-    desc: "Behind-the-scenes with the artisans, streets, and traditions that inspire each piece.",
+    title: "Emotional Archive Access",
+    desc: "Deep dives into the emotional series — the stories, symbols, and signals behind every drop.",
   },
   {
     icon: "◆",
-    title: "Member Discounts",
-    desc: "Exclusive codes and early-bird pricing reserved for tribe members only.",
+    title: "Signal-Only Discounts",
+    desc: "Exclusive codes and early-bird pricing reserved for archive members only.",
   },
   {
     icon: "✸",
-    title: "Collab Previews",
-    desc: "Sneak peeks of upcoming artist collaborations across Mumbai, Tokyo, Accra, and beyond.",
+    title: "New Series Previews",
+    desc: "First looks at upcoming emotional series before they go live to the world.",
   },
 ];
 
@@ -147,7 +147,7 @@ type SubscribeStatus = "idle" | "loading" | "success" | "error";
 
 export default function Newsletter() {
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
 
   const [email, setEmail] = useState("");
   const [name, setName] = useState("");
@@ -196,7 +196,9 @@ export default function Newsletter() {
 
       setStatus("success");
       toast.success(
-        isFunky ? "You're in the tribe! 🔥" : "Welcome to the movement.",
+        isSignal
+          ? "Signal received. You are in. 🔥"
+          : "Welcome to the archive.",
         {
           description: `${name ? `Welcome, ${name}!` : "Welcome!"} Expect the unexpected in your inbox.`,
         },
@@ -233,7 +235,9 @@ export default function Newsletter() {
           <div
             className="mx-auto mb-6 max-w-xs"
             style={{
-              color: isFunky ? "oklch(var(--saffron))" : "oklch(var(--indigo))",
+              color: isSignal
+                ? "oklch(var(--saffron))"
+                : "oklch(var(--indigo))",
             }}
           >
             <BlockPrintBorder />
@@ -244,16 +248,16 @@ export default function Newsletter() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
           >
-            {isFunky ? (
+            {isSignal ? (
               <>
                 <h1 className="heading-brand text-5xl md:text-7xl mb-4 text-foreground">
-                  Join the Movement
+                  JOIN THE SIGNAL
                 </h1>
                 <p
                   className="heading-brand text-2xl md:text-3xl mb-6"
                   style={{ color: "oklch(var(--crimson))" }}
                 >
-                  The Zola Tribe Awaits You
+                  ACCESS THE ARCHIVE
                 </p>
               </>
             ) : (
@@ -262,19 +266,19 @@ export default function Newsletter() {
                   className="font-display text-xs uppercase tracking-[0.35em] mb-4"
                   style={{ color: "oklch(var(--indigo))" }}
                 >
-                  The Zola Collective
+                  The AltInstinct Collective
                 </p>
                 <h1 className="heading-brand text-4xl md:text-6xl mb-4 text-foreground">
-                  Stay Inspired.
+                  Access the Archive.
                   <br />
-                  Join the Fusion.
+                  Select Your Signal.
                 </h1>
               </>
             )}
             <p className="font-body text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
-              {isFunky
-                ? "First access to drops, culture deep-dives, artist collabs, and member-only deals — delivered straight to your inbox."
-                : "Curated drops, cultural narratives, and member privileges — from our world to yours."}
+              {isSignal
+                ? "First access to drops, emotional series deep-dives, signal-only deals — delivered straight to your inbox."
+                : "Emotional archive drops, series narratives, and member privileges — from the system to you."}
             </p>
           </motion.div>
 
@@ -282,7 +286,9 @@ export default function Newsletter() {
           <div
             className="mx-auto mt-6 max-w-xs"
             style={{
-              color: isFunky ? "oklch(var(--saffron))" : "oklch(var(--indigo))",
+              color: isSignal
+                ? "oklch(var(--saffron))"
+                : "oklch(var(--indigo))",
             }}
           >
             <BlockPrintBorder />
@@ -305,7 +311,7 @@ export default function Newsletter() {
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true }}
               >
-                {isFunky ? "What You'll Unlock" : "Your Member Benefits"}
+                {isSignal ? "What You'll Unlock" : "Your Member Benefits"}
               </motion.h2>
               <motion.p
                 className="font-body text-sm text-muted-foreground mb-8"
@@ -314,7 +320,7 @@ export default function Newsletter() {
                 viewport={{ once: true }}
                 transition={{ delay: 0.1 }}
               >
-                {isFunky
+                {isSignal
                   ? "No fluff. Pure culture, delivered with fire."
                   : "Carefully curated content for those who appreciate the craft."}
               </motion.p>
@@ -330,13 +336,13 @@ export default function Newsletter() {
                     transition={{ delay: i * 0.1 }}
                     className="flex gap-4 items-start p-4 rounded-xl card-brand"
                     style={{
-                      borderLeft: `var(--border-accent-width) solid ${isFunky ? "oklch(var(--saffron))" : "oklch(var(--indigo))"}`,
+                      borderLeft: `var(--border-accent-width) solid ${isSignal ? "oklch(var(--saffron))" : "oklch(var(--indigo))"}`,
                     }}
                   >
                     <span
                       className="text-xl flex-shrink-0 font-display font-black mt-0.5"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--crimson))"
                           : "oklch(var(--indigo))",
                       }}
@@ -363,7 +369,7 @@ export default function Newsletter() {
                 transition={{ delay: 0.5, duration: 0.7 }}
                 className="mt-8 flex justify-start"
                 style={{
-                  color: isFunky
+                  color: isSignal
                     ? "oklch(var(--saffron))"
                     : "oklch(var(--indigo) / 0.5)",
                 }}
@@ -379,13 +385,13 @@ export default function Newsletter() {
               transition={{ delay: 0.2, duration: 0.55 }}
               className="rounded-2xl p-8 pattern-block-print relative overflow-hidden"
               style={{
-                backgroundColor: isFunky
+                backgroundColor: isSignal
                   ? "oklch(var(--indigo))"
                   : "oklch(var(--card))",
-                boxShadow: isFunky
+                boxShadow: isSignal
                   ? "8px 8px 0 oklch(var(--saffron))"
                   : "0 24px 48px oklch(var(--indigo) / 0.12)",
-                border: isFunky ? "none" : "2px solid oklch(var(--border))",
+                border: isSignal ? "none" : "2px solid oklch(var(--border))",
               }}
             >
               {/* Corner mandala accent */}
@@ -393,7 +399,7 @@ export default function Newsletter() {
                 className="absolute -top-8 -right-8 w-32 h-32 pointer-events-none"
                 style={
                   {
-                    color: isFunky
+                    color: isSignal
                       ? "oklch(var(--saffron) / 0.15)"
                       : "oklch(var(--primary) / 0.08)",
                   } as React.CSSProperties
@@ -426,17 +432,17 @@ export default function Newsletter() {
                     <h3
                       className="heading-brand text-2xl mb-2"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--saffron))"
                           : "oklch(var(--primary))",
                       }}
                     >
-                      You're in the Tribe!
+                      You are in the Archive!
                     </h3>
                     <p
                       className="font-body text-sm opacity-80"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--offwhite))"
                           : "oklch(var(--foreground))",
                       }}
@@ -450,7 +456,7 @@ export default function Newsletter() {
                       data-ocid="newsletter.subscribe_again_button"
                       className="mt-6 font-display text-xs uppercase tracking-widest underline underline-offset-4 opacity-60 hover:opacity-100 transition-smooth"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--offwhite))"
                           : "oklch(var(--foreground))",
                       }}
@@ -472,22 +478,22 @@ export default function Newsletter() {
                     <h2
                       className="heading-brand text-2xl mb-1"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--saffron))"
                           : "oklch(var(--foreground))",
                       }}
                     >
-                      {isFunky ? "Join the Movement" : "Become a Member"}
+                      {isSignal ? "JOIN THE SIGNAL" : "Become a Member"}
                     </h2>
                     <p
                       className="font-body text-sm mb-6"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--offwhite) / 0.65)"
                           : "oklch(var(--muted-foreground))",
                       }}
                     >
-                      {isFunky
+                      {isSignal
                         ? "No spam. Drop notifications only. 🔥"
                         : "Curated updates, nothing more. Unsubscribe anytime."}
                     </p>
@@ -503,7 +509,7 @@ export default function Newsletter() {
                           htmlFor="nl-name"
                           className="font-display text-xs uppercase tracking-widest mb-1.5 block"
                           style={{
-                            color: isFunky
+                            color: isSignal
                               ? "oklch(var(--offwhite) / 0.7)"
                               : "oklch(var(--foreground) / 0.7)",
                           }}
@@ -515,16 +521,16 @@ export default function Newsletter() {
                           data-ocid="newsletter.name_input"
                           type="text"
                           placeholder={
-                            isFunky ? "Ayo, Kenji, Priya..." : "Your name"
+                            isSignal ? "Ayo, Kenji, Priya..." : "Your name"
                           }
                           value={name}
                           onChange={(e) => setName(e.target.value)}
                           className="font-body border-0 transition-smooth focus-visible:ring-2"
                           style={{
-                            backgroundColor: isFunky
+                            backgroundColor: isSignal
                               ? "oklch(var(--offwhite) / 0.12)"
                               : "oklch(var(--input))",
-                            color: isFunky
+                            color: isSignal
                               ? "oklch(var(--offwhite))"
                               : "oklch(var(--foreground))",
                             caretColor: "oklch(var(--saffron))",
@@ -538,7 +544,7 @@ export default function Newsletter() {
                           htmlFor="nl-email"
                           className="font-display text-xs uppercase tracking-widest mb-1.5 block"
                           style={{
-                            color: isFunky
+                            color: isSignal
                               ? "oklch(var(--offwhite) / 0.7)"
                               : "oklch(var(--foreground) / 0.7)",
                           }}
@@ -564,10 +570,10 @@ export default function Newsletter() {
                           aria-describedby={errorMsg ? "nl-error" : undefined}
                           className="font-body border-0 transition-smooth focus-visible:ring-2"
                           style={{
-                            backgroundColor: isFunky
+                            backgroundColor: isSignal
                               ? "oklch(var(--offwhite) / 0.12)"
                               : "oklch(var(--input))",
-                            color: isFunky
+                            color: isSignal
                               ? "oklch(var(--offwhite))"
                               : "oklch(var(--foreground))",
                             caretColor: "oklch(var(--saffron))",
@@ -587,7 +593,7 @@ export default function Newsletter() {
                               data-ocid="newsletter.field_error"
                               className="font-body text-xs mt-1.5 flex items-center gap-1"
                               style={{
-                                color: isFunky
+                                color: isSignal
                                   ? "oklch(var(--saffron))"
                                   : "oklch(var(--crimson))",
                               }}
@@ -608,14 +614,14 @@ export default function Newsletter() {
                         disabled={isLoading || !email.trim()}
                         className="w-full font-display font-black uppercase tracking-widest text-sm transition-smooth mt-1 h-11"
                         style={{
-                          backgroundColor: isFunky
+                          backgroundColor: isSignal
                             ? "oklch(var(--saffron))"
                             : "oklch(var(--primary))",
-                          color: isFunky
+                          color: isSignal
                             ? "oklch(0.15 0.05 280)"
                             : "oklch(var(--primary-foreground))",
                           boxShadow:
-                            isFunky && !isLoading && email.trim()
+                            isSignal && !isLoading && email.trim()
                               ? "3px 3px 0 oklch(var(--offwhite) / 0.4)"
                               : "none",
                           opacity: !email.trim() ? 0.55 : 1,
@@ -635,12 +641,12 @@ export default function Newsletter() {
                               }}
                               className="inline-block w-4 h-4 border-2 border-current border-t-transparent rounded-full"
                             />
-                            {isFunky
-                              ? "Joining the tribe..."
+                            {isSignal
+                              ? "Joining the archive..."
                               : "Subscribing..."}
                           </span>
-                        ) : isFunky ? (
-                          "Subscribe Now →"
+                        ) : isSignal ? (
+                          "ACCESS THE ARCHIVE →"
                         ) : (
                           "Join the Collective"
                         )}
@@ -650,7 +656,7 @@ export default function Newsletter() {
                     <p
                       className="font-body text-xs mt-4 text-center opacity-50"
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--offwhite))"
                           : "oklch(var(--muted-foreground))",
                       }}
@@ -671,7 +677,7 @@ export default function Newsletter() {
         data-ocid="newsletter.social_proof_section"
         className="py-20 pattern-block-print border-cultural relative overflow-hidden"
         style={{
-          backgroundColor: isFunky
+          backgroundColor: isSignal
             ? "oklch(var(--saffron))"
             : "oklch(var(--card))",
         }}
@@ -680,7 +686,9 @@ export default function Newsletter() {
           className="absolute right-8 top-1/2 -translate-y-1/2 w-40 h-40 opacity-20 pointer-events-none"
           style={
             {
-              color: isFunky ? "oklch(0.15 0.05 280)" : "oklch(var(--primary))",
+              color: isSignal
+                ? "oklch(0.15 0.05 280)"
+                : "oklch(var(--primary))",
             } as React.CSSProperties
           }
         />
@@ -688,7 +696,9 @@ export default function Newsletter() {
           className="absolute -left-8 top-1/2 -translate-y-1/2 w-32 h-32 opacity-15 pointer-events-none"
           style={
             {
-              color: isFunky ? "oklch(0.15 0.05 280)" : "oklch(var(--primary))",
+              color: isSignal
+                ? "oklch(0.15 0.05 280)"
+                : "oklch(var(--primary))",
             } as React.CSSProperties
           }
         />
@@ -702,7 +712,7 @@ export default function Newsletter() {
             <p
               className="heading-brand text-6xl md:text-8xl mb-2"
               style={{
-                color: isFunky
+                color: isSignal
                   ? "oklch(0.15 0.05 280)"
                   : "oklch(var(--primary))",
               }}
@@ -712,13 +722,13 @@ export default function Newsletter() {
             <p
               className="font-body text-lg font-semibold"
               style={{
-                color: isFunky
+                color: isSignal
                   ? "oklch(0.15 0.05 280 / 0.75)"
                   : "oklch(var(--muted-foreground))",
               }}
             >
-              {isFunky
-                ? "tribe members worldwide and counting 🌍"
+              {isSignal
+                ? "archive members worldwide and counting 🌍"
                 : "members across the global collective"}
             </p>
           </motion.div>

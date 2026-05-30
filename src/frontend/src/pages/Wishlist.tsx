@@ -10,11 +10,11 @@ import { useWishlistStore } from "../store/wishlistStore";
 import type { WishlistItem } from "../types/index";
 
 // Block-print SVG header accent
-function BlockPrintHeader({ isFunky }: { isFunky: boolean }) {
-  const c1 = isFunky
+function BlockPrintHeader({ isSignal }: { isSignal: boolean }) {
+  const c1 = isSignal
     ? "oklch(0.88 0.3 130 / 0.25)"
     : "oklch(0.76 0.18 72 / 0.18)";
-  const c2 = isFunky
+  const c2 = isSignal
     ? "oklch(0.6 0.32 330 / 0.2)"
     : "oklch(0.48 0.2 273 / 0.12)";
   return (
@@ -41,7 +41,7 @@ function BlockPrintHeader({ isFunky }: { isFunky: boolean }) {
 interface WishlistCardProps {
   item: WishlistItem;
   index: number;
-  isFunky: boolean;
+  isSignal: boolean;
   onRemove: (id: string) => void;
   onAddToCart: (item: WishlistItem) => void;
 }
@@ -49,7 +49,7 @@ interface WishlistCardProps {
 function WishlistCard({
   item,
   index,
-  isFunky,
+  isSignal,
   onRemove,
   onAddToCart,
 }: WishlistCardProps) {
@@ -104,10 +104,10 @@ function WishlistCard({
         <div
           className="absolute bottom-2 left-2 px-2 py-0.5 rounded text-xs font-body font-bold uppercase tracking-wider"
           style={{
-            backgroundColor: isFunky
+            backgroundColor: isSignal
               ? "oklch(0.88 0.3 130 / 0.2)"
               : "oklch(var(--secondary) / 0.15)",
-            color: isFunky ? "oklch(var(--lime))" : "oklch(var(--secondary))",
+            color: isSignal ? "oklch(var(--lime))" : "oklch(var(--secondary))",
           }}
         >
           {item.category}
@@ -126,7 +126,7 @@ function WishlistCard({
           <span
             className="font-display font-bold text-lg shrink-0"
             style={{
-              color: isFunky ? "oklch(var(--lime))" : "oklch(var(--primary))",
+              color: isSignal ? "oklch(var(--lime))" : "oklch(var(--primary))",
             }}
           >
             {priceDisplay}
@@ -140,13 +140,13 @@ function WishlistCard({
             onClick={() => onAddToCart(item)}
             className="flex-1 font-body font-bold uppercase tracking-widest text-xs transition-smooth"
             style={{
-              backgroundColor: isFunky
+              backgroundColor: isSignal
                 ? "oklch(var(--hotpink))"
                 : "oklch(var(--primary))",
-              color: isFunky
+              color: isSignal
                 ? "oklch(0.98 0 0)"
                 : "oklch(var(--primary-foreground))",
-              boxShadow: isFunky
+              boxShadow: isSignal
                 ? "0 0 16px oklch(0.6 0.32 330 / 0.35)"
                 : "none",
             }}
@@ -177,7 +177,7 @@ function WishlistContent() {
   const { items, removeItem } = useWishlistStore();
   const { addItem: addToCart } = useCartStore();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
 
   const handleRemove = (productId: string) => {
     removeItem(productId);
@@ -194,7 +194,7 @@ function WishlistContent() {
     toast.success(`${item.name} added to cart!`);
   };
 
-  const accentColor = isFunky
+  const accentColor = isSignal
     ? "oklch(var(--hotpink))"
     : "oklch(var(--primary))";
 
@@ -205,7 +205,7 @@ function WishlistContent() {
         className="relative overflow-hidden py-10 px-4 sm:px-8 border-b border-border"
         style={{ backgroundColor: "oklch(var(--card))" }}
       >
-        <BlockPrintHeader isFunky={isFunky} />
+        <BlockPrintHeader isSignal={isSignal} />
         <div className="relative z-10 max-w-6xl mx-auto">
           <div className="flex items-center gap-3 mb-2">
             <Heart
@@ -217,7 +217,7 @@ function WishlistContent() {
               className="heading-brand text-3xl md:text-5xl"
               style={{ color: "oklch(var(--foreground))" }}
             >
-              {isFunky ? "YOUR FIRE LIST" : "YOUR WISHLIST"}
+              {isSignal ? "YOUR FIRE LIST" : "YOUR WISHLIST"}
             </h1>
           </div>
           <p
@@ -254,13 +254,13 @@ function WishlistContent() {
                 className="heading-brand text-2xl md:text-3xl mb-3"
                 style={{ color: "oklch(var(--foreground))" }}
               >
-                {isFunky ? "NOTHING HERE YET." : "Your Wishlist is Empty"}
+                {isSignal ? "NOTHING HERE YET." : "Your Wishlist is Empty"}
               </h2>
               <p
                 className="font-body text-sm max-w-xs mx-auto"
                 style={{ color: "oklch(var(--muted-foreground))" }}
               >
-                {isFunky
+                {isSignal
                   ? "Find something loud, bold, and undeniably you."
                   : "Discover pieces that speak to your style and save them here."}
               </p>
@@ -270,15 +270,15 @@ function WishlistContent() {
                 className="font-body font-bold uppercase tracking-widest text-sm px-8 py-5 transition-smooth"
                 style={{
                   backgroundColor: accentColor,
-                  color: isFunky
+                  color: isSignal
                     ? "oklch(0.98 0 0)"
                     : "oklch(var(--primary-foreground))",
-                  boxShadow: isFunky
+                  boxShadow: isSignal
                     ? "0 0 24px oklch(0.6 0.32 330 / 0.4)"
                     : "none",
                 }}
               >
-                {isFunky ? "SHOP THE DROP \u2192" : "Browse Collection"}
+                {isSignal ? "SHOP THE DROP \u2192" : "Browse Collection"}
               </Button>
             </Link>
           </motion.div>
@@ -311,7 +311,7 @@ function WishlistContent() {
                     key={item.productId}
                     item={item}
                     index={index}
-                    isFunky={isFunky}
+                    isSignal={isSignal}
                     onRemove={handleRemove}
                     onAddToCart={handleAddToCart}
                   />
@@ -331,15 +331,15 @@ function WishlistContent() {
                   className="font-body font-bold uppercase tracking-widest text-sm px-10 py-5 transition-smooth"
                   style={{
                     backgroundColor: accentColor,
-                    color: isFunky
+                    color: isSignal
                       ? "oklch(0.98 0 0)"
                       : "oklch(var(--primary-foreground))",
-                    boxShadow: isFunky
+                    boxShadow: isSignal
                       ? "0 0 28px oklch(0.6 0.32 330 / 0.35)"
                       : "none",
                   }}
                 >
-                  {isFunky ? "DISCOVER MORE \u2192" : "Discover More Pieces"}
+                  {isSignal ? "DISCOVER MORE \u2192" : "Discover More Pieces"}
                 </Button>
               </Link>
             </motion.div>

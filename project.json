@@ -1,26 +1,21 @@
 {
-  "overview": "ZOLA is a bold cultural-fusion lifestyle brand e-commerce platform blending Indian/Mughal, Japanese, Mexican, African, and vintage Americana aesthetics with streetwear energy. Features dual visual modes (Be Funky / Chic Look), full authentication, shopping cart, Stripe checkout, wishlist, and an admin dashboard for product and inventory management.",
+  "overview": "AltInstinct — a Gen Z emotional streetwear brand with mood-based product discovery, cinematic lookbook reels, and lore drop countdowns.",
   "features": [
-    "Dual theme modes: Be Funky (neon/street-art) and Chic Look (refined elegance)",
-    "Email/password authentication with persistent sessions",
-    "Product catalog with category filtering and product detail pages",
-    "Guest and logged-in shopping cart",
-    "Stripe-powered checkout with order confirmation",
-    "Wishlist for logged-in users",
-    "Admin dashboard: product CRUD + inventory management with low-stock alerts",
-    "Newsletter signup with confirmation email",
-    "Cultural motifs (block print, paisley, mandala) across all pages"
+    "Mood-based emotional filter (Chaos, Isolation, Obsession, Escape, Overthinking, Burnout) on product pages",
+    "Cinematic lookbook reel gallery on Homepage with one reel per collection series",
+    "Lore drop countdown timer on Homepage with admin-configurable target date",
+    "SIGNAL and STATIC dual theme modes across all pages",
+    "Full e-commerce: email login, guest cart, Stripe checkout, wishlist, admin panel"
   ],
   "category": "e-commerce",
   "tags": [
-    "fashion",
     "streetwear",
+    "gen-z",
+    "emotional",
+    "cinematic",
+    "fashion",
     "e-commerce",
-    "cultural-fusion",
-    "lifestyle",
-    "dual-theme",
-    "admin-dashboard",
-    "stripe"
+    "mood-filter"
   ],
-  "last_updated": "2026-04-24T19:27:30.583Z"
+  "last_updated": "2026-05-30T07:24:34.038Z"
 }

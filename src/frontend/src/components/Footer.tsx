@@ -6,8 +6,8 @@ import { useThemeStore } from "../store/themeStore";
 const navLinks = [
   { label: "Home", to: "/" },
   { label: "Shop", to: "/products" },
-  { label: "Lookbook", to: "/lookbook" },
-  { label: "Brand Story", to: "/brand-story" },
+  { label: "Archive", to: "/lookbook" },
+  { label: "The Universe", to: "/brand-story" },
   { label: "Newsletter", to: "/newsletter" },
 ];
 
@@ -21,7 +21,7 @@ const socialLinks = [
 export default function Footer() {
   const year = new Date().getFullYear();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isFunky = mode === "signal";
   const hostname =
     typeof window !== "undefined"
       ? encodeURIComponent(window.location.hostname)
@@ -57,15 +57,15 @@ export default function Footer() {
                   : "oklch(var(--secondary))",
               }}
             >
-              ZOLA
+              AltInstinct
             </p>
             <p
               className="font-body text-sm leading-relaxed opacity-80 max-w-xs"
               style={{ color: "oklch(var(--footer-fg))" }}
             >
-              Embrace the Beat. Fuse the World.
+              Emotions are systems. Identity is the signal.
               <br />
-              Global folk motifs × streetwear energy.
+              Alternative Digital Emotion Culture.
             </p>
           </div>
 
@@ -131,7 +131,7 @@ export default function Footer() {
             color: "oklch(var(--footer-fg))",
           }}
         >
-          <span>© {year} ZOLA Global. All rights reserved.</span>
+          <span>© {year} AltInstinct Global. All rights reserved.</span>
           <span>
             Built with love using{" "}
             <a

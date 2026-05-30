@@ -7,6 +7,10 @@ export interface None {
     __kind__: "None";
 }
 export type Option<T> = Some<T> | None;
+export interface LoreDrop {
+    targetTimestamp: bigint;
+    title: string;
+}
 export interface TransformationOutput {
     status: bigint;
     body: Uint8Array;
@@ -104,9 +108,11 @@ export interface CartItem {
 export interface Product {
     id: string;
     stockQuantity: bigint;
+    emotion: string;
     name: string;
     description: string;
     variants: Array<ProductVariant>;
+    series: string;
     imageUrl: string;
     category: string;
     price: bigint;
@@ -137,6 +143,7 @@ export interface backendInterface {
     createCheckoutSession(items: Array<ShoppingItem>, successUrl: string, cancelUrl: string): Promise<string>;
     getCallerUserRole(): Promise<UserRole>;
     getCart(): Promise<Cart>;
+    getLoreDrop(): Promise<LoreDrop | null>;
     getMyOrders(): Promise<Array<Order>>;
     getProduct(id: string): Promise<Product | null>;
     getProducts(): Promise<Array<Product>>;
@@ -147,6 +154,7 @@ export interface backendInterface {
     placeOrder(items: Array<OrderItem>, totalInCents: bigint, shippingAddress: ShippingAddress, stripeSessionId: string | null): Promise<string>;
     removeFromCart(productId: string): Promise<void>;
     removeFromWishlist(productId: string): Promise<void>;
+    setLoreDrop(target: bigint, title: string): Promise<void>;
     setStripeConfiguration(config: StripeConfiguration): Promise<void>;
     subscribeNewsletter(email: string): Promise<SubscribeResult>;
     transform(input: TransformationInput): Promise<TransformationOutput>;

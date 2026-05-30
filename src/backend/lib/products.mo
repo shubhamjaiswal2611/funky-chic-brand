@@ -52,14 +52,14 @@ module {
     products.values().filter(func(p) { isLowStock(p) }).toArray();
   };
 
-  // Seed 12 placeholder products matching the Lookbook
+  // Seed 12 placeholder products matching AltInstinct series
   public func seedProducts(products : Map.Map<Text, Types.Product>) : () {
     let placeholders : [Types.Product] = [
       {
         id = "p1";
-        name = "Tokyo Drift Hoodie";
+        name = "Social Battery: 3%";
         price = 8999;
-        description = "Street-ready hoodie fusing Japanese kanji prints with graffiti-style brushwork. Oversized fit, heavyweight fleece.";
+        description = "Hoodie for when your social battery is critically low. Oversized fit, heavyweight fleece with diagnostic print.";
         category = "hoodies";
         imageUrl = "https://images.unsplash.com/photo-1556821840-3a63f15732ce?w=600";
         variants = [
@@ -69,174 +69,199 @@ module {
           { size = ?"XL"; color = ?"Neon Black" },
         ];
         stockQuantity = 42;
+        emotion = "Chaos";
+        series = "Social Battery Series";
       },
       {
         id = "p2";
-        name = "Mumbai Block Print Kurta";
+        name = "Recharge Failed";
         price = 7499;
-        description = "Traditional hand-block printed kurta reimagined with bold Mughal paisley motifs and electric indigo hues.";
-        category = "kurtas";
+        description = "When rest doesn't restore. Graphic tee featuring battery UI and emotional diagnostics in infrared red.";
+        category = "tees";
         imageUrl = "https://images.unsplash.com/photo-1583391733956-3750e0ff4e8b?w=600";
         variants = [
-          { size = ?"S"; color = ?"Indigo" },
-          { size = ?"M"; color = ?"Indigo" },
-          { size = ?"L"; color = ?"Saffron" },
-          { size = ?"XL"; color = ?"Saffron" },
+          { size = ?"S"; color = ?"Infrared" },
+          { size = ?"M"; color = ?"Infrared" },
+          { size = ?"L"; color = ?"Infrared" },
+          { size = ?"XL"; color = ?"Infrared" },
         ];
         stockQuantity = 28;
+        emotion = "Chaos";
+        series = "Social Battery Series";
       },
       {
         id = "p3";
-        name = "Oaxacan Fiesta Jacket";
-        price = 12999;
-        description = "Embroidered bomber jacket celebrating Mexican folk art — vibrant marigold and crimson florals on jet black.";
-        category = "jackets";
+        name = "Interaction Overload";
+        price = 6499;
+        description = "Signal systems overloaded. Shorts with minimal symbolic print and utility pockets.";
+        category = "shorts";
         imageUrl = "https://images.unsplash.com/photo-1591047139829-d91aecb6caea?w=600";
         variants = [
-          { size = ?"S"; color = ?"Black/Marigold" },
-          { size = ?"M"; color = ?"Black/Marigold" },
-          { size = ?"L"; color = ?"Black/Crimson" },
-          { size = ?"XL"; color = ?"Black/Crimson" },
+          { size = ?"S"; color = ?"Static Grey" },
+          { size = ?"M"; color = ?"Static Grey" },
+          { size = ?"L"; color = ?"Static Grey" },
+          { size = ?"XL"; color = ?"Static Grey" },
         ];
         stockQuantity = 15;
+        emotion = "Chaos";
+        series = "Social Battery Series";
       },
       {
         id = "p4";
-        name = "Lagos Kente Joggers";
-        price = 6999;
-        description = "Kente-inspired woven joggers with West African geometric patterns. Comfortable stretch fit, tapered leg.";
-        category = "bottoms";
+        name = "Missing Identity";
+        price = 9499;
+        description = "Corrupted face hoodie. VHS texture distortion printed across oversized silhouette in cold blue.";
+        category = "hoodies";
         imageUrl = "https://images.unsplash.com/photo-1552902865-b72c031ac5ea?w=600";
         variants = [
-          { size = ?"S"; color = ?"Gold/Green" },
-          { size = ?"M"; color = ?"Gold/Green" },
-          { size = ?"L"; color = ?"Gold/Blue" },
-          { size = ?"XL"; color = ?"Gold/Blue" },
+          { size = ?"S"; color = ?"Cold Blue" },
+          { size = ?"M"; color = ?"Cold Blue" },
+          { size = ?"L"; color = ?"Cold Blue" },
+          { size = ?"XL"; color = ?"Cold Blue" },
         ];
         stockQuantity = 3;
+        emotion = "Isolation";
+        series = "Memory Corruption Series";
       },
       {
         id = "p5";
-        name = "Route 66 Denim Shirt";
-        price = 5999;
-        description = "Vintage Americana denim shirt with embroidered patches — highway maps, eagles, and retro badges.";
-        category = "shirts";
+        name = "Memory Leak";
+        price = 7999;
+        description = "Disappearing humans, pixel erosion. Oversized tee capturing the feeling of losing yourself.";
+        category = "tees";
         imageUrl = "https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?w=600";
         variants = [
-          { size = ?"S"; color = ?"Faded Blue" },
-          { size = ?"M"; color = ?"Faded Blue" },
-          { size = ?"L"; color = ?"Dark Wash" },
-          { size = ?"XL"; color = ?"Dark Wash" },
+          { size = ?"S"; color = ?"Void Black" },
+          { size = ?"M"; color = ?"Void Black" },
+          { size = ?"L"; color = ?"Void Black" },
+          { size = ?"XL"; color = ?"Void Black" },
         ];
         stockQuantity = 20;
+        emotion = "Isolation";
+        series = "Memory Corruption Series";
       },
       {
         id = "p6";
-        name = "Mandala Crop Tee";
-        price = 3499;
-        description = "Cropped tee with hand-drawn mandala print in neon lime on jet black. Unisex street fit.";
-        category = "tees";
+        name = "Between Dreams";
+        price = 10999;
+        description = "Floating rooms, impossible stairs. Dreamstate hoodie in lavender — surreal architecture printed across the back.";
+        category = "hoodies";
         imageUrl = "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=600";
         variants = [
-          { size = ?"XS"; color = ?"Black/Lime" },
-          { size = ?"S"; color = ?"Black/Lime" },
-          { size = ?"M"; color = ?"Black/Pink" },
-          { size = ?"L"; color = ?"Black/Pink" },
+          { size = ?"XS"; color = ?"Lavender" },
+          { size = ?"S"; color = ?"Lavender" },
+          { size = ?"M"; color = ?"Lavender" },
+          { size = ?"L"; color = ?"Lavender" },
         ];
         stockQuantity = 55;
+        emotion = "Escape";
+        series = "Dreamstate Series";
       },
       {
         id = "p7";
-        name = "Rajasthan Mirror Vest";
-        price = 9499;
-        description = "Embellished mirror-work vest inspired by Rajasthani folk craft. Statement piece, fully lined.";
-        category = "vests";
+        name = "Artificial Reality";
+        price = 8299;
+        description = "Sleep division tee. Dream dimensions meet digital humanity in this surreal lavender graphic.";
+        category = "tees";
         imageUrl = "https://images.unsplash.com/photo-1594938298603-c8148c4b4169?w=600";
         variants = [
-          { size = ?"S"; color = ?"Crimson/Gold" },
-          { size = ?"M"; color = ?"Crimson/Gold" },
-          { size = ?"L"; color = ?"Indigo/Silver" },
+          { size = ?"S"; color = ?"Dream Lavender" },
+          { size = ?"M"; color = ?"Dream Lavender" },
+          { size = ?"L"; color = ?"Dream Lavender" },
         ];
         stockQuantity = 8;
+        emotion = "Escape";
+        series = "Dreamstate Series";
       },
       {
         id = "p8";
-        name = "Harajuku Patchwork Pants";
-        price = 8299;
-        description = "Wide-leg patchwork trousers merging Japanese harajuku style with global textile scraps. Each pair unique.";
-        category = "bottoms";
+        name = "Emotion Overload";
+        price = 9299;
+        description = "Fake system alerts layered over oversized lowers. Human error detected — violet UI warnings across the waistband.";
+        category = "lowers";
         imageUrl = "https://images.unsplash.com/photo-1584370848010-d7fe6bc767ec?w=600";
         variants = [
-          { size = ?"S"; color = ?"Multicolor" },
-          { size = ?"M"; color = ?"Multicolor" },
-          { size = ?"L"; color = ?"Multicolor" },
+          { size = ?"S"; color = ?"Overthinking Violet" },
+          { size = ?"M"; color = ?"Overthinking Violet" },
+          { size = ?"L"; color = ?"Overthinking Violet" },
         ];
         stockQuantity = 12;
+        emotion = "Overthinking";
+        series = "Human Error Series";
       },
       {
         id = "p9";
-        name = "Aztec Graffiti Windbreaker";
+        name = "Human System Failure";
         price = 11499;
-        description = "Lightweight windbreaker with spray-paint Aztec calendar print. Water-resistant shell, street-art energy.";
-        category = "jackets";
+        description = "Stability corrupted hoodie. Emotional report UI printed across front in glitch violet.";
+        category = "hoodies";
         imageUrl = "https://images.unsplash.com/photo-1543076447-215ad9ba6923?w=600";
         variants = [
-          { size = ?"S"; color = ?"Electric Blue" },
-          { size = ?"M"; color = ?"Electric Blue" },
-          { size = ?"L"; color = ?"Hot Pink" },
-          { size = ?"XL"; color = ?"Hot Pink" },
+          { size = ?"S"; color = ?"Glitch Violet" },
+          { size = ?"M"; color = ?"Glitch Violet" },
+          { size = ?"L"; color = ?"Glitch Violet" },
+          { size = ?"XL"; color = ?"Glitch Violet" },
         ];
         stockQuantity = 4;
+        emotion = "Overthinking";
+        series = "Human Error Series";
       },
       {
         id = "p10";
-        name = "Sashiko Stitch Sweatshirt";
-        price = 7999;
-        description = "Premium sweatshirt with traditional Japanese sashiko stitching pattern in contrasting white on navy.";
-        category = "hoodies";
+        name = "Obsession Protocol";
+        price = 8999;
+        description = "Instinct symbol tee in toxic green. Obsession made wearable — minimal chest symbol, large back drop.";
+        category = "tees";
         imageUrl = "https://images.unsplash.com/photo-1620799140408-edc6dcb6d633?w=600";
         variants = [
-          { size = ?"S"; color = ?"Navy" },
-          { size = ?"M"; color = ?"Navy" },
-          { size = ?"L"; color = ?"Navy" },
-          { size = ?"XL"; color = ?"Navy" },
+          { size = ?"S"; color = ?"Toxic Green" },
+          { size = ?"M"; color = ?"Toxic Green" },
+          { size = ?"L"; color = ?"Toxic Green" },
+          { size = ?"XL"; color = ?"Toxic Green" },
         ];
         stockQuantity = 30;
+        emotion = "Obsession";
+        series = "Instinct Protocol Series";
       },
       {
         id = "p11";
-        name = "Tribal Batik Dress";
-        price = 10499;
-        description = "Flowing midi dress featuring Indonesian batik patterns with African tribal geometry. Resort-to-street versatility.";
-        category = "dresses";
+        name = "Silence Instinct";
+        price = 7999;
+        description = "Symbolic language hoodie — chaos, silence, attachment rendered as instinct symbols in toxic green.";
+        category = "hoodies";
         imageUrl = "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=600";
         variants = [
-          { size = ?"XS"; color = ?"Terracotta" },
-          { size = ?"S"; color = ?"Terracotta" },
-          { size = ?"M"; color = ?"Indigo" },
-          { size = ?"L"; color = ?"Indigo" },
+          { size = ?"XS"; color = ?"Toxic Green" },
+          { size = ?"S"; color = ?"Toxic Green" },
+          { size = ?"M"; color = ?"Toxic Green" },
+          { size = ?"L"; color = ?"Toxic Green" },
         ];
         stockQuantity = 18;
+        emotion = "Obsession";
+        series = "Instinct Protocol Series";
       },
       {
         id = "p12";
-        name = "Neon Bandhani Scarf";
-        price = 2499;
-        description = "Hand-tie-dyed bandhani scarf in neon electric shades. Versatile accessory — wear as scarf, top, or headwrap.";
-        category = "accessories";
+        name = "Emotional Burnout Lowers";
+        price = 7499;
+        description = "Ash grey utility lowers for the emotionally depleted. Burnout made uniform — minimal print, maximum comfort.";
+        category = "lowers";
         imageUrl = "https://images.unsplash.com/photo-1601924994987-69e26d50dc26?w=600";
         variants = [
-          { size = null; color = ?"Electric Lime" },
-          { size = null; color = ?"Hot Pink" },
-          { size = null; color = ?"Neon Blue" },
+          { size = ?"S"; color = ?"Ash Grey" },
+          { size = ?"M"; color = ?"Ash Grey" },
+          { size = ?"L"; color = ?"Ash Grey" },
+          { size = ?"XL"; color = ?"Ash Grey" },
         ];
         stockQuantity = 2;
+        emotion = "Burnout";
+        series = "Human Error Series";
       },
     ];
 
     for (p in placeholders.vals()) {
       // Only seed if not already present
-      if (not products.containsKey(p.id)) {
+      if (products.get(p.id) == null) {
         products.add(p.id, p);
       };
     };

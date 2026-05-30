@@ -35,6 +35,6 @@ export const useWishlistStore = create<WishlistState>()(
 
       clearWishlist: () => set({ items: [] }),
     }),
-    { name: "zola-wishlist" },
+    { name: "altinstinct-wishlist" },
   ),
 );

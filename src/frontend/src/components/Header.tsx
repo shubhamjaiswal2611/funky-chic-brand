@@ -26,8 +26,8 @@ import { useWishlistStore } from "../store/wishlistStore";
 
 const navLinks = [
   { label: "Shop", to: "/products" },
-  { label: "Lookbook", to: "/lookbook" },
-  { label: "Brand Story", to: "/brand-story" },
+  { label: "Archive", to: "/lookbook" },
+  { label: "The Universe", to: "/brand-story" },
   { label: "Newsletter", to: "/newsletter" },
 ];
 
@@ -37,7 +37,7 @@ export default function Header() {
   const cartCount = useCartStore((s) => s.getCount());
   const wishlistCount = useWishlistStore((s) => s.items.length);
   const [mobileOpen, setMobileOpen] = useState(false);
-  const isFunky = mode === "funky";
+  const isFunky = mode === "signal";
   const navigate = useNavigate();
 
   return (
@@ -66,7 +66,7 @@ export default function Header() {
           type="button"
           data-ocid="theme.toggle"
           onClick={toggle}
-          aria-label={`Switch to ${isFunky ? "Chic" : "Funky"} mode`}
+          aria-label={`Switch to ${isFunky ? "STATIC" : "SIGNAL"} mode`}
           className="relative flex items-center gap-2 rounded-full px-3 py-0.5 transition-smooth"
           style={{ backgroundColor: "oklch(0.15 0.05 280 / 0.15)" }}
         >
@@ -74,7 +74,7 @@ export default function Header() {
             className="font-display font-black uppercase text-xs tracking-widest"
             style={{ opacity: isFunky ? 1 : 0.5 }}
           >
-            BE FUNKY
+            SIGNAL
           </span>
           <span
             className="relative inline-flex w-10 h-5 rounded-full transition-smooth mx-1"
@@ -95,7 +95,7 @@ export default function Header() {
             className="font-display font-black uppercase text-xs tracking-widest"
             style={{ opacity: isFunky ? 0.5 : 1 }}
           >
-            CHIC
+            STATIC
           </span>
         </button>
       </div>
@@ -124,7 +124,7 @@ export default function Header() {
                 : "none",
             }}
           >
-            ZOLA
+            AltInstinct
           </span>
         </Link>
 

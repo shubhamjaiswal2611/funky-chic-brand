@@ -19,10 +19,10 @@ import { useThemeStore } from "../store/themeStore";
 import type { CartItem, ShippingAddress } from "../types/index";
 
 // Mandala SVG decoration
-function MandalaDecor({ isFunky }: { isFunky: boolean }) {
-  const c1 = isFunky ? "oklch(0.88 0.3 130)" : "oklch(0.76 0.18 72)";
-  const c2 = isFunky ? "oklch(0.6 0.32 330)" : "oklch(0.48 0.2 273)";
-  const c3 = isFunky ? "oklch(0.65 0.28 210)" : "oklch(0.54 0.24 22)";
+function MandalaDecor({ isSignal }: { isSignal: boolean }) {
+  const c1 = isSignal ? "oklch(0.88 0.3 130)" : "oklch(0.76 0.18 72)";
+  const c2 = isSignal ? "oklch(0.6 0.32 330)" : "oklch(0.48 0.2 273)";
+  const c3 = isSignal ? "oklch(0.65 0.28 210)" : "oklch(0.54 0.24 22)";
 
   const angles = [0, 45, 90, 135, 180, 225, 270, 315];
 
@@ -98,7 +98,7 @@ type ConfirmationState = "loading" | "success" | "polling" | "failed";
 
 export default function OrderConfirmation() {
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
   const { actor } = useBackend();
   const { clearCart } = useCartStore();
 
@@ -110,12 +110,12 @@ export default function OrderConfirmation() {
   const orderId = search.orderId;
   const stripeSessionId = search.session_id;
 
-  const accentColor = isFunky ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
-  const priceColor = isFunky
+  const accentColor = isSignal ? "oklch(var(--lime))" : "oklch(0.48 0.2 273)";
+  const priceColor = isSignal
     ? "oklch(var(--secondary))"
     : "oklch(var(--primary))";
-  const ctaBg = isFunky ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
-  const ctaFg = isFunky
+  const ctaBg = isSignal ? "oklch(var(--hotpink))" : "oklch(var(--primary))";
+  const ctaFg = isSignal
     ? "oklch(0.98 0 0)"
     : "oklch(var(--primary-foreground))";
 
@@ -325,17 +325,17 @@ export default function OrderConfirmation() {
             <div
               className="card-brand p-8 text-center mb-4"
               style={{
-                borderBottom: isFunky
+                borderBottom: isSignal
                   ? "3px solid oklch(var(--lime))"
                   : "2px solid oklch(0.76 0.18 72)",
               }}
             >
-              <MandalaDecor isFunky={isFunky} />
+              <MandalaDecor isSignal={isSignal} />
               <CheckCircle2
                 size={56}
                 className="mx-auto mb-4"
                 style={{
-                  color: isFunky
+                  color: isSignal
                     ? "oklch(var(--secondary))"
                     : "oklch(0.6 0.2 165)",
                 }}

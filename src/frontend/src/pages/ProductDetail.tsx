@@ -1,3 +1,8 @@
+import {
+  type ProductCategory,
+  ProductMockup,
+  type ProductSeries,
+} from "@/components/ProductMockup";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -140,7 +145,7 @@ export default function ProductDetail() {
   const { id } = useParams({ from: "/product/$id" });
   const { actor, isFetching: actorFetching } = useBackend();
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
   const { isAuthenticated } = useAuth();
   const { addItem: addToCart } = useCartStore();
   const {
@@ -152,7 +157,6 @@ export default function ProductDetail() {
   const [selectedSize, setSelectedSize] = useState<string | undefined>();
   const [selectedColor, setSelectedColor] = useState<string | undefined>();
   const [quantity, setQuantity] = useState(1);
-  const [imgError, setImgError] = useState(false);
 
   const { data: allProducts = [] } = useQuery<Product[]>({
     queryKey: ["products"],
@@ -293,7 +297,7 @@ export default function ProductDetail() {
             className="relative"
           >
             {/* Funky: neon border frame */}
-            {isFunky && inStock && (
+            {isSignal && inStock && (
               <div
                 className="absolute -inset-1 rounded-xl -z-10"
                 style={{
@@ -303,38 +307,12 @@ export default function ProductDetail() {
               />
             )}
             <div className="relative rounded-xl overflow-hidden aspect-square bg-muted">
-              {!imgError && product.imageUrl ? (
-                <img
-                  src={product.imageUrl}
-                  alt={product.name}
-                  className="w-full h-full object-cover"
-                  onError={() => setImgError(true)}
-                />
-              ) : (
-                <div className="w-full h-full flex items-center justify-center pattern-paisley relative">
-                  <ShoppingBag
-                    size={60}
-                    style={{ color: "oklch(var(--muted-foreground) / 0.3)" }}
-                  />
-                  {/* Paisley decorations */}
-                  <PaisleyDecor
-                    className="absolute top-6 left-6 w-12 h-20 opacity-30 rotate-12"
-                    style={{
-                      color: isFunky
-                        ? "oklch(var(--hotpink))"
-                        : "oklch(var(--secondary))",
-                    }}
-                  />
-                  <PaisleyDecor
-                    className="absolute bottom-6 right-6 w-10 h-16 opacity-25 -rotate-20"
-                    style={{
-                      color: isFunky
-                        ? "oklch(var(--lime))"
-                        : "oklch(var(--primary))",
-                    }}
-                  />
-                </div>
-              )}
+              <ProductMockup
+                series={product.series as ProductSeries}
+                category={product.category as ProductCategory}
+                emotion={product.emotion ?? undefined}
+                className="w-full h-full"
+              />
 
               {!inStock && (
                 <div
@@ -355,7 +333,7 @@ export default function ProductDetail() {
             <MandalaDecor
               className="absolute -bottom-8 -right-8 w-32 h-32 pointer-events-none -z-10 opacity-30"
               style={{
-                color: isFunky
+                color: isSignal
                   ? "oklch(var(--lime))"
                   : "oklch(var(--secondary))",
               }}
@@ -399,17 +377,17 @@ export default function ProductDetail() {
               <p
                 className="font-display text-4xl font-black"
                 style={{
-                  color: isFunky
+                  color: isSignal
                     ? "oklch(var(--secondary))"
                     : "oklch(var(--primary))",
-                  textShadow: isFunky
+                  textShadow: isSignal
                     ? "0 0 20px oklch(var(--secondary) / 0.4)"
                     : "none",
                 }}
               >
                 {priceDisplay}
               </p>
-              {isFunky && (
+              {isSignal && (
                 <span
                   className="font-body text-xs uppercase tracking-wider px-2 py-1 rounded"
                   style={{
@@ -434,7 +412,7 @@ export default function ProductDetail() {
             <div
               className="h-px"
               style={{
-                background: isFunky
+                background: isSignal
                   ? "linear-gradient(90deg, oklch(var(--hotpink)), oklch(var(--neonblue)), transparent)"
                   : "oklch(var(--border))",
               }}
@@ -467,14 +445,14 @@ export default function ProductDetail() {
                       style={
                         selectedSize === size
                           ? {
-                              backgroundColor: isFunky
+                              backgroundColor: isSignal
                                 ? "oklch(var(--hotpink))"
                                 : "oklch(var(--primary))",
                               color: "oklch(var(--primary-foreground))",
-                              borderColor: isFunky
+                              borderColor: isSignal
                                 ? "oklch(var(--hotpink))"
                                 : "oklch(var(--primary))",
-                              boxShadow: isFunky
+                              boxShadow: isSignal
                                 ? "2px 2px 0 oklch(var(--lime))"
                                 : "none",
                             }
@@ -519,14 +497,14 @@ export default function ProductDetail() {
                       style={
                         selectedColor === color
                           ? {
-                              backgroundColor: isFunky
+                              backgroundColor: isSignal
                                 ? "oklch(var(--neonblue))"
                                 : "oklch(var(--primary))",
                               color: "oklch(var(--primary-foreground))",
-                              borderColor: isFunky
+                              borderColor: isSignal
                                 ? "oklch(var(--neonblue))"
                                 : "oklch(var(--primary))",
-                              boxShadow: isFunky
+                              boxShadow: isSignal
                                 ? "2px 2px 0 oklch(var(--hotpink))"
                                 : "none",
                             }
@@ -605,11 +583,11 @@ export default function ProductDetail() {
                 style={
                   inStock
                     ? {
-                        backgroundColor: isFunky
+                        backgroundColor: isSignal
                           ? "oklch(var(--hotpink))"
                           : "oklch(var(--primary))",
                         color: "oklch(var(--primary-foreground))",
-                        boxShadow: isFunky
+                        boxShadow: isSignal
                           ? "4px 4px 0 oklch(var(--lime))"
                           : "none",
                       }
@@ -641,7 +619,7 @@ export default function ProductDetail() {
                           ? "oklch(var(--destructive))"
                           : "oklch(var(--muted-foreground))",
                         boxShadow:
-                          isFunky && wishlisted
+                          isSignal && wishlisted
                             ? "2px 2px 0 oklch(var(--hotpink))"
                             : "none",
                       }}
@@ -672,7 +650,7 @@ export default function ProductDetail() {
                   >
                     <span
                       style={{
-                        color: isFunky
+                        color: isSignal
                           ? "oklch(var(--lime))"
                           : "oklch(var(--secondary))",
                       }}
@@ -699,15 +677,15 @@ export default function ProductDetail() {
               <h2
                 className="heading-brand text-xl md:text-2xl shrink-0"
                 style={{
-                  color: isFunky
+                  color: isSignal
                     ? "oklch(var(--lime))"
                     : "oklch(var(--foreground))",
-                  textShadow: isFunky
+                  textShadow: isSignal
                     ? "0 0 20px oklch(var(--lime) / 0.4)"
                     : "none",
                 }}
               >
-                {isFunky ? "⚡ YOU MIGHT ALSO WANT ⚡" : "You May Also Like"}
+                {isSignal ? "⚡ YOU MIGHT ALSO WANT ⚡" : "You May Also Like"}
               </h2>
               <div
                 className="h-px flex-1"
@@ -741,10 +719,10 @@ export default function ProductDetail() {
         <div
           className="mt-16 py-8 rounded-xl relative overflow-hidden pattern-paisley flex items-center justify-center"
           style={{
-            backgroundColor: isFunky
+            backgroundColor: isSignal
               ? "oklch(var(--card))"
               : "oklch(var(--muted) / 0.4)",
-            border: isFunky
+            border: isSignal
               ? "2px solid oklch(var(--hotpink) / 0.4)"
               : "1px solid oklch(var(--border))",
           }}
@@ -752,13 +730,15 @@ export default function ProductDetail() {
           <PaisleyDecor
             className="absolute left-4 top-1/2 -translate-y-1/2 w-10 h-16 opacity-30"
             style={{
-              color: isFunky ? "oklch(var(--lime))" : "oklch(var(--secondary))",
+              color: isSignal
+                ? "oklch(var(--lime))"
+                : "oklch(var(--secondary))",
             }}
           />
           <PaisleyDecor
             className="absolute right-4 top-1/2 -translate-y-1/2 w-10 h-16 opacity-30 scale-x-[-1]"
             style={{
-              color: isFunky
+              color: isSignal
                 ? "oklch(var(--hotpink))"
                 : "oklch(var(--primary))",
             }}
@@ -766,12 +746,12 @@ export default function ProductDetail() {
           <p
             className="heading-brand text-sm tracking-[0.3em] text-center"
             style={{
-              color: isFunky
+              color: isSignal
                 ? "oklch(var(--neonblue))"
                 : "oklch(var(--muted-foreground))",
             }}
           >
-            {isFunky
+            {isSignal
               ? "⚡ HANDCRAFTED · GLOBALLY SOURCED · STREET CERTIFIED ⚡"
               : "Handcrafted · Globally Sourced · Ethically Made"}
           </p>

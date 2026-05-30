@@ -20,7 +20,12 @@ import WishlistApi "mixins/wishlist-api";
 import OrdersApi "mixins/orders-api";
 
 import ProductsLib "lib/products";
+import LoreDropTypes "types/lore-drop";
+import LoreDropApi "mixins/lore-drop-api";
+import Migration "migration";
 
+
+(with migration = Migration.run)
 actor {
   // Authorization
   let accessControlState = AccessControl.initState();
@@ -47,6 +52,10 @@ actor {
   let orders = Map.empty<Text, OrderTypes.Order>();
   let orderCounter = { var value : Nat = 0 };
   include OrdersApi(accessControlState, orders, carts, orderCounter);
+
+  // Lore Drop
+  let loreDropState = { var loreDrop : ?LoreDropTypes.LoreDrop = null };
+  include LoreDropApi(accessControlState, loreDropState);
 
   // Stripe configuration
   var stripeConfiguration : ?Stripe.StripeConfiguration = null;

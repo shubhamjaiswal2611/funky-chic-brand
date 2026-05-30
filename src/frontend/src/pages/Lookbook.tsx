@@ -1,9 +1,12 @@
+import { ProductMockup } from "@/components/ProductMockup";
 import { Badge } from "@/components/ui/badge";
+import { X } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
-import { type CSSProperties, useState } from "react";
+import { useEffect, useState } from "react";
+import type { CSSProperties } from "react";
 import { useThemeStore } from "../store/themeStore";
 
-type Category = "All" | "Apparel" | "Accessories" | "Lifestyle" | "Fusion Art";
+type Category = "All" | "Tees" | "Hoodies" | "Shorts" | "Lowers";
 
 interface Product {
   id: number;
@@ -11,241 +14,194 @@ interface Product {
   category: Exclude<Category, "All">;
   price: string;
   description: string;
-  accentHex: string;
-  bgFrom: string;
-  bgTo: string;
-  patternClass: "pattern-block-print" | "pattern-paisley" | "pattern-mandala";
+  gradientFrom: string;
+  gradientTo: string;
+  series: string;
+  emotion: string;
 }
 
 const PRODUCTS: Product[] = [
   {
     id: 1,
-    name: "Tokyo Drift Hoodie",
-    category: "Apparel",
-    price: "$128",
+    name: "Battery: 3% Tee",
+    category: "Tees",
+    price: "₹2499",
     description:
-      "Oversized cut adorned with ukiyo-e wave motifs and graffiti kanji — where Harajuku meets Brooklyn.",
-    accentHex: "#4F46E5",
-    bgFrom: "#4F46E5",
-    bgTo: "#1e1b4b",
-    patternClass: "pattern-block-print",
+      "Running on empty. 240 GSM oversized cut for the socially drained.",
+    gradientFrom: "#9CA3AF",
+    gradientTo: "#1a1a1a",
+    series: "Social Battery Series",
+    emotion: "Burnout",
   },
   {
     id: 2,
-    name: "Mumbai Block Print Kurta",
-    category: "Apparel",
-    price: "$95",
+    name: "Recharge Failed Hoodie",
+    category: "Hoodies",
+    price: "₹3999",
     description:
-      "Hand-block-printed cotton kurta in bold Mughal floral geometry — tailored for the streets, rooted in heritage.",
-    accentHex: "#F59E0B",
-    bgFrom: "#F59E0B",
-    bgTo: "#92400e",
-    patternClass: "pattern-paisley",
+      "When rest doesn't work. 400 GSM dropped-shoulder isolation armour.",
+    gradientFrom: "#0EA5E9",
+    gradientTo: "#0a0a14",
+    series: "Social Battery Series",
+    emotion: "Isolation",
   },
   {
     id: 3,
-    name: "Sahara Denim Jacket",
-    category: "Apparel",
-    price: "$165",
+    name: "Interaction Overload Shorts",
+    category: "Shorts",
+    price: "₹1999",
     description:
-      "Woven Kente-stripe panels meet raw indigo denim — a cross-continent fusion born from West African looms.",
-    accentHex: "#DC2626",
-    bgFrom: "#DC2626",
-    bgTo: "#7f1111",
-    patternClass: "pattern-mandala",
+      "Too many people. Too many signals. Minimal utility shorts for controlled chaos.",
+    gradientFrom: "#FF2D2D",
+    gradientTo: "#1a0000",
+    series: "Social Battery Series",
+    emotion: "Chaos",
   },
   {
     id: 4,
-    name: "Oaxacan Embroidery Tee",
-    category: "Apparel",
-    price: "$72",
-    description:
-      "Organic cotton heavyweight tee with hand-embroidered Zapotec floral borders — artisan craft meets everyday wear.",
-    accentHex: "#F59E0B",
-    bgFrom: "#d97706",
-    bgTo: "#F59E0B",
-    patternClass: "pattern-block-print",
+    name: "Missing Identity Tee",
+    category: "Tees",
+    price: "₹2499",
+    description: "Identity corrupted. 240 GSM tee with VHS distortion energy.",
+    gradientFrom: "#7C3AED",
+    gradientTo: "#0a0014",
+    series: "Memory Corruption",
+    emotion: "Overthinking",
   },
   {
     id: 5,
-    name: "Kyoto Silk Bandana",
-    category: "Accessories",
-    price: "$38",
+    name: "Memory Leak Hoodie",
+    category: "Hoodies",
+    price: "₹3999",
     description:
-      "100% silk scarf featuring shibori indigo-dye patterns inspired by Kyoto artisan dyehouses — wear it three ways.",
-    accentHex: "#4F46E5",
-    bgFrom: "#6366f1",
-    bgTo: "#4F46E5",
-    patternClass: "pattern-paisley",
+      "Something is draining you from within. Toxic green signal against the void.",
+    gradientFrom: "#39FF14",
+    gradientTo: "#001400",
+    series: "Memory Corruption",
+    emotion: "Obsession",
   },
   {
     id: 6,
-    name: "Brass Mandala Cuff",
-    category: "Accessories",
-    price: "$55",
+    name: "Archive Lost Lowers",
+    category: "Lowers",
+    price: "₹1999",
     description:
-      "Recycled brass bracelet engraved with an 8-pointed mandala drawn from Rajasthani temple architecture.",
-    accentHex: "#F59E0B",
-    bgFrom: "#b45309",
-    bgTo: "#F59E0B",
-    patternClass: "pattern-mandala",
+      "Files deleted. Identity incomplete. Utility lowers for the erased.",
+    gradientFrom: "#0EA5E9",
+    gradientTo: "#000a14",
+    series: "Memory Corruption",
+    emotion: "Isolation",
   },
   {
     id: 7,
-    name: "Graffiti Kente Cap",
-    category: "Accessories",
-    price: "$48",
+    name: "Between Dreams Tee",
+    category: "Tees",
+    price: "₹2499",
     description:
-      "6-panel structured cap combining hand-painted graffiti lettering with authentic Ghanaian Kente-inspired trim.",
-    accentHex: "#DC2626",
-    bgFrom: "#DC2626",
-    bgTo: "#991b1b",
-    patternClass: "pattern-block-print",
+      "Caught between sleep and reality. Lavender surreal dimensions on skin.",
+    gradientFrom: "#C084FC",
+    gradientTo: "#0a0014",
+    series: "Dreamstate Division",
+    emotion: "Escape",
   },
   {
     id: 8,
-    name: "Batik Canvas Tote",
-    category: "Accessories",
-    price: "$62",
-    description:
-      "Wax-resist batik canvas tote in Javanese parang patterns — holds your world, tells its stories.",
-    accentHex: "#4F46E5",
-    bgFrom: "#312e81",
-    bgTo: "#4F46E5",
-    patternClass: "pattern-paisley",
+    name: "Artificial Reality Hoodie",
+    category: "Hoodies",
+    price: "₹3999",
+    description: "Which world is real? 400 GSM deep violet portal hoodie.",
+    gradientFrom: "#7C3AED",
+    gradientTo: "#050010",
+    series: "Dreamstate Division",
+    emotion: "Overthinking",
   },
   {
     id: 9,
-    name: "Folk Art Incense Set",
-    category: "Lifestyle",
-    price: "$42",
+    name: "Sleep Division Shorts",
+    category: "Shorts",
+    price: "₹1999",
     description:
-      "Curated incense from Jaipur oud makers and Oaxacan copal harvesters — ritual meets slow living.",
-    accentHex: "#F59E0B",
-    bgFrom: "#92400e",
-    bgTo: "#F59E0B",
-    patternClass: "pattern-mandala",
+      "Division between conscious and dream state. Soft lavender on midnight shorts.",
+    gradientFrom: "#C084FC",
+    gradientTo: "#0a0014",
+    series: "Dreamstate Division",
+    emotion: "Escape",
   },
   {
     id: 10,
-    name: "Mughal Garden Candle",
-    category: "Lifestyle",
-    price: "$58",
+    name: "Emotion Overload Tee",
+    category: "Tees",
+    price: "₹2499",
     description:
-      "Soy wax candle in a hand-thrown terracotta vessel, scented with rose, vetiver and oud — a Mughal garden distilled.",
-    accentHex: "#DC2626",
-    bgFrom: "#DC2626",
-    bgTo: "#7f1d1d",
-    patternClass: "pattern-block-print",
+      "System error — feelings exceeded capacity. Infrared warning signal tee.",
+    gradientFrom: "#FF2D2D",
+    gradientTo: "#1a0000",
+    series: "Human Error Series",
+    emotion: "Chaos",
   },
   {
     id: 11,
-    name: "Tokyo × Jaipur Print",
-    category: "Fusion Art",
-    price: "$89",
+    name: "Human System Failure Hoodie",
+    category: "Hoodies",
+    price: "₹3999",
     description:
-      "Limited giclée print marrying Hokusai wave energy with Rajasthani miniature pigment work — numbered edition of 100.",
-    accentHex: "#4F46E5",
-    bgFrom: "#4F46E5",
-    bgTo: "#1e1b4b",
-    patternClass: "pattern-paisley",
+      "Stability corrupted. Ash grey 400 GSM — the colour of emotional burnout.",
+    gradientFrom: "#9CA3AF",
+    gradientTo: "#111111",
+    series: "Human Error Series",
+    emotion: "Burnout",
   },
   {
     id: 12,
-    name: "Griot Sticker Pack",
-    category: "Fusion Art",
-    price: "$18",
+    name: "Chaos Tee",
+    category: "Tees",
+    price: "₹2499",
     description:
-      "12 die-cut vinyl stickers fusing West African griot symbols with Tokyo street-art tag aesthetics — collab edition.",
-    accentHex: "#F59E0B",
-    bgFrom: "#F59E0B",
-    bgTo: "#DC2626",
-    patternClass: "pattern-mandala",
+      "Pure instinct. Pure disorder. Infrared red on void black — the Chaos symbol.",
+    gradientFrom: "#FF2D2D",
+    gradientTo: "#0A0A0A",
+    series: "Instinct Protocol",
+    emotion: "Chaos",
   },
 ];
 
-const CATEGORIES: Category[] = [
-  "All",
-  "Apparel",
-  "Accessories",
-  "Lifestyle",
-  "Fusion Art",
-];
+const CATEGORIES: Category[] = ["All", "Tees", "Hoodies", "Shorts", "Lowers"];
 
-const FUNKY_BADGE_STYLES: Record<Exclude<Category, "All">, CSSProperties> = {
-  Apparel: {
-    backgroundColor: "oklch(var(--indigo) / 0.10)",
-    color: "oklch(var(--indigo))",
-    borderColor: "oklch(var(--indigo) / 0.30)",
+const CATEGORY_BADGE_STYLES: Record<Exclude<Category, "All">, CSSProperties> = {
+  Tees: {
+    backgroundColor: "rgba(57,255,20,0.12)",
+    color: "#39FF14",
+    borderColor: "rgba(57,255,20,0.30)",
   },
-  Accessories: {
-    backgroundColor: "oklch(var(--saffron) / 0.10)",
-    color: "oklch(0.55 0.18 70)",
-    borderColor: "oklch(var(--saffron) / 0.30)",
+  Hoodies: {
+    backgroundColor: "rgba(14,165,233,0.12)",
+    color: "#0EA5E9",
+    borderColor: "rgba(14,165,233,0.30)",
   },
-  Lifestyle: {
-    backgroundColor: "oklch(var(--crimson) / 0.10)",
-    color: "oklch(var(--crimson))",
-    borderColor: "oklch(var(--crimson) / 0.30)",
+  Shorts: {
+    backgroundColor: "rgba(255,45,45,0.12)",
+    color: "#FF2D2D",
+    borderColor: "rgba(255,45,45,0.30)",
   },
-  "Fusion Art": {
-    backgroundColor: "oklch(var(--indigo) / 0.08)",
-    color: "oklch(var(--indigo))",
-    borderColor: "oklch(var(--indigo) / 0.20)",
+  Lowers: {
+    backgroundColor: "rgba(124,58,237,0.12)",
+    color: "#7C3AED",
+    borderColor: "rgba(124,58,237,0.30)",
   },
 };
-
-// Decorative mandala SVG
-function MandalaDecor({
-  className = "",
-  style,
-}: { className?: string; style?: CSSProperties }) {
-  return (
-    <svg
-      viewBox="0 0 200 200"
-      className={className}
-      style={style}
-      aria-hidden="true"
-      focusable="false"
-    >
-      <title>Decorative mandala motif</title>
-      <g
-        fill="none"
-        stroke="currentColor"
-        strokeWidth="0.8"
-        opacity="0.5"
-        transform="translate(100,100)"
-      >
-        {(
-          [0, 30, 60, 90, 120, 150, 180, 210, 240, 270, 300, 330] as number[]
-        ).map((deg) => (
-          <g key={deg} transform={`rotate(${deg})`}>
-            <line x1="0" y1="0" x2="0" y2="-86" />
-            <ellipse cx="0" cy="-54" rx="7" ry="13" />
-            <circle cx="0" cy="-28" r="3.5" fill="currentColor" opacity="0.3" />
-          </g>
-        ))}
-        <circle r="18" />
-        <circle r="38" strokeDasharray="4 4" />
-        <circle r="62" strokeDasharray="2 6" />
-        <circle r="82" />
-      </g>
-    </svg>
-  );
-}
 
 interface ProductCardProps {
   product: Product;
   index: number;
-  isFunky: boolean;
+  isSignal: boolean;
 }
 
-function ProductCard({ product, index, isFunky }: ProductCardProps) {
+function ProductCard({ product, index, isSignal }: ProductCardProps) {
   return (
     <motion.article
       data-ocid={`lookbook.item.${index + 1}`}
       className={`card-brand group overflow-hidden ${
-        isFunky ? "shadow-subtle-brand" : "border border-border bg-card"
+        isSignal ? "shadow-subtle-brand" : "border border-border bg-card"
       }`}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
@@ -261,43 +217,41 @@ function ProductCard({ product, index, isFunky }: ProductCardProps) {
         className="relative w-full overflow-hidden"
         style={{ aspectRatio: "3/4" }}
       >
-        {/* Gradient bg */}
-        <div
-          className="absolute inset-0 transition-smooth group-hover:scale-105"
-          style={{
-            background: `linear-gradient(135deg, ${product.bgFrom}, ${product.bgTo})`,
-          }}
+        <ProductMockup
+          series={
+            product.series as import("@/components/ProductMockup").ProductSeries
+          }
+          category={product.category}
+          emotion={product.emotion}
+          className="w-full h-full transition-smooth group-hover:scale-105"
         />
-
-        {/* Pattern overlay — funky only */}
-        {isFunky && (
-          <div
-            className={`absolute inset-0 ${product.patternClass}`}
-            style={{ opacity: 0.35 }}
-          />
-        )}
-
-        {/* Chic: light noise overlay */}
-        {!isFunky && <div className="absolute inset-0 bg-foreground/8" />}
 
         {/* Price tag */}
         <div
           className={`absolute top-3 right-3 rounded px-2.5 py-1 font-display text-sm font-bold transition-smooth ${
-            isFunky
+            isSignal
               ? "bg-background text-foreground"
               : "bg-background/90 text-foreground backdrop-blur-sm border border-border/60"
           }`}
-          style={isFunky ? { boxShadow: `2px 2px 0 ${product.accentHex}` } : {}}
+          style={
+            isSignal ? { boxShadow: `2px 2px 0 ${product.gradientFrom}` } : {}
+          }
         >
           {product.price}
         </div>
 
-        {/* Funky: accent dot */}
-        {isFunky && (
+        {/* Signal: emotion tag */}
+        {isSignal && (
           <div
-            className="absolute bottom-3 left-3 w-3 h-3 rounded-full border-2 border-background"
-            style={{ backgroundColor: product.accentHex }}
-          />
+            className="absolute bottom-3 left-3 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest"
+            style={{
+              backgroundColor: `${product.gradientFrom}22`,
+              color: product.gradientFrom,
+              border: `1px solid ${product.gradientFrom}44`,
+            }}
+          >
+            {product.emotion}
+          </div>
         )}
       </div>
 
@@ -305,15 +259,26 @@ function ProductCard({ product, index, isFunky }: ProductCardProps) {
       <div
         className="p-4"
         style={
-          isFunky
-            ? { borderTop: `2px solid ${product.accentHex}` }
+          isSignal
+            ? { borderTop: `2px solid ${product.gradientFrom}` }
             : { borderTop: "1px solid oklch(var(--border))" }
         }
       >
+        {/* Series badge */}
+        <p
+          className="text-[9px] font-semibold uppercase tracking-[0.2em] mb-1.5"
+          style={{
+            color: isSignal
+              ? product.gradientFrom
+              : "oklch(var(--muted-foreground))",
+          }}
+        >
+          {product.series}
+        </p>
         <div className="flex items-start justify-between gap-2 mb-2 min-w-0">
           <h3
             className={`font-display font-bold leading-snug text-foreground text-sm group-hover:text-primary transition-smooth truncate flex-1 ${
-              isFunky
+              isSignal
                 ? "uppercase tracking-tight text-[0.9rem]"
                 : "text-[0.9rem]"
             }`}
@@ -323,7 +288,7 @@ function ProductCard({ product, index, isFunky }: ProductCardProps) {
           <Badge
             variant="outline"
             className="shrink-0 text-[9px] font-semibold uppercase tracking-wide"
-            style={isFunky ? FUNKY_BADGE_STYLES[product.category] : undefined}
+            style={CATEGORY_BADGE_STYLES[product.category]}
           >
             {product.category}
           </Badge>
@@ -336,44 +301,135 @@ function ProductCard({ product, index, isFunky }: ProductCardProps) {
   );
 }
 
+const MOODS = [
+  "Chaos",
+  "Isolation",
+  "Obsession",
+  "Escape",
+  "Overthinking",
+  "Burnout",
+] as const;
+type Mood = (typeof MOODS)[number];
+
+const MOOD_TOKEN: Record<Mood, string> = {
+  Chaos: "var(--chaos)",
+  Isolation: "var(--isolation)",
+  Obsession: "var(--obsession)",
+  Escape: "var(--escape)",
+  Overthinking: "var(--overthinking)",
+  Burnout: "var(--burnout)",
+};
+
+function MoodChip({
+  mood,
+  isActive,
+  onClick,
+}: {
+  mood: Mood | null;
+  isActive: boolean;
+  onClick: () => void;
+}) {
+  const token = mood ? MOOD_TOKEN[mood] : undefined;
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      data-ocid={
+        mood ? `lookbook.mood.${mood.toLowerCase()}` : "lookbook.mood.clear"
+      }
+      className={`mood-chip flex items-center gap-1.5 shrink-0 ${isActive ? "active" : ""}`}
+    >
+      {mood ? (
+        <>
+          <span
+            className="inline-block w-2 h-2 rounded-full"
+            style={{ backgroundColor: token ? `oklch(${token})` : undefined }}
+          />
+          <span>{mood}</span>
+        </>
+      ) : (
+        <>
+          <X size={12} />
+          <span>All Moods</span>
+        </>
+      )}
+    </button>
+  );
+}
+
 export default function Lookbook() {
   const [activeCategory, setActiveCategory] = useState<Category>("All");
+  const [activeMood, setActiveMood] = useState<Mood | null>(null);
   const mode = useThemeStore((s) => s.mode);
-  const isFunky = mode === "funky";
+  const isSignal = mode === "signal";
 
-  const filtered =
+  // Sync mood to/from URL
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const moodParam = params.get("mood");
+    if (moodParam) {
+      const normalized =
+        moodParam.charAt(0).toUpperCase() + moodParam.slice(1).toLowerCase();
+      if (MOODS.includes(normalized as Mood)) {
+        setActiveMood(normalized as Mood);
+      }
+    }
+  }, []);
+
+  useEffect(() => {
+    const url = new URL(window.location.href);
+    if (activeMood) {
+      url.searchParams.set("mood", activeMood.toLowerCase());
+    } else {
+      url.searchParams.delete("mood");
+    }
+    window.history.replaceState({}, "", url.toString());
+  }, [activeMood]);
+
+  const categoryFiltered =
     activeCategory === "All"
       ? PRODUCTS
       : PRODUCTS.filter((p) => p.category === activeCategory);
 
+  const matched = activeMood
+    ? categoryFiltered.filter(
+        (p) => p.emotion.toLowerCase() === activeMood.toLowerCase(),
+      )
+    : [];
+  const others = activeMood
+    ? categoryFiltered.filter(
+        (p) => p.emotion.toLowerCase() !== activeMood.toLowerCase(),
+      )
+    : categoryFiltered;
+
   return (
     <div data-ocid="lookbook.page" className="min-h-screen bg-background">
-      {/* ── Page header with mandala motif ── */}
+      {/* ── Page header ── */}
       <header
         className={`relative overflow-hidden py-14 md:py-20 ${
-          isFunky ? "bg-card pattern-mandala" : "bg-card border-b border-border"
+          isSignal ? "bg-card" : "bg-card border-b border-border"
         }`}
-        style={
-          isFunky ? { borderBottom: "4px solid oklch(var(--saffron))" } : {}
-        }
+        style={isSignal ? { borderBottom: "4px solid #39FF14" } : {}}
       >
-        {/* Decorative mandalas */}
-        <MandalaDecor
-          className="absolute -right-14 top-1/2 -translate-y-1/2 w-72 h-72 pointer-events-none"
-          style={{
-            color: isFunky
-              ? "oklch(var(--saffron))"
-              : "oklch(var(--indigo) / 0.10)",
-          }}
-        />
-        <MandalaDecor
-          className="absolute -left-16 top-1/2 -translate-y-1/2 w-56 h-56 opacity-60 pointer-events-none"
-          style={{
-            color: isFunky
-              ? "oklch(var(--indigo))"
-              : "oklch(var(--indigo) / 0.08)",
-          }}
-        />
+        {/* Signal mode: glowing circuit lines */}
+        {isSignal && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            <div
+              className="absolute right-0 top-0 w-96 h-96 opacity-10"
+              style={{
+                background:
+                  "radial-gradient(circle at 70% 30%, #39FF14 0%, transparent 60%)",
+              }}
+            />
+            <div
+              className="absolute left-0 bottom-0 w-64 h-64 opacity-8"
+              style={{
+                background:
+                  "radial-gradient(circle at 30% 70%, #0EA5E9 0%, transparent 60%)",
+              }}
+            />
+          </div>
+        )}
 
         <div className="relative z-10 container mx-auto px-4 text-center">
           <motion.p
@@ -382,7 +438,9 @@ export default function Lookbook() {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.4 }}
           >
-            Curated Collections
+            {isSignal
+              ? "// ALTINSTINCT SYSTEM — EMOTIONAL ARCHIVE"
+              : "Altinstinct — Emotional Archive"}
           </motion.p>
 
           <motion.h1
@@ -391,43 +449,62 @@ export default function Lookbook() {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 0.1 }}
           >
-            {isFunky ? (
+            {isSignal ? (
               <>
                 THE{" "}
-                <span style={{ color: "oklch(var(--saffron))" }}>LOOKBOOK</span>
+                <span
+                  style={{ color: "#39FF14", textShadow: "0 0 20px #39FF1440" }}
+                >
+                  ARCHIVE
+                </span>
               </>
             ) : (
-              "The Lookbook"
+              "EMOTIONAL ARCHIVE"
             )}
           </motion.h1>
 
           <motion.p
-            className="max-w-md mx-auto text-muted-foreground font-body text-sm md:text-base"
+            className="max-w-md mx-auto text-muted-foreground font-body text-sm md:text-base tracking-wide"
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.2 }}
           >
-            {isFunky
-              ? "12 pieces. Infinite cultures. Zero boundaries — wear the world."
-              : "A carefully edited collection where global craft meets considered style."}
+            Select your signal. Wear your state.
           </motion.p>
         </div>
       </header>
 
-      {/* ── Sticky category filter ── */}
+      {/* ── Sticky mood + category filter ── */}
       <div
         data-ocid="lookbook.filter.tab"
         className={`sticky top-0 z-20 transition-theme ${
-          isFunky
+          isSignal
             ? "bg-background/95 backdrop-blur-sm"
             : "bg-background/95 backdrop-blur-sm border-b border-border"
         }`}
         style={
-          isFunky ? { borderBottom: "2px solid rgba(245,158,11,0.3)" } : {}
+          isSignal ? { borderBottom: "2px solid rgba(57,255,20,0.2)" } : {}
         }
       >
         <div className="container mx-auto px-4">
-          <div className="flex gap-1.5 overflow-x-auto py-3 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {/* Mood chips */}
+          <div className="flex gap-2 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+            <MoodChip
+              mood={null}
+              isActive={activeMood === null}
+              onClick={() => setActiveMood(null)}
+            />
+            {MOODS.map((m) => (
+              <MoodChip
+                key={m}
+                mood={m}
+                isActive={activeMood === m}
+                onClick={() => setActiveMood(m)}
+              />
+            ))}
+          </div>
+          {/* Category tabs */}
+          <div className="flex gap-1.5 overflow-x-auto py-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
             {CATEGORIES.map((cat) => {
               const isActive = activeCategory === cat;
               return (
@@ -438,17 +515,17 @@ export default function Lookbook() {
                   onClick={() => setActiveCategory(cat)}
                   className={`shrink-0 px-4 py-1.5 rounded-full text-sm font-semibold uppercase tracking-wide transition-smooth focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${
                     isActive
-                      ? isFunky
+                      ? isSignal
                         ? "font-bold"
                         : "bg-primary text-primary-foreground"
                       : "text-muted-foreground hover:text-foreground hover:bg-muted"
                   }`}
                   style={
-                    isActive && isFunky
+                    isActive && isSignal
                       ? {
-                          backgroundColor: "oklch(var(--saffron))",
-                          color: "oklch(0.15 0.05 280)",
-                          boxShadow: "3px 3px 0 oklch(var(--indigo))",
+                          backgroundColor: "#39FF14",
+                          color: "#0A0A0A",
+                          boxShadow: "3px 3px 0 #0EA5E9",
                         }
                       : {}
                   }
@@ -463,74 +540,138 @@ export default function Lookbook() {
 
       {/* ── Product grid ── */}
       <main className="container mx-auto px-4 py-10 md:py-14">
-        {/* Count */}
-        <motion.p
-          key={activeCategory}
-          className="text-xs uppercase tracking-widest text-muted-foreground mb-6 font-semibold"
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ duration: 0.2 }}
-        >
-          {filtered.length} {filtered.length === 1 ? "piece" : "pieces"}
-          {activeCategory !== "All" ? ` · ${activeCategory}` : ""}
-        </motion.p>
+        {/* Matched section */}
+        {activeMood && matched.length > 0 && (
+          <section className="mb-10">
+            <motion.p
+              key={`matched-${activeCategory}-${activeMood}`}
+              className="text-xs uppercase tracking-widest text-muted-foreground mb-6 font-semibold"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 0.2 }}
+            >
+              {matched.length} {matched.length === 1 ? "item" : "items"} matches
+              your vibe · {activeMood}
+            </motion.p>
+            <motion.div
+              key={`matched-grid-${activeCategory}-${activeMood}`}
+              data-ocid="lookbook.list.matched"
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.18 }}
+            >
+              {matched.map((product, i) => (
+                <ProductCard
+                  key={product.id}
+                  product={product}
+                  index={i}
+                  isSignal={isSignal}
+                />
+              ))}
+            </motion.div>
+          </section>
+        )}
 
-        <AnimatePresence mode="wait">
-          <motion.div
-            key={activeCategory}
-            data-ocid="lookbook.list"
-            className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.18 }}
-          >
-            {filtered.map((product, i) => (
-              <ProductCard
-                key={product.id}
-                product={product}
-                index={i}
-                isFunky={isFunky}
-              />
-            ))}
-          </motion.div>
-        </AnimatePresence>
+        {/* Others / All section */}
+        {others.length > 0 && (
+          <section>
+            {activeMood && (
+              <motion.p
+                key={`others-${activeCategory}-${activeMood}`}
+                className="text-xs uppercase tracking-widest text-muted-foreground mb-6 font-semibold"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {others.length} {others.length === 1 ? "item" : "items"} ·{" "}
+                {activeMood ? "All Drops" : "Full Archive"}
+                {activeCategory !== "All" ? ` · ${activeCategory}` : ""}
+              </motion.p>
+            )}
+            {!activeMood && (
+              <motion.p
+                key={`count-${activeCategory}`}
+                className="text-xs uppercase tracking-widest text-muted-foreground mb-6 font-semibold"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.2 }}
+              >
+                {others.length} {others.length === 1 ? "item" : "items"}
+                {activeCategory !== "All"
+                  ? ` · ${activeCategory}`
+                  : " · Full Archive"}
+              </motion.p>
+            )}
+            <AnimatePresence mode="wait">
+              <motion.div
+                key={`grid-${activeCategory}-${activeMood ?? "all"}`}
+                data-ocid="lookbook.list"
+                className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5 md:gap-6"
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                transition={{ duration: 0.18 }}
+              >
+                {others.map((product, i) => (
+                  <ProductCard
+                    key={product.id}
+                    product={product}
+                    index={i}
+                    isSignal={isSignal}
+                  />
+                ))}
+              </motion.div>
+            </AnimatePresence>
+          </section>
+        )}
 
         {/* Empty state (defensive) */}
-        {filtered.length === 0 && (
+        {matched.length === 0 && others.length === 0 && (
           <div
             data-ocid="lookbook.empty_state"
             className="flex flex-col items-center justify-center py-24 text-center"
           >
-            <MandalaDecor className="w-20 h-20 text-muted-foreground mb-5 opacity-25" />
+            <div className="w-16 h-16 rounded-full border border-border mb-5 flex items-center justify-center">
+              <span className="text-2xl text-muted-foreground">∅</span>
+            </div>
             <h2 className="heading-brand text-2xl text-foreground mb-2">
-              Nothing here yet
+              {isSignal ? "NO SIGNAL DETECTED" : "Nothing here yet"}
             </h2>
             <p className="text-muted-foreground text-sm">
-              Check back soon or explore another category.
+              {isSignal
+                ? "Select a different emotional frequency."
+                : "Check back soon or explore another category."}
             </p>
           </div>
         )}
       </main>
 
-      {/* ── Bottom cultural band ── */}
+      {/* ── Bottom signal band ── */}
       <div
-        className={`py-8 mt-4 pattern-block-print ${
-          isFunky
-            ? "text-primary-foreground"
-            : "bg-muted/40 border-t border-border"
+        className={`py-8 mt-4 ${
+          isSignal ? "border-t" : "bg-muted/40 border-t border-border"
         }`}
-        style={isFunky ? { backgroundColor: "oklch(var(--indigo))" } : {}}
+        style={
+          isSignal
+            ? {
+                borderColor: "rgba(57,255,20,0.2)",
+                backgroundColor: "rgba(57,255,20,0.03)",
+              }
+            : {}
+        }
       >
         <div className="container mx-auto px-4 text-center">
           <p
             className={`heading-brand text-xs md:text-sm tracking-[0.25em] ${
-              isFunky ? "text-primary-foreground" : "text-muted-foreground"
+              isSignal ? "text-foreground" : "text-muted-foreground"
             }`}
+            style={isSignal ? { color: "#39FF1488" } : {}}
           >
-            {isFunky
-              ? "⚡ WEAR THE WORLD — MADE WITH LOVE, CRAFT & ENERGY ⚡"
-              : "Wear the world — made with love, craft & intention"}
+            {isSignal
+              ? "⚡ EMOTIONS ARE SYSTEMS — WEAR YOUR STATE — ALTINSTINCT ⚡"
+              : "Emotions are systems — wear your state — AltInstinct"}
           </p>
         </div>
       </div>
