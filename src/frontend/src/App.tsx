@@ -1,5 +1,4 @@
-import { useInternetIdentity } from "@caffeineai/core-infrastructure";
-import { useQuery } from "@tanstack/react-query";
+import { useAuth } from "./store/authStore";
 import {
   Outlet,
   RouterProvider,
@@ -9,7 +8,6 @@ import {
 } from "@tanstack/react-router";
 import { Suspense, lazy, useEffect } from "react";
 import Layout from "./components/Layout";
-import { useBackend } from "./hooks/useBackend";
 import BrandStory from "./pages/BrandStory";
 import Home from "./pages/Home";
 import Lookbook from "./pages/Lookbook";
@@ -43,20 +41,8 @@ function PageLoader() {
 }
 
 function RoleSyncer() {
-  const { actor, isFetching: actorFetching } = useBackend();
-  const { isAuthenticated } = useInternetIdentity();
-  const { setIsAdmin, reset } = useAuthStore();
-
-  useQuery({
-    queryKey: ["caller-role", isAuthenticated],
-    queryFn: async () => {
-      if (!actor || !isAuthenticated) return false;
-      const isAdmin = await actor.isCallerAdmin();
-      setIsAdmin(isAdmin);
-      return isAdmin;
-    },
-    enabled: !!actor && !actorFetching && isAuthenticated,
-  });
+  const { isAuthenticated } = useAuth();
+  const { reset } = useAuthStore();
 
   useEffect(() => {
     if (!isAuthenticated) {

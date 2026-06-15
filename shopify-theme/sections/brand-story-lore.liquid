@@ -1,0 +1,136 @@
+<section 
+  class="border-t py-16 sm:py-20"
+  style="background-color: oklch(var(--card)); border-color: oklch(var(--border));"
+>
+  <div class="container max-w-4xl">
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="font-mono text-[11px] tracking-[0.25em] uppercase text-muted-foreground mb-2">
+        {{ section.settings.prefix | default: 'SYSTEM LOG / DROP HISTORY' }}
+      </p>
+      <h2 class="font-display text-3xl sm:text-4xl font-extrabold tracking-tight text-foreground uppercase">
+        {{ section.settings.title | default: 'THE DROP LORE' }}
+      </h2>
+    </div>
+
+    <!-- Lore drops timeline listing -->
+    <div class="flex flex-col gap-4">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          {%- liquid
+            assign is_incoming = false
+            if block.settings.status == 'INCOMING' or block.settings.status == 'ACTIVE'
+              assign is_incoming = true
+            endif
+            assign status_color = 'oklch(var(--muted-foreground))'
+            assign status_bg = 'oklch(var(--muted))'
+            if is_incoming
+              assign status_color = 'oklch(var(--primary))'
+              assign status_bg = 'oklch(var(--primary) / 0.15)'
+            endif
+          -%}
+          <div 
+            class="rounded-sm border p-5 font-mono"
+            style="background-color: oklch(var(--background)); border-color: oklch(var(--border)); border-left: 3px solid {{ status_color }};"
+            {{ block.shopify_attributes }}
+          >
+            <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+              <div class="flex items-center gap-3">
+                <span class="text-xs tracking-widest text-foreground font-bold">
+                  {{ block.settings.drop_id }}
+                </span>
+                <span 
+                  class="text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-sm"
+                  style="background-color: {{ status_bg }}; color: {{ status_color }};"
+                >
+                  {{ block.settings.status }}
+                </span>
+              </div>
+              <span class="text-[10px] tracking-wider text-muted-foreground">
+                {{ block.settings.timestamp }}
+              </span>
+            </div>
+            
+            <p class="text-sm text-foreground mb-2 font-bold">
+              &gt; {{ block.settings.event }}
+            </p>
+            <p class="text-xs text-muted-foreground leading-relaxed">
+              {{ block.settings.detail }}
+            </p>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <!-- Fallback mock blocks -->
+        <div class="rounded-sm border p-5 font-mono" style="background-color: oklch(var(--background)); border-color: oklch(var(--border)); border-left: 3px solid oklch(var(--muted-foreground));">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-3">
+            <div class="flex items-center gap-3">
+              <span class="text-xs tracking-widest text-foreground font-bold">DROP_001</span>
+              <span class="text-[10px] tracking-widest uppercase px-2 py-0.5 rounded-sm" style="background-color: oklch(var(--muted)); color: oklch(var(--muted-foreground));">ARCHIVED</span>
+            </div>
+            <span class="text-[10px] tracking-wider text-muted-foreground">EPOCH_001 // SIGNAL INITIATED</span>
+          </div>
+          <p class="text-sm text-foreground mb-2 font-bold">&gt; Identity corruption begins.</p>
+          <p class="text-xs text-muted-foreground leading-relaxed">The first transmissions were unstable. Identity files fragmenting. Drop was diagnostic.</p>
+        </div>
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Drop Timeline",
+  "settings": [
+    {
+      "type": "text",
+      "id": "prefix",
+      "default": "SYSTEM LOG / DROP HISTORY",
+      "label": "Prefix Subheading"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "THE DROP LORE",
+      "label": "Timeline Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "drop",
+      "name": "Drop Timeline Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "drop_id",
+          "default": "DROP_001",
+          "label": "Drop Identifier"
+        },
+        {
+          "type": "text",
+          "id": "status",
+          "default": "ARCHIVED",
+          "label": "Status (ARCHIVED / INCOMING)"
+        },
+        {
+          "type": "text",
+          "id": "timestamp",
+          "default": "EPOCH_001 // SIGNAL INITIATED",
+          "label": "Timestamp Header"
+        },
+        {
+          "type": "text",
+          "id": "event",
+          "default": "Identity corruption begins.",
+          "label": "Timeline Event text"
+        },
+        {
+          "type": "textarea",
+          "id": "detail",
+          "default": "The first transmissions were unstable. Identity files began fragmenting. The first drop was not a collection — it was a diagnostic.",
+          "label": "Description details"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

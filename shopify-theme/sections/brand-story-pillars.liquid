@@ -1,0 +1,203 @@
+<section 
+  class="relative overflow-hidden"
+  style="background: linear-gradient(135deg, oklch(var(--background)) 0%, oklch(var(--muted)) 100%);"
+>
+  <!-- Main Banner Header -->
+  <div class="container py-20 relative z-10 text-center">
+    <p class="mb-4 font-mono text-[11px] tracking-[0.3em] uppercase text-muted-foreground">
+      ALTINSTINCT &bull; ORIGIN SIGNAL &bull; THE ARCHIVE
+    </p>
+    <h1 class="font-display text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground mb-6 leading-none uppercase">
+      ALTINSTINCT:<br>
+      <span style="color: oklch(var(--primary));">THE ORIGIN</span><br>
+      SIGNAL
+    </h1>
+    <p class="font-body text-lg sm:text-xl leading-relaxed text-muted-foreground max-w-xl mx-auto mb-8">
+      Not gothic. Not techwear. Not anime-core. Not luxury copycat.<br>
+      <span class="text-foreground font-medium">Something new.</span>
+    </p>
+  </div>
+  <div class="h-px bg-border" style="background: linear-gradient(90deg, transparent, oklch(var(--border)), transparent);"></div>
+</section>
+
+<!-- Columns positioning highlights -->
+<section class="border-b" style="background-color: oklch(var(--card)); border-color: oklch(var(--border));">
+  <div class="container py-10">
+    <div class="grid grid-cols-2 sm:grid-cols-4 gap-6 text-center">
+      <div>
+        <p class="font-mono text-[10px] tracking-widest uppercase mb-1" style="color: oklch(var(--chaos));">IDENTITY</p>
+        <p class="font-body text-xs text-muted-foreground">Who you are</p>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] tracking-widest uppercase mb-1" style="color: oklch(var(--isolation));">EMOTIONS</p>
+        <p class="font-body text-xs text-muted-foreground">What you feel</p>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] tracking-widest uppercase mb-1" style="color: oklch(var(--escape));">INTERNET CULTURE</p>
+        <p class="font-body text-xs text-muted-foreground">Where you live</p>
+      </div>
+      <div>
+        <p class="font-mono text-[10px] tracking-widest uppercase mb-1" style="color: oklch(var(--overthinking));">FUTURISTIC AESTHETICS</p>
+        <p class="font-body text-xs text-muted-foreground">How you see</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Brand Pillars Loop -->
+<div>
+  {%- if section.blocks.size > 0 -%}
+    {%- for block in section.blocks -%}
+      {%- liquid
+        assign is_even = forloop.index | modulo: 2
+        assign bg_color_style = 'background-color: oklch(var(--background));'
+        if is_even == 0
+          assign bg_color_style = 'background-color: oklch(var(--card) / 0.3);'
+        endif
+        assign pillar_color = block.settings.pillar_color | default: 'oklch(var(--primary))'
+      -%}
+      <section 
+        class="transition-all duration-300 border-b" 
+        style="{{ bg_color_style }} border-color: oklch(var(--border));"
+        {{ block.shopify_attributes }}
+      >
+        <div class="container py-16 sm:py-24">
+          <!-- Divider motif -->
+          <div class="mb-10 flex items-center gap-4" aria-hidden="true">
+            <div class="h-px flex-1 bg-border"></div>
+            <span class="font-mono text-[10px] tracking-widest text-muted-foreground uppercase">SYS &mdash;</span>
+            <div class="h-1.5 w-1.5 rounded-full" style="background-color: {{ pillar_color }};"></div>
+            <div class="h-px w-16 bg-border"></div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-16 items-start">
+            
+            <!-- Image (Position alternates) -->
+            <div class="{% if is_even == 0 %}md:order-2{% endif %}">
+              <div 
+                class="relative overflow-hidden rounded-lg border"
+                style="box-shadow: 0 0 40px {{ pillar_color }}22; border-color: oklch(var(--border));"
+              >
+                {%- if block.settings.image != blank -%}
+                  <img 
+                    src="{{ block.settings.image | image_url: width: 700 }}" 
+                    alt="{{ block.settings.title | escape }}"
+                    style="width: 100%; height: 100%; object-fit: cover;"
+                    class="aspect-square"
+                  />
+                {%- else -%}
+                  <!-- Ambient placeholder matching color -->
+                  <div class="aspect-square w-full" style="background: linear-gradient(135deg, {{ pillar_color }}33 0%, #000000 100%); display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: 11px;">
+                    [{{ block.settings.title }} ARTWORK TRANSMISSION]
+                  </div>
+                {%- endif -%}
+
+                <div class="absolute top-3 left-3">
+                  <span 
+                    class="font-mono text-[10px] tracking-widest px-2 py-1 rounded"
+                    style="background-color: {{ pillar_color }}33; color: {{ pillar_color }}; border: 1px solid {{ pillar_color }}55;"
+                  >
+                    {{ block.settings.index }}
+                  </span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Text Content -->
+            <div class="flex flex-col gap-6 {% if is_even == 0 %}md:order-1{% endif %}">
+              <div>
+                <p class="mb-2 font-mono text-[10px] tracking-widest uppercase" style="color: {{ pillar_color }};">
+                  BRAND PILLAR &bull; {{ block.settings.index }}
+                </p>
+                <h2 class="font-display text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground uppercase leading-none">
+                  {{ block.settings.title }}
+                </h2>
+              </div>
+
+              <blockquote class="relative pl-4 py-1" style="border-left: 3px solid {{ pillar_color }};">
+                <p class="font-display text-lg font-semibold leading-snug text-foreground/90">
+                  &ldquo;{{ block.settings.quote }}&rdquo;
+                </p>
+              </blockquote>
+
+              <p class="font-body text-base leading-relaxed text-muted-foreground md:text-lg">
+                {{ block.settings.body }}
+              </p>
+
+              <!-- Tags -->
+              {%- if block.settings.tags != blank -%}
+                <div class="flex flex-wrap gap-2 pt-1">
+                  {%- assign tags_array = block.settings.tags | split: ',' -%}
+                  {%- for tag in tags_array -%}
+                    <span 
+                      class="inline-block rounded-sm border px-3 py-1 font-mono text-[11px] tracking-wider text-muted-foreground"
+                      style="border-color: {{ pillar_color }}44; background-color: {{ pillar_color }}0d;"
+                    >
+                      {{ tag | strip | upcase }}
+                    </span>
+                  {%- endfor -%}
+                </div>
+              {%- endif -%}
+            </div>
+
+          </div>
+        </div>
+      </section>
+    {%- endfor -%}
+  {%- endif -%}
+</div>
+
+{% schema %}
+{
+  "name": "Brand Pillars",
+  "blocks": [
+    {
+      "type": "pillar",
+      "name": "Pillar Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "index",
+          "default": "01",
+          "label": "Index (e.g. 01)"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "EMOTIONAL",
+          "label": "Pillar Title"
+        },
+        {
+          "type": "text",
+          "id": "pillar_color",
+          "default": "#7C3AED",
+          "label": "Theme Color (Hex/RGB)"
+        },
+        {
+          "type": "image_picker",
+          "id": "image",
+          "label": "Pillar Image"
+        },
+        {
+          "type": "text",
+          "id": "quote",
+          "default": "Every thread carries a frequency. Every graphic is a transmission.",
+          "label": "Pull Quote"
+        },
+        {
+          "type": "textarea",
+          "id": "body",
+          "default": "People should FEEL the designs. We don't make clothes — we make transmissions. Each graphic is encoded with a specific emotional frequency.",
+          "label": "Main Paragraph"
+        },
+        {
+          "type": "text",
+          "id": "tags",
+          "default": "Frequency, Transmission, Feeling",
+          "label": "Tags (Comma-separated)"
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

@@ -1,0 +1,211 @@
+<section 
+  data-ocid="home.categories_section"
+  class="py-20"
+  style="background-color: oklch(var(--background));"
+>
+  <div class="container">
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] mb-3" style="color: oklch(var(--primary));">
+        {{ section.settings.prefix_text }}
+      </p>
+      <h2 
+        class="font-display font-black uppercase text-foreground"
+        style="font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -0.02em;"
+      >
+        {{ section.settings.title }}
+      </h2>
+    </div>
+
+    <!-- Category grid -->
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+      
+      <!-- Category 1: Tees -->
+      <a href="{{ section.settings.url_1 }}" class="block">
+        <div 
+          data-ocid="home.category.item.1"
+          class="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth"
+          style="aspect-ratio: 1/1; background: linear-gradient(135deg, oklch(var(--obsession) / 0.2) 0%, oklch(var(--isolation) / 0.35) 100%); border: 1px solid oklch(var(--border));"
+        >
+          <!-- Grid Overlay pattern -->
+          <div class="absolute inset-0 pointer-events-none opacity-20 pattern-grid"></div>
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth" style="background: radial-gradient(circle at 50% 80%, oklch(var(--obsession) / 0.15) 0%, transparent 70%);"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background-color: oklch(var(--obsession) / 0.15); border: 1px solid oklch(var(--obsession) / 0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--obsession))" stroke-width="2"><rect x="3" y="3" width="7" height="9"></rect><rect x="14" y="3" width="7" height="5"></rect><rect x="14" y="12" width="7" height="9"></rect><rect x="3" y="16" width="7" height="5"></rect></svg>
+            </div>
+            <p class="font-display font-black text-xl uppercase tracking-tight leading-tight text-foreground">{{ section.settings.title_1 }}</p>
+            <p class="font-mono text-xs mt-1" style="color: oklch(var(--foreground) / 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ section.settings.desc_1 }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Category 2: Hoodies -->
+      <a href="{{ section.settings.url_2 }}" class="block">
+        <div 
+          data-ocid="home.category.item.2"
+          class="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth"
+          style="aspect-ratio: 1/1; background: linear-gradient(135deg, oklch(var(--chaos) / 0.2) 0%, oklch(var(--overthinking) / 0.35) 100%); border: 1px solid oklch(var(--border));"
+        >
+          <div class="absolute inset-0 pointer-events-none opacity-20 pattern-grid"></div>
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth" style="background: radial-gradient(circle at 50% 80%, oklch(var(--chaos) / 0.15) 0%, transparent 70%);"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background-color: oklch(var(--chaos) / 0.15); border: 1px solid oklch(var(--chaos) / 0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--chaos))" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect><rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect><line x1="6" y1="6" x2="6.01" y2="6"></line><line x1="6" y1="18" x2="6.01" y2="18"></line></svg>
+            </div>
+            <p class="font-display font-black text-xl uppercase tracking-tight leading-tight text-foreground">{{ section.settings.title_2 }}</p>
+            <p class="font-mono text-xs mt-1" style="color: oklch(var(--foreground) / 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ section.settings.desc_2 }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Category 3: Shorts -->
+      <a href="{{ section.settings.url_3 }}" class="block">
+        <div 
+          data-ocid="home.category.item.3"
+          class="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth"
+          style="aspect-ratio: 1/1; background: linear-gradient(135deg, oklch(var(--escape) / 0.2) 0%, oklch(var(--isolation) / 0.35) 100%); border: 1px solid oklch(var(--border));"
+        >
+          <div class="absolute inset-0 pointer-events-none opacity-20 pattern-grid"></div>
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth" style="background: radial-gradient(circle at 50% 80%, oklch(var(--escape) / 0.15) 0%, transparent 70%);"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background-color: oklch(var(--escape) / 0.15); border: 1px solid oklch(var(--escape) / 0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--escape))" stroke-width="2"><ellipse cx="12" cy="5" rx="9" ry="3"></ellipse><path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path></svg>
+            </div>
+            <p class="font-display font-black text-xl uppercase tracking-tight leading-tight text-foreground">{{ section.settings.title_3 }}</p>
+            <p class="font-mono text-xs mt-1" style="color: oklch(var(--foreground) / 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ section.settings.desc_3 }}</p>
+          </div>
+        </div>
+      </a>
+
+      <!-- Category 4: Lowers -->
+      <a href="{{ section.settings.url_4 }}" class="block">
+        <div 
+          data-ocid="home.category.item.4"
+          class="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth"
+          style="aspect-ratio: 1/1; background: linear-gradient(135deg, oklch(var(--burnout) / 0.2) 0%, oklch(var(--overthinking) / 0.35) 100%); border: 1px solid oklch(var(--border));"
+        >
+          <div class="absolute inset-0 pointer-events-none opacity-20 pattern-grid"></div>
+          <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-smooth" style="background: radial-gradient(circle at 50% 80%, oklch(var(--overthinking) / 0.15) 0%, transparent 70%);"></div>
+          <div class="absolute bottom-0 left-0 right-0 p-5">
+            <div class="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style="background-color: oklch(var(--burnout) / 0.15); border: 1px solid oklch(var(--burnout) / 0.35);">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="oklch(var(--burnout))" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="2.18" ry="2.18"></rect><line x1="7" y1="2" x2="7" y2="22"></line><line x1="17" y1="2" x2="17" y2="22"></line><line x1="2" y1="12" x2="22" y2="12"></line><line x1="2" y1="7" x2="22" y2="7"></line><line x1="2" y1="17" x2="22" y2="17"></line></svg>
+            </div>
+            <p class="font-display font-black text-xl uppercase tracking-tight leading-tight text-foreground">{{ section.settings.title_4 }}</p>
+            <p class="font-mono text-xs mt-1" style="color: oklch(var(--foreground) / 0.5); white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">{{ section.settings.desc_4 }}</p>
+          </div>
+        </div>
+      </a>
+
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Select Signal Grid",
+  "settings": [
+    {
+      "type": "text",
+      "id": "prefix_text",
+      "default": "FORM_SELECT",
+      "label": "Prefix Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "SELECT YOUR SIGNAL",
+      "label": "Heading Title"
+    },
+    {
+      "type": "header",
+      "content": "Category 1"
+    },
+    {
+      "type": "text",
+      "id": "title_1",
+      "default": "Tees",
+      "label": "Title 1"
+    },
+    {
+      "type": "text",
+      "id": "desc_1",
+      "default": "Oversized 240 GSM statement tees",
+      "label": "Description 1"
+    },
+    {
+      "type": "url",
+      "id": "url_1",
+      "label": "Link 1"
+    },
+    {
+      "type": "header",
+      "content": "Category 2"
+    },
+    {
+      "type": "text",
+      "id": "title_2",
+      "default": "Hoodies",
+      "label": "Title 2"
+    },
+    {
+      "type": "text",
+      "id": "desc_2",
+      "default": "400 GSM heavyweight drop-shoulder",
+      "label": "Description 2"
+    },
+    {
+      "type": "url",
+      "id": "url_2",
+      "label": "Link 2"
+    },
+    {
+      "type": "header",
+      "content": "Category 3"
+    },
+    {
+      "type": "text",
+      "id": "title_3",
+      "default": "Shorts",
+      "label": "Title 3"
+    },
+    {
+      "type": "text",
+      "id": "desc_3",
+      "default": "Minimal symbolic utility shorts",
+      "label": "Description 3"
+    },
+    {
+      "type": "url",
+      "id": "url_3",
+      "label": "Link 3"
+    },
+    {
+      "type": "header",
+      "content": "Category 4"
+    },
+    {
+      "type": "text",
+      "id": "title_4",
+      "default": "Lowers",
+      "label": "Title 4"
+    },
+    {
+      "type": "text",
+      "id": "desc_4",
+      "default": "Utility-inspired relaxed silhouettes",
+      "label": "Description 4"
+    },
+    {
+      "type": "url",
+      "id": "url_4",
+      "label": "Link 4"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Select Signal Grid"
+    }
+  ]
+}
+{% endschema %}

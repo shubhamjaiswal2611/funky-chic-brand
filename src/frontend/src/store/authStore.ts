@@ -1,10 +1,15 @@
-import { useInternetIdentity } from "@caffeineai/core-infrastructure";
 import { useQueryClient } from "@tanstack/react-query";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
-import { UserRole } from "../backend.d";
-import { useBackend } from "../hooks/useBackend";
+import { Session, User } from "@supabase/supabase-js";
+import { supabase } from "../integrations/supabase/client";
+
+export enum UserRole {
+  guest = "guest",
+  customer = "customer",
+  admin = "admin",
+}
 
 interface AuthState {
   role: UserRole;
@@ -21,65 +26,98 @@ export const useAuthStore = create<AuthState>()(
       isAdmin: false,
       setRole: (role) => set({ role }),
       setIsAdmin: (isAdmin) => set({ isAdmin }),
-      reset: () => set({ role: UserRole.guest, isAdmin: false }),
+      reset: () =>
+        set({
+          role: UserRole.guest,
+          isAdmin: false,
+        }),
     }),
-    { name: "altinstinct-auth-state" },
+    {
+      name: "funky-chic-auth",
+    },
   ),
 );
 
-// Hook combining Internet Identity platform auth + role state from backend
 export function useAuth() {
-  const {
-    login,
-    clear,
-    isAuthenticated,
-    isInitializing,
-    isLoggingIn,
-    identity,
-  } = useInternetIdentity();
   const queryClient = useQueryClient();
+
   const { role, isAdmin, setRole, setIsAdmin, reset } = useAuthStore();
-  const { actor, isFetching: isActorFetching } = useBackend();
 
-  // Sync role and admin status from backend after auth resolves
+  const [user, setUser] = useState<User | null>(null);
+
+  const [session, setSession] = useState<Session | null>(null);
+
+  const [isInitializing, setIsInitializing] = useState(true);
+
   useEffect(() => {
-    if (!isAuthenticated || isActorFetching || !actor) return;
+    supabase.auth.getSession().then(({ data }) => {
+      setSession(data.session);
+      setUser(data.session?.user ?? null);
+      setIsInitializing(false);
+    });
 
-    let cancelled = false;
-    (async () => {
-      try {
-        const [userRole, adminStatus] = await Promise.all([
-          actor.getCallerUserRole(),
-          actor.isCallerAdmin(),
-        ]);
-        if (!cancelled) {
-          setRole(userRole);
-          setIsAdmin(adminStatus);
-        }
-      } catch {
-        // silently ignore; role stays at persisted value
-      }
-    })();
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+      setUser(session?.user ?? null);
+      setIsInitializing(false);
+    });
 
-    return () => {
-      cancelled = true;
-    };
-  }, [isAuthenticated, actor, isActorFetching, setRole, setIsAdmin]);
+    return () => subscription.unsubscribe();
+  }, []);
 
-  const handleLogout = () => {
-    clear();
+  const login = async (
+    email: string,
+    password: string,
+  ) => {
+    return supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+  };
+
+  const register = async (
+    email: string,
+    password: string,
+  ) => {
+    return supabase.auth.signUp({
+      email,
+      password,
+    });
+  };
+
+  const logout = async () => {
+    await supabase.auth.signOut();
     reset();
     queryClient.clear();
   };
 
+  useEffect(() => {
+    if (!user) {
+      reset();
+      return;
+    }
+
+    const role =
+      user.user_metadata?.role === "admin"
+        ? UserRole.admin
+        : UserRole.customer;
+
+    setRole(role);
+    setIsAdmin(role === UserRole.admin);
+  }, [user]);
+
   return {
-    isAuthenticated,
+    user,
+    session,
+    isAuthenticated: !!user,
     isInitializing,
-    isLoggingIn,
-    isAdmin,
+    isLoggingIn: false,
     role,
-    identity,
+    isAdmin,
     login,
-    logout: handleLogout,
+    register,
+    logout,
   };
 }

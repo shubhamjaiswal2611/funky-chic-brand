@@ -1,0 +1,26 @@
+{
+  "sections": {
+    "hero": {
+      "type": "hero"
+    },
+    "countdown": {
+      "type": "lore-countdown"
+    },
+    "categories": {
+      "type": "select-signal"
+    },
+    "featured": {
+      "type": "featured-products"
+    },
+    "reels": {
+      "type": "cinematic-reels"
+    }
+  },
+  "order": [
+    "hero",
+    "countdown",
+    "categories",
+    "featured",
+    "reels"
+  ]
+}

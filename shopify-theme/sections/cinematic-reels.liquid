@@ -1,0 +1,135 @@
+<section 
+  class="py-20"
+  style="background-color: oklch(var(--background));"
+>
+  <div class="container">
+    <!-- Header -->
+    <div class="mb-12">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] mb-3" style="color: oklch(var(--primary));">
+        {{ section.settings.prefix_text }}
+      </p>
+      <h2 
+        class="font-display font-black uppercase text-foreground"
+        style="font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -0.02em;"
+      >
+        {{ section.settings.title }}
+      </h2>
+    </div>
+
+    <!-- Reels grid -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+      {%- if section.blocks.size > 0 -%}
+        {%- for block in section.blocks -%}
+          <div 
+            class="reel-card"
+            data-reel-video-src="{{ block.settings.video_url }}"
+            {{ block.shopify_attributes }}
+          >
+            <!-- Overlay and Play trigger -->
+            <div class="reel-play">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+            <!-- Labels -->
+            <div class="reel-label flex items-center justify-between">
+              <span class="heading-brand text-sm tracking-widest">{{ block.settings.title }}</span>
+              <span class="font-mono text-xs text-muted-foreground uppercase" style="color: oklch(var(--primary));">
+                // {{ block.settings.emotion | default: 'system' }}
+              </span>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- else -%}
+        <!-- Mock blocks if none configured -->
+        {%- assign mock_titles = 'Emotional Archive,Dreamstate Division,Human Error Series,Instinct Protocol' | split: ',' -%}
+        {%- assign mock_emotions = 'chaos,escape,overthinking,obsession' | split: ',' -%}
+        {%- for title in mock_titles -%}
+          <div 
+            class="reel-card"
+            data-reel-video-src="https://assets.mixkit.co/videos/preview/mixkit-street-fashion-shoot-with-a-cool-girl-40508-large.mp4"
+          >
+            <div class="reel-play">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polygon points="5 3 19 12 5 21 5 3"></polygon>
+              </svg>
+            </div>
+            <div class="reel-label flex items-center justify-between">
+              <span class="heading-brand text-sm tracking-widest">{{ title }}</span>
+              <span class="font-mono text-xs uppercase" style="color: oklch(var(--primary));">
+                // {{ mock_emotions[forloop.index0] }}
+              </span>
+            </div>
+          </div>
+        {%- endfor -%}
+      {%- endif -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Cinematic Reels",
+  "settings": [
+    {
+      "type": "text",
+      "id": "prefix_text",
+      "default": "LOOKBOOK_REELS",
+      "label": "Prefix Text"
+    },
+    {
+      "type": "text",
+      "id": "title",
+      "default": "CINEMATIC LOOKBOOK REELS",
+      "label": "Heading Title"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "reel",
+      "name": "Lookbook Reel",
+      "settings": [
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Collection Series Title",
+          "label": "Title"
+        },
+        {
+          "type": "text",
+          "id": "emotion",
+          "default": "chaos",
+          "label": "Emotion / Mood tag"
+        },
+        {
+          "type": "text",
+          "id": "video_url",
+          "label": "Video MP4 Source URL",
+          "default": "https://assets.mixkit.co/videos/preview/mixkit-street-fashion-shoot-with-a-cool-girl-40508-large.mp4"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Cinematic Reels",
+      "blocks": [
+        {
+          "type": "reel",
+          "settings": {
+            "title": "Emotional Archive",
+            "emotion": "chaos"
+          }
+        },
+        {
+          "type": "reel",
+          "settings": {
+            "title": "Dreamstate Division",
+            "emotion": "escape"
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

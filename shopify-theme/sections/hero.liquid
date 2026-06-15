@@ -1,0 +1,134 @@
+<section 
+  data-ocid="home.hero_section"
+  class="relative overflow-hidden flex items-center"
+  style="min-height: 85vh; background: linear-gradient(145deg, oklch(0.08 0.015 280) 0%, oklch(0.12 0.03 280) 100%);"
+>
+  <!-- Background grid texture -->
+  <div 
+    class="absolute inset-0 pointer-events-none pattern-grid"
+    style="opacity: 0.4;"
+  ></div>
+
+  <!-- Ambient glow orbs -->
+  <div 
+    class="absolute pointer-events-none"
+    style="top: -10%; right: -5%; width: 50vw; height: 50vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--primary) / 0.15) 0%, transparent 70%);"
+  ></div>
+  <div 
+    class="absolute pointer-events-none"
+    style="bottom: -5%; left: -5%; width: 40vw; height: 40vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--secondary) / 0.1) 0%, transparent 70%);"
+  ></div>
+
+  <div class="container relative py-20 z-10">
+    <div style="max-w: 800px;">
+      <!-- Diagnostic indicator -->
+      <div class="flex items-center gap-3 mb-8" style="color: oklch(var(--primary));">
+        <span 
+          class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" 
+          style="background-color: currentColor; box-shadow: 0 0 10px currentColor;"
+        ></span>
+        <span class="font-mono text-xs uppercase tracking-[0.2em]">
+          {{ section.settings.diagnostic_text }}
+        </span>
+      </div>
+
+      <!-- Title display -->
+      <h1 
+        class="font-display font-black uppercase leading-none mb-6 heading-brand"
+        style="font-size: clamp(3rem, 10vw, 8rem); color: oklch(var(--foreground));"
+      >
+        {{ section.settings.title_part1 }}<span style="color: oklch(var(--primary));">{{ section.settings.title_part2 }}</span>
+      </h1>
+
+      <!-- Description paragraph -->
+      <p 
+        class="font-body text-base md:text-xl mb-10 leading-relaxed"
+        style="color: oklch(var(--foreground) / 0.7); max-w: 600px;"
+      >
+        {{ section.settings.description }}
+      </p>
+
+      <!-- Action buttons -->
+      <div class="flex flex-wrap gap-4">
+        {%- if section.settings.btn_primary_text != blank -%}
+          <a 
+            href="{{ section.settings.btn_primary_url }}"
+            class="button-brand primary"
+            data-ocid="home.hero_cta_primary"
+          >
+            {{ section.settings.btn_primary_text }}
+          </a>
+        {%- endif -%}
+
+        {%- if section.settings.btn_secondary_text != blank -%}
+          <a 
+            href="{{ section.settings.btn_secondary_url }}"
+            class="button-brand secondary"
+            data-ocid="home.hero_cta_secondary"
+          >
+            {{ section.settings.btn_secondary_text }}
+          </a>
+        {%- endif -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Hero Section",
+  "settings": [
+    {
+      "type": "text",
+      "id": "diagnostic_text",
+      "default": "SYSTEM_SIGNAL_ACTIVE",
+      "label": "Diagnostic Status Label"
+    },
+    {
+      "type": "text",
+      "id": "title_part1",
+      "default": "ALT",
+      "label": "Heading Part 1"
+    },
+    {
+      "type": "text",
+      "id": "title_part2",
+      "default": "INSTINCT",
+      "label": "Heading Part 2 (Highlighted)"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "default": "Alternative Digital Emotion Culture — where emotions become clothing and identity becomes the signal.",
+      "label": "Description Paragraph"
+    },
+    {
+      "type": "text",
+      "id": "btn_primary_text",
+      "default": "ENTER SYSTEM",
+      "label": "Primary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "btn_primary_url",
+      "label": "Primary Button URL"
+    },
+    {
+      "type": "text",
+      "id": "btn_secondary_text",
+      "default": "ACCESS ARCHIVE",
+      "label": "Secondary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "btn_secondary_url",
+      "label": "Secondary Button URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Hero Section"
+    }
+  ]
+}
+{% endschema %}

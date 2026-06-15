@@ -1,0 +1,33 @@
+<footer 
+  class="py-8 transition-theme"
+  style="background-color: oklch(var(--footer-bg)); color: oklch(var(--footer-fg)); border-top: 1px solid oklch(var(--border));"
+>
+  <div class="marquee-band">
+    <div class="marquee-content heading-brand text-xs md:text-sm tracking-[0.25em]">
+      <span>{{ section.settings.marquee_text }} &nbsp;&bull;&nbsp; {{ section.settings.marquee_text }} &nbsp;&bull;&nbsp; </span>
+    </div>
+    <div class="marquee-content heading-brand text-xs md:text-sm tracking-[0.25em]" aria-hidden="true">
+      <span>{{ section.settings.marquee_text }} &nbsp;&bull;&nbsp; {{ section.settings.marquee_text }} &nbsp;&bull;&nbsp; </span>
+    </div>
+  </div>
+
+  <div class="container text-center mt-6">
+    <p class="font-mono text-[10px] text-muted-foreground" style="opacity: 0.6;">
+      &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. ALL TRANSMISSIONS SECURED.
+    </p>
+  </div>
+</footer>
+
+{% schema %}
+{
+  "name": "Footer",
+  "settings": [
+    {
+      "type": "text",
+      "id": "marquee_text",
+      "default": "⚡ WEAR THE SIGNAL — FIVE SERIES · ZERO LIMITS ⚡",
+      "label": "Marquee Text"
+    }
+  ]
+}
+{% endschema %}

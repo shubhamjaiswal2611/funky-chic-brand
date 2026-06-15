@@ -1,0 +1,270 @@
+<section 
+  class="relative overflow-hidden"
+  style="background-color: oklch(var(--card)); min-height: 300px; border-bottom: 1px solid oklch(var(--border));"
+>
+  <!-- Background decals -->
+  <div class="absolute -right-16 -top-16 w-64 h-64 opacity-10 pattern-mandala pointer-events-none"></div>
+  <div class="absolute -left-16 bottom-0 w-48 h-48 opacity-10 pattern-mandala pointer-events-none"></div>
+
+  <!-- Header Banner -->
+  <div class="container py-16 text-center max-w-3xl relative z-10">
+    <p class="font-mono text-xs uppercase tracking-[0.35em] mb-4 text-muted-foreground">
+      {{ section.settings.subheading | default: 'The AltInstinct Collective' }}
+    </p>
+    <h1 class="heading-brand text-4xl md:text-6xl mb-4 text-foreground leading-tight">
+      {{ section.settings.heading | default: 'Access the Archive. Select Your Signal.' }}
+    </h1>
+    <p class="font-body text-muted-foreground text-base max-w-xl mx-auto leading-relaxed">
+      {{ section.settings.description | default: 'First access to drops, emotional series narratives, and member privileges — from the system to you.' }}
+    </p>
+  </div>
+</section>
+
+<!-- Content Area: Perks + Form split -->
+<section class="py-20" style="background-color: oklch(var(--background));">
+  <div class="container">
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-14 items-start max-w-5xl mx-auto">
+      
+      <!-- Perks panel -->
+      <div>
+        <h2 class="heading-brand text-3xl mb-2 text-foreground">
+          {{ section.settings.perks_title | default: 'Your Member Benefits' }}
+        </h2>
+        <p class="font-body text-sm text-muted-foreground mb-8">
+          {{ section.settings.perks_description | default: 'Carefully curated content for those who appreciate the streetwear culture.' }}
+        </p>
+
+        <!-- Perks list loop -->
+        <div class="flex flex-col gap-4">
+          {%- if section.blocks.size > 0 -%}
+            {%- for block in section.blocks -%}
+              <div 
+                class="card-brand flex gap-4 items-start p-4"
+                style="border-left: var(--border-accent-width) solid oklch(var(--primary));"
+                {{ block.shopify_attributes }}
+              >
+                <span 
+                  class="text-xl flex-shrink-0 font-display font-black mt-0.5"
+                  style="color: oklch(var(--primary));"
+                >
+                  {{ block.settings.icon | default: '✦' }}
+                </span>
+                <div class="min-w-0">
+                  <p class="font-display font-bold text-foreground text-sm uppercase tracking-wide">
+                    {{ block.settings.title }}
+                  </p>
+                  <p class="font-body text-sm text-muted-foreground mt-0.5 leading-relaxed">
+                    {{ block.settings.description }}
+                  </p>
+                </div>
+              </div>
+            {%- endfor -%}
+          {%- else -%}
+            <!-- Fallback Mock perks -->
+            <div class="card-brand flex gap-4 items-start p-4" style="border-left: var(--border-accent-width) solid oklch(var(--primary));">
+              <span class="text-xl flex-shrink-0 font-display font-black mt-0.5" style="color: oklch(var(--primary));">✦</span>
+              <div class="min-w-0">
+                <p class="font-display font-bold text-foreground text-sm uppercase tracking-wide">Exclusive Drop Alerts</p>
+                <p class="font-body text-sm text-muted-foreground mt-0.5 leading-relaxed">First access to limited collections before anyone else.</p>
+              </div>
+            </div>
+          {%- endif -%}
+        </div>
+      </div>
+
+      <!-- Form Box wrapper -->
+      <div>
+        <div 
+          class="rounded-2xl p-8 pattern-block-print relative overflow-hidden"
+          style="background-color: oklch(var(--card)); border: 1px solid oklch(var(--border)); box-shadow: 0 24px 48px oklch(var(--primary) / 0.05);"
+        >
+          <!-- Accent pattern -->
+          <div class="absolute -top-8 -right-8 w-32 h-32 opacity-10 pattern-mandala pointer-events-none"></div>
+
+          <!-- Active form state -->
+          <div id="newsletter-form-container">
+            <h2 class="heading-brand text-2xl mb-1" style="color: oklch(var(--foreground));">
+              Become a Member
+            </h2>
+            <p class="font-body text-sm mb-6 text-muted-foreground">
+              Curated updates, nothing more. Unsubscribe anytime.
+            </p>
+
+            <form data-newsletter-form class="flex flex-col gap-5">
+              <!-- Name field -->
+              <div>
+                <label for="nl-name" class="font-display text-xs uppercase tracking-widest mb-1.5 block" style="color: oklch(var(--foreground) / 0.7);">
+                  Your Name
+                </label>
+                <input 
+                  id="nl-name" 
+                  data-ocid="newsletter.name_input"
+                  type="text" 
+                  placeholder="Your name" 
+                  class="input-brand"
+                />
+              </div>
+
+              <!-- Email field -->
+              <div>
+                <label for="nl-email" class="font-display text-xs uppercase tracking-widest mb-1.5 block" style="color: oklch(var(--foreground) / 0.7);">
+                  Email Address *
+                </label>
+                <input 
+                  id="nl-email" 
+                  data-ocid="newsletter.email_input"
+                  type="email" 
+                  placeholder="your@email.com" 
+                  class="input-brand"
+                  required
+                />
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit" 
+                data-ocid="newsletter.subscribe_button"
+                class="button-brand primary w-full h-11"
+                style="margin-top: 4px;"
+              >
+                Join the Collective
+              </button>
+            </form>
+            
+            <p class="font-body text-xs mt-4 text-center opacity-50 text-muted-foreground">
+              By subscribing you agree to receive brand updates. Unsubscribe anytime.
+            </p>
+          </div>
+
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Bottom Marquee Proof Section -->
+<section 
+  data-ocid="newsletter.social_proof_section"
+  class="py-20 pattern-block-print relative overflow-hidden"
+  style="background-color: oklch(var(--card)); border-top: 1px solid oklch(var(--border)); border-bottom: 1px solid oklch(var(--border));"
+>
+  <div class="absolute -right-8 top-1/2 -translate-y-1/2 w-40 h-40 opacity-10 pattern-mandala pointer-events-none"></div>
+  <div class="absolute -left-8 top-1/2 -translate-y-1/2 w-32 h-32 opacity-10 pattern-mandala pointer-events-none"></div>
+  
+  <div class="container text-center relative z-10">
+    <p class="heading-brand text-6xl md:text-8xl mb-2" style="color: oklch(var(--primary));">
+      {{ section.settings.proof_number | default: '12,000+' }}
+    </p>
+    <p class="font-body text-lg font-semibold text-muted-foreground">
+      {{ section.settings.proof_label | default: 'members across the global collective 🌍' }}
+    </p>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Newsletter Form",
+  "settings": [
+    {
+      "type": "text",
+      "id": "subheading",
+      "default": "The AltInstinct Collective",
+      "label": "Subheading Label"
+    },
+    {
+      "type": "text",
+      "id": "heading",
+      "default": "Access the Archive. Select Your Signal.",
+      "label": "Main Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "description",
+      "default": "First access to drops, emotional series narratives, and member privileges — from the system to you.",
+      "label": "Description details"
+    },
+    {
+      "type": "text",
+      "id": "perks_title",
+      "default": "Your Member Benefits",
+      "label": "Perks Block Heading"
+    },
+    {
+      "type": "textarea",
+      "id": "perks_description",
+      "default": "Carefully curated content for those who appreciate the streetwear culture.",
+      "label": "Perks Block Description"
+    },
+    {
+      "type": "text",
+      "id": "proof_number",
+      "default": "12,000+",
+      "label": "Social Proof Stat number"
+    },
+    {
+      "type": "text",
+      "id": "proof_label",
+      "default": "members across the global collective 🌍",
+      "label": "Social Proof Label"
+    }
+  ],
+  "blocks": [
+    {
+      "type": "perk",
+      "name": "Perk Block",
+      "settings": [
+        {
+          "type": "text",
+          "id": "icon",
+          "default": "✦",
+          "label": "Bullet icon indicator"
+        },
+        {
+          "type": "text",
+          "id": "title",
+          "default": "Exclusive Drop Alerts",
+          "label": "Perk Title"
+        },
+        {
+          "type": "textarea",
+          "id": "description",
+          "default": "First access to limited collections before anyone else.",
+          "label": "Perk Description"
+        }
+      ]
+    }
+  ],
+  "presets": [
+    {
+      "name": "Newsletter Form",
+      "blocks": [
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "✦",
+            "title": "Exclusive Drop Alerts",
+            "description": "First access to limited collections before anyone else. Be the one who got it early."
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "◈",
+            "title": "Emotional Archive Access",
+            "description": "Deep dives into the emotional series — the stories, symbols, and signals behind every drop."
+          }
+        },
+        {
+          "type": "perk",
+          "settings": {
+            "icon": "◆",
+            "title": "Signal-Only Discounts",
+            "description": "Exclusive codes and early-bird pricing reserved for archive members only."
+          }
+        }
+      ]
+    }
+  ]
+}
+{% endschema %}

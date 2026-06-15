@@ -1,0 +1,159 @@
+{%- comment -%}
+  Renders a product card in collection grids.
+  Accepts:
+  - product: {Object} Shopify Product Object
+  - index: {Number} Grid index for animation delay offset
+{%- endcomment -%}
+
+{%- liquid
+  assign animation_delay = index | modulo: 4 | multiply: 0.08
+  assign card_image = product.featured_media.preview_image
+
+  # Parse tags for metadata, fallback to defaults
+  assign product_series = 'Social Battery Series'
+  assign product_category = 'Tees'
+  assign product_mood = ''
+
+  for tag in product.tags
+    assign tag_lower = tag | downcase
+    if tag_lower contains 'series:'
+      assign product_series = tag | split: ':' | last | strip
+    elsif tag_lower contains 'emotion:' or tag_lower contains 'mood:'
+      assign product_mood = tag | split: ':' | last | strip
+    elsif tag_lower contains 'category:'
+      assign product_category = tag | split: ':' | last | strip
+    endif
+  endfor
+
+  # Fallback checks based on type or title if tags not present
+  if product.type != blank
+    assign product_category = product.type
+  elsif product.title contains 'Tee'
+    assign product_category = 'Tees'
+  elsif product.title contains 'Hoodie'
+    assign product_category = 'Hoodies'
+  elsif product.title contains 'Shorts'
+    assign product_category = 'Shorts'
+  elsif product.title contains 'Lower' or product.title contains 'Pant'
+    assign product_category = 'Lowers'
+  endif
+
+  # Fallback colors mapping
+  assign accent_color = '#CCFF00'
+  if product_series == 'Social Battery Series'
+    assign accent_color = '#FF2244'
+  elsif product_series == 'Memory Corruption Series'
+    assign accent_color = '#0066CC'
+  elsif product_series == 'Dreamstate Division'
+    assign accent_color = '#9B7EDE'
+  elsif product_series == 'Human Error Series'
+    assign accent_color = '#7B2FBE'
+  endif
+-%}
+
+<div 
+  class="card-brand group relative flex flex-col"
+  data-product-card
+  data-category="{{ product_category | downcase }}"
+  data-mood="{{ product_mood | downcase }}"
+  data-title="{{ product.title | downcase }}"
+  data-desc="{{ product.description | downcase }}"
+  style="animation-delay: {{ animation_delay }}s;"
+>
+  <!-- Card Media Wrapper -->
+  <div class="relative w-full overflow-hidden" style="aspect-ratio: 3/4; background-color: oklch(var(--muted) / 0.15);">
+    {%- if card_image != blank -%}
+      <a href="{{ product.url }}" class="block w-full h-full">
+        <img 
+          src="{{ card_image | image_url: width: 450 }}"
+          alt="{{ card_image.alt | escape }}"
+          loading="lazy"
+          width="450"
+          height="600"
+          style="width: 100%; height: 100%; object-fit: cover;"
+          class="transition-smooth group-hover:scale-105"
+        />
+      </a>
+    {%- else -%}
+      <!-- Dynamic SVG Mockup Fallback -->
+      <a href="{{ product.url }}" class="block w-full h-full transition-smooth group-hover:scale-105">
+        {% render 'product-mockup', category: product_category, series: product_series, emotion: product_mood %}
+      </a>
+    {%- endif -%}
+
+    <!-- Floating Price Tag -->
+    <div 
+      class="price-badge absolute top-3 right-3 rounded px-2.5 py-1 font-display text-sm font-bold transition-smooth"
+      style="background-color: oklch(var(--background)); color: oklch(var(--foreground)); border: 1px solid oklch(var(--border));"
+    >
+      {{ product.price | money_without_trailing_zeros }}
+    </div>
+
+    <!-- Quick Wishlist Button -->
+    <button 
+      type="button"
+      class="absolute top-3 left-3 p-2 rounded-md transition-smooth"
+      data-wishlist-toggle
+      data-product-id="{{ product.id }}"
+      data-product-title="{{ product.title | escape }}"
+      data-product-price="{{ product.price | money_without_trailing_zeros }}"
+      data-product-image="{% if card_image != blank %}{{ card_image | image_url: width: 300 }}{% endif %}"
+      data-product-handle="{{ product.handle }}"
+      aria-label="Add to wishlist"
+      style="background-color: oklch(var(--background) / 0.7); border: 1px solid oklch(var(--border) / 0.5); color: oklch(var(--muted-foreground)); display: flex; align-items: center; justify-content: center;"
+    >
+      {% render 'icon-heart', size: 14 %}
+    </button>
+
+    <!-- Signal-mode dynamic emotion tags -->
+    {%- if product_mood != blank -%}
+      <div 
+        class="absolute bottom-3 left-3 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest brand-emotion-tag"
+        style="background-color: {{ accent_color }}22; color: {{ accent_color }}; border: 1px solid {{ accent_color }}44;"
+      >
+        {{ product_mood }}
+      </div>
+    {%- endif -%}
+  </div>
+
+  <!-- Card Body -->
+  <div 
+    class="p-4 flex flex-col flex-1"
+    style="border-top: 1px solid oklch(var(--border));"
+  >
+    <!-- Series Label -->
+    <p 
+      class="text-[9px] font-semibold uppercase tracking-[0.2em] mb-1.5 product-series-label"
+      style="color: oklch(var(--muted-foreground));"
+    >
+      {{ product_series }}
+    </p>
+
+    <!-- Title and Category row -->
+    <div class="flex items-start justify-between gap-2 mb-2 min-w-0">
+      <h3 class="font-display font-bold leading-snug text-foreground text-sm group-hover:text-primary transition-smooth truncate flex-1 uppercase tracking-tight text-[0.9rem]">
+        <a href="{{ product.url }}">{{ product.title }}</a>
+      </h3>
+      <span 
+        class="badge badge-outline shrink-0 text-[9px] font-semibold uppercase tracking-wide"
+        style="background-color: oklch(var(--muted) / 0.3); border-color: oklch(var(--border)); color: oklch(var(--muted-foreground));"
+      >
+        {{ product_category }}
+      </span>
+    </div>
+
+    <!-- Brief description truncation -->
+    <p class="text-muted-foreground text-xs leading-relaxed line-clamp-2 flex-1 mb-4">
+      {{ product.description | strip_html | truncate: 120 }}
+    </p>
+
+    <!-- Quick view or enter links -->
+    <a 
+      href="{{ product.url }}" 
+      class="button-brand primary text-center text-xs w-full"
+      style="padding: 8px 16px; font-size: 11px;"
+    >
+      View Transmissions
+    </a>
+  </div>
+</div>

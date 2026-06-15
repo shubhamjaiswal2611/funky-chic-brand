@@ -1,0 +1,123 @@
+{%- liquid
+  assign main_menu = section.settings.menu | default: linklists.main-menu
+-%}
+
+<header 
+  class="sticky top-0 z-50 transition-theme"
+  style="background-color: oklch(var(--header-bg)); color: oklch(var(--header-fg)); border-bottom: 2px solid oklch(var(--border));"
+>
+  <!-- Energy mode bar -->
+  <div 
+    class="flex items-center justify-center gap-3 py-1.5 text-xs font-body font-semibold tracking-widest uppercase energy-mode-bar"
+    style="background-color: oklch(var(--primary)); color: oklch(var(--primary-foreground));"
+  >
+    <span class="hidden sm:inline">Energy Mode</span>
+    <button 
+      type="button" 
+      data-ocid="theme.toggle"
+      aria-label="Switch theme mode"
+      class="energy-bar-btn"
+    >
+      <span class="font-display font-black uppercase text-[10px] tracking-widest label-signal">SIGNAL</span>
+      <span class="energy-bar-toggle">
+        <span class="energy-bar-toggle-knob"></span>
+      </span>
+      <span class="font-display font-black uppercase text-[10px] tracking-widest label-static">STATIC</span>
+    </button>
+  </div>
+
+  <!-- Main nav container -->
+  <div class="container flex items-center justify-between py-3 gap-4">
+    <!-- Brand Logo -->
+    <a href="{{ routes.root_url }}" class="flex items-center gap-2 transition-smooth hover:opacity-80 flex-shrink-0" data-ocid="nav.logo_link">
+      {% render 'icon-zap', size: 20 %}
+      <span 
+        class="font-display text-2xl font-black tracking-tight uppercase header-logo-text"
+        style="color: oklch(var(--header-fg));"
+      >
+        AltInstinct
+      </span>
+    </a>
+
+    <!-- Desktop nav links -->
+    <nav class="hidden md:flex items-center gap-1 flex-1 justify-center" aria-label="Main navigation">
+      {%- for link in main_menu.links -%}
+        <a 
+          href="{{ link.url }}" 
+          class="nav-link {% if link.active %}active{% endif %}"
+          data-ocid="nav.{{ link.title | downcase | replace: ' ', '_' }}_link"
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    </nav>
+
+    <!-- Action icons -->
+    <div class="flex items-center gap-1">
+      <!-- Wishlist link -->
+      <a href="/pages/wishlist" class="relative p-2 rounded-md transition-smooth hover:opacity-80" data-ocid="nav.wishlist_link" aria-label="Wishlist">
+        {% render 'icon-heart', size: 20 %}
+        <span class="badge-notify badge-notify-wishlist" style="background-color: oklch(var(--destructive)); color: oklch(var(--destructive-foreground)); display: none;">0</span>
+      </a>
+
+      <!-- Cart link -->
+      <a href="{{ routes.cart_url }}" class="relative p-2 rounded-md transition-smooth hover:opacity-80" data-ocid="nav.cart_link" aria-label="Shopping bag">
+        {% render 'icon-shopping-bag', size: 20 %}
+        <span class="badge-notify" style="background-color: oklch(var(--secondary)); color: oklch(var(--secondary-foreground)); {% if cart.item_count == 0 %}display: none;{% endif %}">
+          {{ cart.item_count }}
+        </span>
+      </a>
+
+      <!-- User accounts -->
+      {%- if shop.customer_accounts_enabled -%}
+        {%- if customer -%}
+          <a href="{{ routes.account_url }}" class="p-2 rounded-full transition-smooth hover:opacity-80" aria-label="Account" data-ocid="nav.user_menu_toggle">
+            {% render 'icon-user', size: 20 %}
+          </a>
+        {%- else -%}
+          <a href="{{ routes.account_login_url }}" class="flex items-center gap-1.5 font-body font-semibold text-xs uppercase tracking-widest transition-smooth p-2" data-ocid="nav.login_button">
+            {% render 'icon-user', size: 18 %}
+            <span class="hidden sm:inline">Login</span>
+          </a>
+        {%- endif -%}
+      {%- endif -%}
+
+      <!-- Mobile drawer toggle -->
+      <button 
+        type="button" 
+        class="md:hidden p-2 rounded-md transition-smooth" 
+        data-ocid="nav.mobile_menu_toggle"
+        aria-label="Toggle menu"
+      >
+        {% render 'icon-menu', size: 22 %}
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile nav drawer (hidden by default) -->
+  <nav id="mobile-nav-drawer" class="mobile-nav-drawer" style="display: none;" aria-label="Mobile navigation">
+    {%- for link in main_menu.links -%}
+      <a 
+        href="{{ link.url }}" 
+        class="mobile-nav-link {% if link.active %}active{% endif %}"
+        data-ocid="nav.mobile_{{ link.title | downcase | replace: ' ', '_' }}_link"
+      >
+        {{ link.title }}
+      </a>
+    {%- endfor -%}
+  </nav>
+</header>
+
+{% schema %}
+{
+  "name": "Header",
+  "settings": [
+    {
+      "type": "link_list",
+      "id": "menu",
+      "default": "main-menu",
+      "label": "Navigation Menu"
+    }
+  ]
+}
+{% endschema %}

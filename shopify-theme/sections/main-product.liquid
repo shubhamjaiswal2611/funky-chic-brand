@@ -1,0 +1,359 @@
+{%- liquid
+  assign current_variant = product.selected_or_first_available_variant
+  assign product_image = product.featured_media.preview_image
+
+  # Parse tags for mockup metadata
+  assign product_series = 'Social Battery Series'
+  assign product_category = 'Tees'
+  assign product_mood = ''
+
+  for tag in product.tags
+    assign tag_lower = tag | downcase
+    if tag_lower contains 'series:'
+      assign product_series = tag | split: ':' | last | strip
+    elsif tag_lower contains 'emotion:' or tag_lower contains 'mood:'
+      assign product_mood = tag | split: ':' | last | strip
+    elsif tag_lower contains 'category:'
+      assign product_category = tag | split: ':' | last | strip
+    endif
+  endfor
+
+  # Fallback checks based on type or title if tags not present
+  if product.type != blank
+    assign product_category = product.type
+  elsif product.title contains 'Tee'
+    assign product_category = 'Tees'
+  elsif product.title contains 'Hoodie'
+    assign product_category = 'Hoodies'
+  elsif product.title contains 'Shorts'
+    assign product_category = 'Shorts'
+  elsif product.title contains 'Lower' or product.title contains 'Pant'
+    assign product_category = 'Lowers'
+  endif
+
+  # Fallback colors mapping
+  assign accent_color = '#CCFF00'
+  if product_series == 'Social Battery Series'
+    assign accent_color = '#FF2244'
+  elsif product_series == 'Memory Corruption Series'
+    assign accent_color = '#0066CC'
+  elsif product_series == 'Dreamstate Division'
+    assign accent_color = '#9B7EDE'
+  elsif product_series == 'Human Error Series'
+    assign accent_color = '#7B2FBE'
+  endif
+-%}
+
+<div 
+  class="min-h-screen py-8"
+  style="background-color: oklch(var(--background));"
+  data-ocid="product_detail.page"
+>
+  <div class="container">
+    <!-- Back link -->
+    <a 
+      href="/collections/all" 
+      class="inline-flex items-center gap-2 mb-8 font-body text-sm transition-smooth hover:opacity-70"
+      style="color: oklch(var(--muted-foreground));"
+      data-ocid="product_detail.back_link"
+    >
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="19" y1="12" x2="5" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg>
+      Back to Shop
+    </a>
+
+    <!-- Product Details Grid split -->
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-10 lg:gap-16">
+      
+      <!-- Media column -->
+      <div class="relative">
+        <!-- Neon border glow in signal mode -->
+        <div class="product-glow-frame absolute -inset-1 rounded-xl -z-10" style="display: none;"></div>
+        
+        <div class="relative rounded-xl overflow-hidden aspect-square bg-muted" style="border: 1px solid oklch(var(--border));">
+          {%- if product_image != blank -%}
+            <img 
+              src="{{ product_image | image_url: width: 800 }}" 
+              alt="{{ product_image.alt | escape }}"
+              style="width: 100%; height: 100%; object-fit: cover;"
+              class="product-featured-media"
+            />
+          {%- else -%}
+            <!-- Fallback Mockup SVG -->
+            {% render 'product-mockup', category: product_category, series: product_series, emotion: product_mood, class_name: 'w-full h-full' %}
+          {%- endif -%}
+
+          {%- unless product.available -%}
+            <div 
+              class="absolute inset-0 flex items-center justify-center"
+              style="background-color: oklch(var(--background) / 0.75);"
+            >
+              <span class="font-display text-3xl font-black uppercase tracking-wider" style="color: oklch(var(--destructive));">
+                Sold Out
+              </span>
+            </div>
+          {%- endunless -%}
+        </div>
+      </div>
+
+      <!-- Info details column -->
+      <div class="flex flex-col gap-5">
+        <!-- Category & Stock -->
+        <div class="flex items-center gap-3">
+          <span 
+            class="badge badge-outline text-xs uppercase tracking-wider font-body font-semibold"
+            style="background-color: oklch(var(--muted) / 0.3); border-color: oklch(var(--border)); color: oklch(var(--primary));"
+          >
+            {{ product_category }}
+          </span>
+          {%- if product.available -%}
+            <span class="font-body text-xs text-muted-foreground">// AVAILABLE IN SYSTEM</span>
+          {%- endif -%}
+        </div>
+
+        <!-- Title -->
+        <h1 
+          class="heading-brand text-3xl md:text-4xl lg:text-5xl"
+          style="color: oklch(var(--foreground));"
+        >
+          {{ product.title }}
+        </h1>
+
+        <!-- Price -->
+        <div class="flex items-center gap-4">
+          <p 
+            class="font-display text-4xl font-black product-detail-price"
+            style="color: oklch(var(--primary));"
+          >
+            {{ product.price | money_without_trailing_zeros }}
+          </p>
+          <span class="font-body text-xs uppercase tracking-wider px-2 py-1 rounded" style="background-color: oklch(var(--muted) / 0.4); color: oklch(var(--muted-foreground));">
+            Free shipping
+          </span>
+        </div>
+
+        <!-- Description -->
+        <div class="font-body text-sm leading-relaxed text-muted-foreground">
+          {{ product.description }}
+        </div>
+
+        <!-- Divider line -->
+        <div class="h-px bg-border" style="background: linear-gradient(90deg, oklch(var(--primary)), transparent);"></div>
+
+        <!-- Shopify Product Form -->
+        {%- form 'product', product, id: 'product-form', class: 'product-form flex flex-col gap-5' -%}
+          <!-- Hidden Variant selection -->
+          <input type="hidden" name="id" value="{{ current_variant.id }}">
+
+          <!-- Variant options selector -->
+          {%- unless product.has_only_default_variant -%}
+            <div class="product-options">
+              {%- for option in product.options_with_values -%}
+                <div class="mb-4">
+                  <p class="font-body font-semibold text-xs uppercase tracking-widest mb-3 text-muted-foreground">
+                    {{ option.name }}
+                  </p>
+                  
+                  <div class="flex flex-wrap gap-2" data-option-index="{{ forloop.index0 }}">
+                    {%- for value in option.values -%}
+                      {%- liquid
+                        assign option_active = false
+                        if option.selected_value == value
+                          assign option_active = true
+                        endif
+                      -%}
+                      <button 
+                        type="button"
+                        class="variant-swatch min-w-[44px] h-10 px-4 rounded-md text-sm font-body font-semibold uppercase tracking-wider border transition-smooth {% if option_active %}active{% endif %}"
+                        data-value="{{ value | escape }}"
+                        style="{% if option_active %}background-color: oklch(var(--primary)); color: oklch(var(--primary-foreground)); border-color: oklch(var(--primary));{% else %}background-color: transparent; border-color: oklch(var(--border)); color: oklch(var(--foreground));{% endif %}"
+                      >
+                        {{ value }}
+                      </button>
+                    {%- endfor -%}
+                  </div>
+                </div>
+              {%- endfor -%}
+            </div>
+          {%- endunless -%}
+
+          <!-- Quantity input -->
+          <div>
+            <p class="font-body font-semibold text-xs uppercase tracking-widest mb-3 text-muted-foreground">
+              Quantity
+            </p>
+            <div class="flex items-center gap-1">
+              <button 
+                type="button" 
+                class="w-10 h-10 rounded-md border flex items-center justify-center transition-smooth"
+                style="border-color: oklch(var(--border)); color: oklch(var(--foreground));"
+                onclick="changeQty(-1)"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+              <input 
+                type="number" 
+                name="quantity" 
+                id="quantity-input" 
+                value="1" 
+                min="1" 
+                max="10" 
+                class="w-12 text-center font-display font-bold text-lg" 
+                style="background: none; border: none; outline: none; -moz-appearance: textfield;"
+                readonly
+              >
+              <button 
+                type="button" 
+                class="w-10 h-10 rounded-md border flex items-center justify-center transition-smooth"
+                style="border-color: oklch(var(--border)); color: oklch(var(--foreground));"
+                onclick="changeQty(1)"
+              >
+                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+              </button>
+            </div>
+          </div>
+
+          <!-- Add to Cart & Wishlist Trigger -->
+          <div class="flex gap-3 mt-1">
+            <button 
+              type="submit" 
+              name="add"
+              data-ocid="product_detail.add_to_cart_button"
+              class="button-brand primary flex-1 h-12"
+              {% unless product.available %}disabled{% endunless %}
+            >
+              {%- if product.available -%}
+                Add to Cart
+              {%- else -%}
+                Out of Stock
+              {%- endif -%}
+            </button>
+
+            <!-- Wishlist quick toggle button -->
+            <button 
+              type="button"
+              class="h-12 w-12 rounded-md border flex items-center justify-center transition-smooth"
+              data-wishlist-toggle
+              data-product-id="{{ product.id }}"
+              data-product-title="{{ product.title | escape }}"
+              data-product-price="{{ product.price | money_without_trailing_zeros }}"
+              data-product-image="{% if product_image != blank %}{{ product_image | image_url: width: 300 }}{% endif %}"
+              data-product-handle="{{ product.handle }}"
+              style="border-color: oklch(var(--border)); color: oklch(var(--muted-foreground));"
+              aria-label="Add to wishlist"
+            >
+              {% render 'icon-heart', size: 18 %}
+            </button>
+          </div>
+        {%- endform -%}
+
+        <!-- Trust Badges -->
+        <div class="flex flex-wrap gap-4 pt-2">
+          {%- assign trust_badges = 'Free returns,Ethically made,Ships in 2-3 Days' | split: ',' -%}
+          {%- for badge in trust_badges -%}
+            <span class="font-body text-xs flex items-center gap-1 text-muted-foreground">
+              <span style="color: oklch(var(--secondary)); font-weight: 700;">✓</span>
+              {{ badge }}
+            </span>
+          {%- endfor -%}
+        </div>
+
+      </div>
+    </div>
+
+    <!-- Related Products -->
+    {%- assign related_collection = product.collections.first -%}
+    {%- if related_collection != blank and related_collection.products_count > 1 -%}
+      <section class="mt-20">
+        <div class="relative mb-8 flex items-center gap-4">
+          <div class="h-px flex-1 bg-border"></div>
+          <h2 class="heading-brand text-xl md:text-2xl shrink-0" style="color: oklch(var(--primary));">
+            ⚡ YOU MIGHT ALSO WANT ⚡
+          </h2>
+          <div class="h-px flex-1 bg-border"></div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {%- assign counter = 0 -%}
+          {%- for related_product in related_collection.products -%}
+            {%- if related_product.id != product.id and counter < 4 -%}
+              {% render 'product-card', product: related_product, index: counter %}
+              {%- assign counter = counter | plus: 1 -%}
+            {%- endif -%}
+          {%- endfor -%}
+        </div>
+      </section>
+    {%- endif -%}
+
+  </div>
+</div>
+
+<script>
+  // Dynamic Quantity trigger
+  function changeQty(amount) {
+    const input = document.getElementById('quantity-input');
+    let val = parseInt(input.value) || 1;
+    val = Math.max(1, Math.min(10, val + amount));
+    input.value = val;
+  }
+
+  // Variant swatches select sync
+  (function() {
+    const swatches = document.querySelectorAll('.variant-swatch');
+    const form = document.getElementById('product-form');
+    const variantSelect = form ? form.querySelector('input[name="id"]') : null;
+
+    if (!variantSelect) return;
+
+    // Build variant mapping
+    const variants = [
+      {%- for variant in product.variants -%}
+        {
+          id: {{ variant.id }},
+          options: [
+            "{{ variant.option1 | escape }}",
+            "{{ variant.option2 | escape }}",
+            "{{ variant.option3 | escape }}"
+          ]
+        }{% unless forloop.last %},{% endunless %}
+      {%- endfor -%}
+    ];
+
+    swatches.forEach(function(swatch) {
+      swatch.addEventListener('click', function() {
+        const index = swatch.parentElement.getAttribute('data-option-index');
+        const value = swatch.getAttribute('data-value');
+
+        // Toggle active states
+        swatch.parentElement.querySelectorAll('.variant-swatch').forEach(s => {
+          s.classList.remove('active');
+          s.style.backgroundColor = 'transparent';
+          s.style.borderColor = 'oklch(var(--border))';
+          s.style.color = 'oklch(var(--foreground))';
+        });
+
+        swatch.classList.add('active');
+        swatch.style.backgroundColor = 'oklch(var(--primary))';
+        swatch.style.borderColor = 'oklch(var(--primary))';
+        swatch.style.color = 'oklch(var(--primary-foreground))';
+
+        // Find match variants based on options values
+        const selectedOptions = [];
+        document.querySelectorAll('[data-option-index]').forEach(function(optDiv) {
+          const activeS = optDiv.querySelector('.variant-swatch.active');
+          if (activeS) selectedOptions.push(activeS.getAttribute('data-value'));
+        });
+
+        // Find variant match ID
+        const match = variants.find(function(v) {
+          return selectedOptions.every(function(opt, idx) {
+            return v.options[idx] === opt;
+          });
+        });
+
+        if (match) {
+          variantSelect.value = match.id;
+        }
+      });
+    });
+  })();
+</script>

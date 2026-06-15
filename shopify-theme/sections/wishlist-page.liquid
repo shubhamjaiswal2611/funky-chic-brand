@@ -1,0 +1,48 @@
+<div 
+  class="min-h-screen py-8"
+  style="background-color: oklch(var(--background));"
+>
+  <div class="container">
+    <!-- Header -->
+    <header class="text-center py-10 mb-8 rounded-xl" style="background-color: oklch(var(--card)); border: 1px solid oklch(var(--border));">
+      <p class="text-xs font-mono font-semibold uppercase tracking-[0.35em] mb-3 text-muted-foreground">
+        // PERSONAL ARCHIVE LOG
+      </p>
+      <h1 class="heading-brand text-4xl md:text-6xl text-foreground">
+        YOUR WISHLIST
+      </h1>
+    </header>
+
+    <!-- Wishlist list grid (Filled client-side by theme.js) -->
+    <div 
+      class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6"
+      data-wishlist-grid
+    ></div>
+
+    <!-- Empty state -->
+    <div 
+      class="wishlist-empty-state"
+      data-wishlist-empty
+      style="display: none;"
+    >
+      <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.3; margin-bottom: 20px;"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>
+      <h2 class="heading-brand text-2xl mb-2" style="color: oklch(var(--foreground));">
+        Archive is empty
+      </h2>
+      <p class="font-body text-sm text-muted-foreground mb-6">
+        No signals saved in this index. Go back to shop to add items.
+      </p>
+      <a href="/collections/all" class="button-brand primary">
+        Back to shop
+      </a>
+    </div>
+
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Wishlist Page",
+  "settings": []
+}
+{% endschema %}

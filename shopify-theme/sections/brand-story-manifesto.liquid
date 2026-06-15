@@ -1,0 +1,117 @@
+<section 
+  class="relative overflow-hidden"
+  style="background-color: oklch(0.06 0.02 280); border-top: 1px solid oklch(var(--border));"
+>
+  <!-- Scanline texture -->
+  <div class="absolute inset-0 pointer-events-none opacity-5 pattern-scanline" aria-hidden="true"></div>
+
+  <div class="container py-20 sm:py-28 relative z-10 text-center">
+    <p 
+      class="font-mono text-[11px] tracking-[0.3em] uppercase mb-8"
+      style="color: oklch(var(--primary) / 0.8);"
+    >
+      {{ section.settings.prefix | default: 'MANIFESTO / FINAL SIGNAL' }}
+    </p>
+
+    <!-- Slogans list -->
+    <div class="flex flex-col gap-4 mb-10">
+      <p class="font-display font-extrabold tracking-tight leading-none text-foreground uppercase" style="font-size: clamp(1.5rem, 5vw, 3.5rem);">
+        {{ section.settings.line_1 | default: 'YOU WERE NEVER MEANT TO FIT IN.' }}
+      </p>
+      <p class="font-display font-extrabold tracking-tight leading-none text-foreground uppercase" style="font-size: clamp(1.5rem, 5vw, 3.5rem);">
+        {{ section.settings.line_2 | default: 'INSTINCT CANNOT BE PROGRAMMED.' }}
+      </p>
+      <p class="font-display font-extrabold tracking-tight leading-none text-foreground uppercase" style="font-size: clamp(1.5rem, 5vw, 3.5rem);">
+        {{ section.settings.line_3 | default: 'EMOTIONS ARE SYSTEMS.' }}
+      </p>
+      <p class="font-display font-extrabold tracking-tight leading-none uppercase" style="font-size: clamp(1.5rem, 5vw, 3.5rem); color: oklch(var(--primary));">
+        {{ section.settings.line_4 | default: 'ALTINSTINCT IS THE SIGNAL.' }}
+      </p>
+    </div>
+
+    <!-- Buttons -->
+    <div class="flex flex-col sm:flex-row gap-3 justify-center items-center mt-10">
+      <a 
+        href="{{ section.settings.url_1 | default: '/collections/all' }}" 
+        class="button-brand primary"
+        data-ocid="brand-story.manifesto_cta_button"
+        style="padding: 14px 28px;"
+      >
+        {{ section.settings.btn_1 | default: 'ENTER SYSTEM' }}
+      </a>
+      <a 
+        href="{{ section.settings.url_2 | default: '/pages/lookbook' }}" 
+        class="button-brand secondary"
+        data-ocid="brand-story.manifesto_lookbook_button"
+        style="padding: 14px 28px; border-color: oklch(var(--foreground) / 0.3); color: oklch(var(--foreground) / 0.8);"
+      >
+        {{ section.settings.btn_2 | default: 'ACCESS ARCHIVE' }}
+      </a>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Brand Manifesto",
+  "settings": [
+    {
+      "type": "text",
+      "id": "prefix",
+      "default": "MANIFESTO / FINAL SIGNAL",
+      "label": "Prefix Subheading"
+    },
+    {
+      "type": "text",
+      "id": "line_1",
+      "default": "YOU WERE NEVER MEANT TO FIT IN.",
+      "label": "Manifesto Line 1"
+    },
+    {
+      "type": "text",
+      "id": "line_2",
+      "default": "INSTINCT CANNOT BE PROGRAMMED.",
+      "label": "Manifesto Line 2"
+    },
+    {
+      "type": "text",
+      "id": "line_3",
+      "default": "EMOTIONS ARE SYSTEMS.",
+      "label": "Manifesto Line 3"
+    },
+    {
+      "type": "text",
+      "id": "line_4",
+      "default": "ALTINSTINCT IS THE SIGNAL.",
+      "label": "Manifesto Line 4"
+    },
+    {
+      "type": "text",
+      "id": "btn_1",
+      "default": "ENTER SYSTEM",
+      "label": "Primary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "url_1",
+      "label": "Primary Button URL"
+    },
+    {
+      "type": "text",
+      "id": "btn_2",
+      "default": "ACCESS ARCHIVE",
+      "label": "Secondary Button Text"
+    },
+    {
+      "type": "url",
+      "id": "url_2",
+      "label": "Secondary Button URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Brand Manifesto"
+    }
+  ]
+}
+{% endschema %}

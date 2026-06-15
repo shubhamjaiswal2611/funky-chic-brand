@@ -1,0 +1,139 @@
+<div 
+  class="min-h-screen py-8"
+  style="background-color: oklch(var(--background));"
+>
+  <div class="container max-w-4xl">
+    <!-- Header -->
+    <header class="text-center py-10 mb-8 rounded-xl" style="background-color: oklch(var(--card)); border: 1px solid oklch(var(--border));">
+      <p class="text-xs font-mono font-semibold uppercase tracking-[0.35em] mb-3 text-muted-foreground">
+        // CART ORDER DIRECTIVE
+      </p>
+      <h1 class="heading-brand text-4xl md:text-6xl text-foreground">
+        YOUR BAG
+      </h1>
+    </header>
+
+    {%- if cart.item_count > 0 -%}
+      <form action="{{ routes.cart_url }}" method="post" id="cart-form" class="space-y-6">
+        <!-- Cart Items List -->
+        <div class="space-y-4">
+          {%- for item in cart.items -%}
+            <div 
+              class="card-brand flex gap-4 p-4 items-center justify-between"
+              style="border-color: oklch(var(--border));"
+            >
+              <!-- Thumbnail & details -->
+              <div class="flex items-center gap-4 flex-1 min-w-0">
+                <div class="w-20 h-24 rounded overflow-hidden flex-shrink-0 bg-muted" style="border: 1px solid oklch(var(--border));">
+                  {%- if item.image != blank -%}
+                    <img src="{{ item.image | image_url: width: 150 }}" alt="{{ item.title | escape }}" style="width: 100%; height: 100%; object-fit: cover;">
+                  {%- else -%}
+                    <div style="width: 100%; height: 100%; background: oklch(var(--card));"></div>
+                  {%- endif -%}
+                </div>
+                <div class="min-w-0">
+                  <h3 class="font-display font-bold uppercase text-sm truncate" style="color: oklch(var(--foreground));">
+                    <a href="{{ item.url }}">{{ item.product.title }}</a>
+                  </h3>
+                  
+                  <!-- Variant info -->
+                  {%- if item.product.has_only_default_variant == false -%}
+                    <p class="font-mono text-[10px] text-muted-foreground mt-0.5 uppercase">
+                      {%- for option in item.options_with_values -%}
+                        {{ option.name }}: {{ option.value }}{% unless forloop.last %} &middot; {% endunless %}
+                      {%- endfor -%}
+                    </p>
+                  {%- endif -%}
+
+                  <!-- Single item price -->
+                  <p class="font-mono text-xs mt-1" style="color: oklch(var(--primary));">
+                    {{ item.original_price | money_without_trailing_zeros }}
+                  </p>
+                </div>
+              </div>
+
+              <!-- Quantity control & removal -->
+              <div class="flex items-center gap-4">
+                <div class="flex items-center gap-1" style="border: 1px solid oklch(var(--border)); border-radius: 4px; overflow: hidden; height: 32px;">
+                  <a 
+                    href="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | minus: 1 }}"
+                    class="w-8 h-full flex items-center justify-center transition-smooth"
+                    style="color: oklch(var(--foreground)); background-color: oklch(var(--muted) / 0.15);"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </a>
+                  <span class="w-8 text-center font-display font-bold text-xs" style="color: oklch(var(--foreground));">
+                    {{ item.quantity }}
+                  </span>
+                  <a 
+                    href="/cart/change?line={{ forloop.index }}&quantity={{ item.quantity | plus: 1 }}"
+                    class="w-8 h-full flex items-center justify-center transition-smooth"
+                    style="color: oklch(var(--foreground)); background-color: oklch(var(--muted) / 0.15);"
+                  >
+                    <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                  </a>
+                </div>
+
+                <!-- Delete item -->
+                <a 
+                  href="/cart/change?line={{ forloop.index }}&quantity=0"
+                  class="p-2 transition-smooth hover:opacity-80"
+                  style="color: oklch(var(--destructive)); display: flex; align-items: center;"
+                  aria-label="Remove item"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path></svg>
+                </a>
+              </div>
+
+            </div>
+          {%- endfor -%}
+        </div>
+
+        <!-- Checkout Summaries panel -->
+        <div 
+          class="rounded-xl p-6 flex flex-col gap-4"
+          style="background-color: oklch(var(--card)); border: 1px solid oklch(var(--border));"
+        >
+          <div class="flex justify-between items-center font-display uppercase tracking-wider text-sm">
+            <span style="color: oklch(var(--muted-foreground));">Bag Subtotal</span>
+            <span style="color: oklch(var(--foreground)); font-weight: 800; font-size: 1.25rem;">
+              {{ cart.total_price | money }}
+            </span>
+          </div>
+
+          <p class="font-body text-xs text-muted-foreground" style="opacity: 0.8;">
+            Taxes and shipping calculated at checkout. Security checks verified.
+          </p>
+
+          <button 
+            type="submit" 
+            name="checkout" 
+            class="button-brand primary w-full h-12"
+          >
+            Access Checkout Matrix
+          </button>
+        </div>
+      </form>
+    {%- else -%}
+      <!-- Empty Bag State -->
+      <div 
+        class="text-center py-20 flex flex-col items-center justify-center"
+        style="background-color: oklch(var(--card)); border: 1px solid oklch(var(--border)); border-radius: var(--radius);"
+      >
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" style="opacity: 0.3; margin-bottom: 20px;"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+        <p class="font-display text-2xl font-bold uppercase mb-2" style="color: oklch(var(--foreground));">Your bag is empty</p>
+        <p class="font-body text-sm mb-6 text-muted-foreground">Select some emotional frequencies to get started.</p>
+        <a href="/collections/all" class="button-brand primary">
+          Explore Archive
+        </a>
+      </div>
+    {%- endif -%}
+  </div>
+</div>
+
+{% schema %}
+{
+  "name": "Cart Page",
+  "settings": []
+}
+{% endschema %}
