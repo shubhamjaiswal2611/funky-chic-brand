@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "DATA_POLICY",
+        "heading": "Privacy Policy",
+        "lede": "How customer and order information is handled."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Customer data",
+            "text": "<p>Customer details are used to process orders, provide support, and improve the shopping experience. Shopify securely handles checkout and payment data.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Communication",
+            "text": "<p>If you subscribe, we may send drop alerts and brand updates. You can unsubscribe from marketing emails at any time.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

@@ -1,0 +1,69 @@
+<section class="account-shell pattern-grid">
+  <div class="container account-wrap">
+    <div class="account-panel">
+      <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">CUSTOMER_ACCESS</p>
+      <h1 class="heading-brand text-5xl mb-4">Login</h1>
+      <p class="text-muted-foreground mb-8">Access orders, saved addresses, and signal-only customer history.</p>
+
+      <div id="login-form">
+        {%- form 'customer_login', class: 'account-form' -%}
+          {%- if form.errors -%}
+            <div class="form-alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+
+          <label class="form-label" for="CustomerEmail">Email</label>
+          <input id="CustomerEmail" class="input-brand" type="email" name="customer[email]" autocomplete="email" required>
+
+          {%- if form.password_needed -%}
+            <label class="form-label" for="CustomerPassword">Password</label>
+            <input id="CustomerPassword" class="input-brand" type="password" name="customer[password]" autocomplete="current-password" required>
+          {%- endif -%}
+
+          <button class="button-brand primary w-full" type="submit">Enter Account</button>
+        {%- endform -%}
+
+        <div class="account-link-row">
+          <a href="#recover" data-recover-toggle>Forgot password?</a>
+          <a href="{{ routes.account_register_url }}">Create account</a>
+        </div>
+      </div>
+
+      <div id="recover-form" style="display: none;">
+        {%- form 'recover_customer_password', class: 'account-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="form-success">Reset instructions sent. Check your inbox.</div>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="form-alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+
+          <label class="form-label" for="RecoverEmail">Email</label>
+          <input id="RecoverEmail" class="input-brand" type="email" name="email" autocomplete="email" required>
+          <button class="button-brand primary w-full" type="submit">Send Reset Link</button>
+        {%- endform -%}
+
+        <div class="account-link-row">
+          <a href="#login" data-login-toggle>Back to login</a>
+        </div>
+      </div>
+    </div>
+
+    <aside class="account-aside">
+      <span class="badge" style="color: oklch(var(--secondary)); border-color: oklch(var(--secondary) / 0.35);">Member System</span>
+      <h2 class="heading-brand text-3xl mt-4 mb-4">Your archive lives here.</h2>
+      <ul class="signal-list">
+        <li>Order history and status checks</li>
+        <li>Saved shipping addresses</li>
+        <li>Faster checkout on future drops</li>
+      </ul>
+      <a href="/pages/track-order" class="button-brand secondary mt-8">Track Order</a>
+    </aside>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer Login",
+  "settings": []
+}
+{% endschema %}

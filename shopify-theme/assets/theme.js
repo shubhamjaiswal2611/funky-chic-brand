@@ -7,6 +7,8 @@
     initWishlist();
     initReelModal();
     initNewsletterForms();
+    initAccountForms();
+    initTrackOrder();
   });
 
   /* ── TOAST MESSAGES ── */
@@ -113,7 +115,7 @@
 
         const days = Math.floor(diff / 86400000);
         const hours = Math.floor((diff % 86400000) / 3600000);
-        const minutes = Math.floor((diff % 3600000) / 6000);
+        const minutes = Math.floor((diff % 3600000) / 60000);
         const seconds = Math.floor((diff % 60000) / 1000);
 
         if (digitDays) digitDays.textContent = String(days).padStart(2, '0');
@@ -476,6 +478,52 @@
           `${name ? `Welcome, ${name}!` : 'Welcome!'} check your inbox shortly.`
         );
       }, 1000);
+    });
+  }
+
+  /* ── CUSTOMER ACCOUNT HELPERS ── */
+  function initAccountForms() {
+    const recoverToggle = document.querySelector('[data-recover-toggle]');
+    const loginToggle = document.querySelector('[data-login-toggle]');
+    const loginForm = document.getElementById('login-form');
+    const recoverForm = document.getElementById('recover-form');
+
+    function showRecover() {
+      if (!loginForm || !recoverForm) return;
+      loginForm.style.display = 'none';
+      recoverForm.style.display = 'block';
+    }
+
+    function showLogin() {
+      if (!loginForm || !recoverForm) return;
+      recoverForm.style.display = 'none';
+      loginForm.style.display = 'block';
+    }
+
+    if (window.location.hash === '#recover') showRecover();
+    if (recoverToggle) recoverToggle.addEventListener('click', showRecover);
+    if (loginToggle) loginToggle.addEventListener('click', showLogin);
+
+    document.querySelectorAll('[data-address-toggle]').forEach(function(button) {
+      button.addEventListener('click', function() {
+        const id = button.getAttribute('data-address-toggle');
+        const panel = document.getElementById('EditAddress_' + id);
+        if (!panel) return;
+        panel.style.display = panel.style.display === 'none' ? 'block' : 'none';
+      });
+    });
+  }
+
+  /* ── TRACK ORDER HANDOFF ── */
+  function initTrackOrder() {
+    const form = document.querySelector('[data-track-order-form]');
+    const result = document.querySelector('[data-track-order-result]');
+    if (!form || !result) return;
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+      result.style.display = 'block';
+      showToast('Secure status check ready', 'Login with your checkout email to view order details.');
     });
   }
 

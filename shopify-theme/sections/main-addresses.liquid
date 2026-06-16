@@ -1,0 +1,83 @@
+<section class="account-shell">
+  <div class="container">
+    <div class="account-header">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">ADDRESS_BOOK</p>
+        <h1 class="heading-brand text-5xl">Addresses</h1>
+      </div>
+      <a href="{{ routes.account_url }}" class="button-brand secondary">Back to Account</a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
+      <div class="account-card">
+        <h2 class="heading-brand text-2xl mb-4">Add Address</h2>
+        {%- form 'customer_address', customer.new_address, class: 'account-form' -%}
+          <label class="form-label" for="AddressFirstNameNew">First name</label>
+          <input class="input-brand" id="AddressFirstNameNew" type="text" name="address[first_name]" value="{{ form.first_name }}">
+          <label class="form-label" for="AddressLastNameNew">Last name</label>
+          <input class="input-brand" id="AddressLastNameNew" type="text" name="address[last_name]" value="{{ form.last_name }}">
+          <label class="form-label" for="AddressCompanyNew">Company</label>
+          <input class="input-brand" id="AddressCompanyNew" type="text" name="address[company]" value="{{ form.company }}">
+          <label class="form-label" for="AddressAddress1New">Address</label>
+          <input class="input-brand" id="AddressAddress1New" type="text" name="address[address1]" value="{{ form.address1 }}">
+          <label class="form-label" for="AddressCityNew">City</label>
+          <input class="input-brand" id="AddressCityNew" type="text" name="address[city]" value="{{ form.city }}">
+          <label class="form-label" for="AddressCountryNew">Country</label>
+          <select class="input-brand" id="AddressCountryNew" name="address[country]" data-default="{{ form.country }}">{{ all_country_option_tags }}</select>
+          <label class="form-label" for="AddressZipNew">Postal code</label>
+          <input class="input-brand" id="AddressZipNew" type="text" name="address[zip]" value="{{ form.zip }}">
+          <label class="form-label" for="AddressPhoneNew">Phone</label>
+          <input class="input-brand" id="AddressPhoneNew" type="tel" name="address[phone]" value="{{ form.phone }}">
+          <label class="checkbox-line">
+            {{ form.set_as_default_checkbox }}
+            Set as default
+          </label>
+          <button class="button-brand primary w-full" type="submit">Save Address</button>
+        {%- endform -%}
+      </div>
+
+      <div class="lg:col-span-2 grid grid-cols-1 md:grid-cols-2 gap-6">
+        {%- for address in customer.addresses -%}
+          <article class="account-card">
+            {%- if address == customer.default_address -%}
+              <span class="badge mb-4" style="color: oklch(var(--secondary)); border-color: oklch(var(--secondary) / 0.35);">Default</span>
+            {%- endif -%}
+            <div class="text-muted-foreground leading-relaxed">{{ address | format_address }}</div>
+            <div class="flex flex-wrap gap-3 mt-6">
+              <button class="button-brand secondary" type="button" data-address-toggle="{{ address.id }}">Edit</button>
+              <form method="post" action="{{ address.url }}">
+                <input type="hidden" name="_method" value="delete">
+                <button class="button-brand secondary" type="submit">Delete</button>
+              </form>
+            </div>
+            <div id="EditAddress_{{ address.id }}" class="address-edit-form mt-6" style="display: none;">
+              {%- form 'customer_address', address, class: 'account-form' -%}
+                <label class="form-label" for="AddressFirstName_{{ address.id }}">First name</label>
+                <input class="input-brand" id="AddressFirstName_{{ address.id }}" type="text" name="address[first_name]" value="{{ form.first_name }}">
+                <label class="form-label" for="AddressLastName_{{ address.id }}">Last name</label>
+                <input class="input-brand" id="AddressLastName_{{ address.id }}" type="text" name="address[last_name]" value="{{ form.last_name }}">
+                <label class="form-label" for="AddressAddress1_{{ address.id }}">Address</label>
+                <input class="input-brand" id="AddressAddress1_{{ address.id }}" type="text" name="address[address1]" value="{{ form.address1 }}">
+                <label class="form-label" for="AddressCity_{{ address.id }}">City</label>
+                <input class="input-brand" id="AddressCity_{{ address.id }}" type="text" name="address[city]" value="{{ form.city }}">
+                <label class="form-label" for="AddressCountry_{{ address.id }}">Country</label>
+                <select class="input-brand" id="AddressCountry_{{ address.id }}" name="address[country]" data-default="{{ form.country }}">{{ all_country_option_tags }}</select>
+                <label class="form-label" for="AddressZip_{{ address.id }}">Postal code</label>
+                <input class="input-brand" id="AddressZip_{{ address.id }}" type="text" name="address[zip]" value="{{ form.zip }}">
+                <label class="checkbox-line">{{ form.set_as_default_checkbox }} Set as default</label>
+                <button class="button-brand primary w-full" type="submit">Update Address</button>
+              {%- endform -%}
+            </div>
+          </article>
+        {%- endfor -%}
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer Addresses",
+  "settings": []
+}
+{% endschema %}

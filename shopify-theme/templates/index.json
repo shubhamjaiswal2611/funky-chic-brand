@@ -14,6 +14,9 @@
     },
     "reels": {
       "type": "cinematic-reels"
+    },
+    "archive_manifesto": {
+      "type": "home-archive-manifesto"
     }
   },
   "order": [
@@ -21,6 +24,7 @@
     "countdown",
     "categories",
     "featured",
-    "reels"
+    "reels",
+    "archive_manifesto"
   ]
 }

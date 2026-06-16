@@ -6,7 +6,7 @@
 {%- endcomment -%}
 
 {%- liquid
-  assign animation_delay = index | modulo: 4 | multiply: 0.08
+  assign animation_delay = index | modulo: 4 | times: 0.08
   assign card_image = product.featured_media.preview_image
 
   # Parse tags for metadata, fallback to defaults

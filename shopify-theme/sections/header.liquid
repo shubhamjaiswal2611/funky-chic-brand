@@ -41,19 +41,32 @@
 
     <!-- Desktop nav links -->
     <nav class="hidden md:flex items-center gap-1 flex-1 justify-center" aria-label="Main navigation">
-      {%- for link in main_menu.links -%}
-        <a 
-          href="{{ link.url }}" 
-          class="nav-link {% if link.active %}active{% endif %}"
-          data-ocid="nav.{{ link.title | downcase | replace: ' ', '_' }}_link"
-        >
-          {{ link.title }}
-        </a>
-      {%- endfor -%}
+      {%- if main_menu.links.size > 0 -%}
+        {%- for link in main_menu.links -%}
+          <a 
+            href="{{ link.url }}" 
+            class="nav-link {% if link.active %}active{% endif %}"
+            data-ocid="nav.{{ link.title | downcase | replace: ' ', '_' }}_link"
+          >
+            {{ link.title }}
+          </a>
+        {%- endfor -%}
+      {%- else -%}
+        <a href="{{ routes.all_products_collection_url }}" class="nav-link" data-ocid="nav.shop_link">Shop</a>
+        <a href="/pages/lookbook" class="nav-link" data-ocid="nav.archive_link">Archive</a>
+        <a href="/pages/brand-story" class="nav-link" data-ocid="nav.universe_link">The Universe</a>
+        <a href="/pages/track-order" class="nav-link" data-ocid="nav.track_order_link">Track Order</a>
+        <a href="/pages/contact" class="nav-link" data-ocid="nav.contact_link">Contact</a>
+      {%- endif -%}
     </nav>
 
     <!-- Action icons -->
     <div class="flex items-center gap-1">
+      <!-- Search link -->
+      <a href="{{ routes.search_url }}" class="relative p-2 rounded-md transition-smooth hover:opacity-80" data-ocid="nav.search_link" aria-label="Search">
+        {% render 'icon-search', size: 20 %}
+      </a>
+
       <!-- Wishlist link -->
       <a href="/pages/wishlist" class="relative p-2 rounded-md transition-smooth hover:opacity-80" data-ocid="nav.wishlist_link" aria-label="Wishlist">
         {% render 'icon-heart', size: 20 %}
@@ -76,7 +89,7 @@
           </a>
         {%- else -%}
           <a href="{{ routes.account_login_url }}" class="flex items-center gap-1.5 font-body font-semibold text-xs uppercase tracking-widest transition-smooth p-2" data-ocid="nav.login_button">
-            {% render 'icon-user', size: 18 %}
+            {% render 'icon-login', size: 18 %}
             <span class="hidden sm:inline">Login</span>
           </a>
         {%- endif -%}
@@ -96,15 +109,24 @@
 
   <!-- Mobile nav drawer (hidden by default) -->
   <nav id="mobile-nav-drawer" class="mobile-nav-drawer" style="display: none;" aria-label="Mobile navigation">
-    {%- for link in main_menu.links -%}
-      <a 
-        href="{{ link.url }}" 
-        class="mobile-nav-link {% if link.active %}active{% endif %}"
-        data-ocid="nav.mobile_{{ link.title | downcase | replace: ' ', '_' }}_link"
-      >
-        {{ link.title }}
-      </a>
-    {%- endfor -%}
+    {%- if main_menu.links.size > 0 -%}
+      {%- for link in main_menu.links -%}
+        <a 
+          href="{{ link.url }}" 
+          class="mobile-nav-link {% if link.active %}active{% endif %}"
+          data-ocid="nav.mobile_{{ link.title | downcase | replace: ' ', '_' }}_link"
+        >
+          {{ link.title }}
+        </a>
+      {%- endfor -%}
+    {%- else -%}
+      <a href="{{ routes.all_products_collection_url }}" class="mobile-nav-link">Shop</a>
+      <a href="/pages/lookbook" class="mobile-nav-link">Archive</a>
+      <a href="/pages/brand-story" class="mobile-nav-link">The Universe</a>
+      <a href="/pages/track-order" class="mobile-nav-link">Track Order</a>
+      <a href="/pages/contact" class="mobile-nav-link">Contact</a>
+      <a href="/pages/faq" class="mobile-nav-link">FAQ</a>
+    {%- endif -%}
   </nav>
 </header>
 

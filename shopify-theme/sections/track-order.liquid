@@ -1,0 +1,47 @@
+<section class="support-shell pattern-grid" data-ocid="track_order.page">
+  <div class="container">
+    <div class="support-hero">
+      <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">ORDER_TRACE</p>
+      <h1 class="heading-brand text-5xl md:text-7xl mb-4">Track Order</h1>
+      <p class="support-lede">Use your account to see order history, fulfillment updates, and shipment tracking links as soon as they are available.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="account-panel lg:col-span-2">
+        <h2 class="heading-brand text-3xl mb-4">Find Your Transmission</h2>
+        <form class="account-form" data-track-order-form>
+          <label class="form-label" for="TrackOrderNumber">Order number</label>
+          <input id="TrackOrderNumber" class="input-brand" type="text" placeholder="#1001" autocomplete="off">
+          <label class="form-label" for="TrackOrderEmail">Email used at checkout</label>
+          <input id="TrackOrderEmail" class="input-brand" type="email" placeholder="you@example.com" autocomplete="email" required>
+          <button class="button-brand primary w-full" type="submit">Check Status</button>
+        </form>
+        <div class="track-result" data-track-order-result style="display: none;">
+          <p class="heading-brand text-xl mb-2">Secure status check</p>
+          <p class="text-muted-foreground mb-4">For privacy, Shopify shows order details after customer login. Sign in with the same email used at checkout to view orders and shipment tracking links.</p>
+          <div class="flex flex-wrap gap-3">
+            <a href="{{ routes.account_login_url }}" class="button-brand primary">Login to View Orders</a>
+            <a href="{{ routes.account_url }}" class="button-brand secondary">My Account</a>
+          </div>
+        </div>
+      </div>
+
+      <aside class="account-card">
+        <h2 class="heading-brand text-2xl mb-4">Need help?</h2>
+        <ul class="signal-list">
+          <li>Tracking links appear after fulfillment.</li>
+          <li>Order confirmation emails include your order number.</li>
+          <li>Support can verify status with email and order number.</li>
+        </ul>
+        <a href="/pages/contact" class="button-brand secondary mt-8">Contact Support</a>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Track Order",
+  "settings": []
+}
+{% endschema %}

@@ -1,0 +1,48 @@
+<section class="support-shell pattern-grid">
+  <div class="container">
+    <div class="support-hero">
+      <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">SUPPORT_SIGNAL</p>
+      <h1 class="heading-brand text-5xl md:text-7xl mb-4">Contact</h1>
+      <p class="support-lede">Send us your question and we will respond with order, product, or collaboration support.</p>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="account-panel lg:col-span-2">
+        {%- form 'contact', class: 'account-form' -%}
+          {%- if form.posted_successfully? -%}
+            <div class="form-success">Message received. We will get back to you soon.</div>
+          {%- endif -%}
+          {%- if form.errors -%}
+            <div class="form-alert">{{ form.errors | default_errors }}</div>
+          {%- endif -%}
+          <label class="form-label" for="ContactName">Name</label>
+          <input id="ContactName" class="input-brand" type="text" name="contact[name]" value="{% if form.name %}{{ form.name }}{% elsif customer %}{{ customer.name }}{% endif %}" autocomplete="name">
+          <label class="form-label" for="ContactEmail">Email</label>
+          <input id="ContactEmail" class="input-brand" type="email" name="contact[email]" value="{% if form.email %}{{ form.email }}{% elsif customer %}{{ customer.email }}{% endif %}" autocomplete="email" required>
+          <label class="form-label" for="ContactOrder">Order number</label>
+          <input id="ContactOrder" class="input-brand" type="text" name="contact[order_number]" placeholder="#1001">
+          <label class="form-label" for="ContactMessage">Message</label>
+          <textarea id="ContactMessage" class="input-brand" name="contact[body]" rows="6" required>{% if form.body %}{{ form.body }}{% endif %}</textarea>
+          <button class="button-brand primary w-full" type="submit">Send Message</button>
+        {%- endform -%}
+      </div>
+
+      <aside class="account-card">
+        <h2 class="heading-brand text-2xl mb-4">Fast paths</h2>
+        <div class="support-link-list">
+          <a href="/pages/track-order">Track order</a>
+          <a href="/pages/returns">Returns</a>
+          <a href="/pages/shipping">Shipping</a>
+          <a href="{{ routes.account_login_url }}">Customer login</a>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Contact Page",
+  "settings": []
+}
+{% endschema %}

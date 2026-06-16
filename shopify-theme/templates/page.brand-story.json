@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "lore": {
+      "type": "brand-story-lore"
+    },
+    "pillars": {
+      "type": "brand-story-pillars"
+    },
+    "manifesto": {
+      "type": "brand-story-manifesto"
+    }
+  },
+  "order": [
+    "lore",
+    "pillars",
+    "manifesto"
+  ]
+}

@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "TERMS_ARCHIVE",
+        "heading": "Terms",
+        "lede": "Store terms for orders, products, and customer use."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Orders",
+            "text": "<p>By placing an order, you agree to provide accurate checkout, shipping, and contact information. Orders may be cancelled if information cannot be verified.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Product details",
+            "text": "<p>Product colors, fit, and availability may vary slightly. Limited drops are subject to inventory and fulfillment constraints.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

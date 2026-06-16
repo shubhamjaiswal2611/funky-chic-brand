@@ -1,0 +1,43 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "FAQ_ARCHIVE",
+        "heading": "FAQ",
+        "lede": "Quick answers for sizing, drops, orders, and support."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "When do drops ship?",
+            "text": "<p>Most ready products ship after order processing. Pre-order or limited-run drops may have a longer dispatch window, which should be noted on the product page.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "How do I track an order?",
+            "text": "<p>Login to your account with the checkout email, then open your order. Tracking links appear after fulfillment.</p>"
+          }
+        },
+        "item_3": {
+          "type": "item",
+          "settings": {
+            "title": "Can I change my address?",
+            "text": "<p>Contact support as soon as possible with your order number. Address changes are only possible before fulfillment.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2",
+        "item_3"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

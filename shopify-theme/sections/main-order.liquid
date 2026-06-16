@@ -1,0 +1,64 @@
+<section class="account-shell">
+  <div class="container">
+    <div class="account-header">
+      <div>
+        <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">ORDER_SIGNAL</p>
+        <h1 class="heading-brand text-5xl">{{ order.name }}</h1>
+        <p class="text-muted-foreground mt-3">Placed {{ order.created_at | date: "%B %d, %Y" }}</p>
+      </div>
+      <a href="{{ routes.account_url }}" class="button-brand secondary">Back to Account</a>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-10">
+      <div class="lg:col-span-2 account-card">
+        <h2 class="heading-brand text-2xl mb-4">Items</h2>
+        <div class="account-table-wrap">
+          <table class="account-table">
+            <thead>
+              <tr>
+                <th>Product</th>
+                <th>Qty</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              {%- for line_item in order.line_items -%}
+                <tr>
+                  <td>
+                    {{ line_item.title }}
+                    {%- if line_item.fulfillment.tracking_url -%}
+                      <div><a href="{{ line_item.fulfillment.tracking_url }}" target="_blank" rel="noopener" class="account-inline-link">Track shipment</a></div>
+                    {%- endif -%}
+                  </td>
+                  <td>{{ line_item.quantity }}</td>
+                  <td>{{ line_item.final_line_price | money }}</td>
+                </tr>
+              {%- endfor -%}
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <aside class="account-card">
+        <h2 class="heading-brand text-2xl mb-4">Status</h2>
+        <p class="account-status">{{ order.financial_status_label }}</p>
+        <p class="account-status mt-3">{{ order.fulfillment_status_label }}</p>
+        <div class="mt-6 text-muted-foreground leading-relaxed">
+          <strong>Shipping</strong>
+          {{ order.shipping_address | format_address }}
+        </div>
+        <div class="mt-6">
+          <p class="font-display font-bold text-xl">{{ order.total_price | money }}</p>
+          <p class="font-mono text-xs text-muted-foreground uppercase mt-1">Order total</p>
+        </div>
+      </aside>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer Order",
+  "settings": []
+}
+{% endschema %}

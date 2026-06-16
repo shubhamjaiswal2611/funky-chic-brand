@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "FIT_MATRIX",
+        "heading": "Size Guide",
+        "lede": "Use this as a starting point for oversized tees, hoodies, shorts, and lowers."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Fit note",
+            "text": "<p>AltInstinct silhouettes are designed with relaxed and oversized energy. Choose your regular size for the intended fit, or size down for a cleaner shape.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Need help choosing?",
+            "text": "<p>Contact support with your height, weight, preferred fit, and product name for guidance before ordering.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

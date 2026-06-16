@@ -1,0 +1,86 @@
+<section class="relative overflow-hidden py-20" style="background-color: oklch(var(--background));">
+  <div class="absolute inset-0 pointer-events-none pattern-grid" style="opacity: 0.25;"></div>
+  <div class="container relative z-10">
+    <div class="mb-12">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] mb-3" style="color: oklch(var(--obsession));">ARCHIVE_REELS</p>
+      <h1 class="font-display font-black uppercase text-foreground" style="font-size: clamp(2.5rem, 8vw, 6rem); letter-spacing: -0.03em;">CINEMATIC ARCHIVE</h1>
+      <p class="font-body text-sm mt-4" style="max-width: 560px; color: oklch(var(--foreground) / 0.58);">A living archive of emotional streetwear transmissions, mockups, moods, and series signals.</p>
+    </div>
+
+    <div class="flex gap-2 overflow-x-auto mb-8">
+      {%- assign categories = 'All,Tees,Hoodies,Shorts,Lowers' | split: ',' -%}
+      {%- for cat in categories -%}
+        <button type="button" class="mood-chip{% if forloop.first %} active{% endif %}" data-ocid="lookbook.filter.{{ cat | downcase }}">{{ cat }}</button>
+      {%- endfor -%}
+    </div>
+
+    <div class="flex gap-2 overflow-x-auto mb-10">
+      <button type="button" class="mood-chip active" data-ocid="lookbook.mood.clear">All Moods</button>
+      {%- assign moods = 'Chaos,Isolation,Obsession,Escape,Overthinking,Burnout' | split: ',' -%}
+      {%- for mood in moods -%}
+        <button type="button" class="mood-chip" data-ocid="lookbook.mood.{{ mood | downcase }}">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: oklch(var(--{{ mood | downcase }}));"></span>
+          {{ mood }}
+        </button>
+      {%- endfor -%}
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6" data-ocid="lookbook.list">
+      {%- assign names = 'Battery: 3% Tee,Recharge Failed Hoodie,Interaction Overload Shorts,Missing Identity Tee,Memory Leak Hoodie,Archive Lost Lowers,Between Dreams Tee,Artificial Reality Hoodie,Sleep Division Shorts,Emotion Overload Tee,Human System Failure Hoodie,Chaos Tee' | split: ',' -%}
+      {%- assign cats = 'Tees,Hoodies,Shorts,Tees,Hoodies,Lowers,Tees,Hoodies,Shorts,Tees,Hoodies,Tees' | split: ',' -%}
+      {%- assign prices = 'Rs.2499,Rs.3999,Rs.1999,Rs.2499,Rs.3999,Rs.1999,Rs.2499,Rs.3999,Rs.1999,Rs.2499,Rs.3999,Rs.2499' | split: ',' -%}
+      {%- assign series = 'Social Battery Series,Social Battery Series,Social Battery Series,Memory Corruption Series,Memory Corruption Series,Memory Corruption Series,Dreamstate Division,Dreamstate Division,Dreamstate Division,Human Error Series,Human Error Series,Instinct Protocol' | split: ',' -%}
+      {%- assign emotions = 'Burnout,Isolation,Chaos,Overthinking,Obsession,Isolation,Escape,Overthinking,Escape,Chaos,Burnout,Chaos' | split: ',' -%}
+      {%- assign descriptions = "Running on empty. 240 GSM oversized cut for the socially drained.|When rest doesn't work. 400 GSM dropped-shoulder isolation armour.|Too many people. Too many signals. Minimal utility shorts for controlled chaos.|Identity corrupted. 240 GSM tee with VHS distortion energy.|Something is draining you from within. Toxic green signal against the void.|Files deleted. Identity incomplete. Utility lowers for the erased.|Caught between sleep and reality. Lavender surreal dimensions on skin.|Which world is real? 400 GSM deep violet portal hoodie.|Division between conscious and dream state. Soft lavender on midnight shorts.|System error - feelings exceeded capacity. Infrared warning signal tee.|Stability corrupted. Ash grey 400 GSM - the colour of emotional burnout.|Pure instinct. Pure disorder. Infrared red on void black - the Chaos symbol." | split: '|' -%}
+      {%- for name in names -%}
+        {%- assign idx = forloop.index0 -%}
+        {%- assign cat = cats[idx] -%}
+        {%- assign emotion = emotions[idx] -%}
+        <article
+          data-ocid="lookbook.item.{{ forloop.index }}"
+          data-product-card
+          data-category="{{ cat | downcase }}"
+          data-mood="{{ emotion | downcase }}"
+          data-title="{{ name | downcase }}"
+          data-desc="{{ descriptions[idx] | downcase }}"
+          class="card-brand group overflow-hidden"
+        >
+          <div class="relative w-full overflow-hidden" style="aspect-ratio: 3/4;">
+            {% render 'product-mockup', category: cat, series: series[idx], emotion: emotion %}
+            <div class="absolute top-3 right-3 rounded px-2.5 py-1 font-display text-sm font-bold transition-smooth" style="background-color: oklch(var(--background)); color: oklch(var(--foreground)); border: 1px solid oklch(var(--border));">
+              {{ prices[idx] }}
+            </div>
+            <div class="absolute bottom-3 left-3 px-2 py-0.5 rounded text-[9px] font-bold uppercase tracking-widest" style="background-color: oklch(var(--{{ emotion | downcase }}) / 0.13); color: oklch(var(--{{ emotion | downcase }})); border: 1px solid oklch(var(--{{ emotion | downcase }}) / 0.27);">
+              {{ emotion }}
+            </div>
+          </div>
+          <div class="p-4" style="border-top: 1px solid oklch(var(--border));">
+            <p class="font-mono text-[9px] font-semibold uppercase tracking-[0.2em] mb-1.5" style="color: oklch(var(--muted-foreground));">{{ series[idx] }}</p>
+            <div class="flex items-start justify-between gap-2 mb-2">
+              <h2 class="font-display font-bold leading-snug text-foreground text-sm uppercase tracking-tight">{{ name }}</h2>
+              <span class="badge badge-outline shrink-0 text-[9px]">{{ cat }}</span>
+            </div>
+            <p class="text-muted-foreground text-xs leading-relaxed line-clamp-2">{{ descriptions[idx] }}</p>
+          </div>
+        </article>
+      {%- endfor -%}
+    </div>
+
+    <div data-ocid="lookbook.empty_state" class="text-center" style="display: none; padding: 72px 0;">
+      <p class="font-display text-2xl font-bold uppercase mb-2" style="color: oklch(var(--foreground));">No archive signals found</p>
+      <p class="font-body text-sm text-muted-foreground">Try a different mood or silhouette.</p>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Lookbook Archive",
+  "settings": [],
+  "presets": [
+    {
+      "name": "Lookbook Archive"
+    }
+  ]
+}
+{% endschema %}

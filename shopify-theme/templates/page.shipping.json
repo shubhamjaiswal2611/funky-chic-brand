@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "SHIPPING_PROTOCOL",
+        "heading": "Shipping",
+        "lede": "Shipping timelines and delivery updates for AltInstinct orders."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Processing",
+            "text": "<p>Orders are processed before dispatch. Limited drops can require additional handling time depending on production and fulfillment status.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Tracking",
+            "text": "<p>Tracking details are added to your order once the shipment is fulfilled. Login to your account or check your email confirmation for updates.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

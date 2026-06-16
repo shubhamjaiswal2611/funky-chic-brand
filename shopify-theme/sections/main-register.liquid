@@ -1,0 +1,40 @@
+<section class="account-shell pattern-grid">
+  <div class="container account-wrap">
+    <div class="account-panel">
+      <p class="font-mono text-xs uppercase tracking-widest mb-3" style="color: oklch(var(--primary));">CREATE_PROFILE</p>
+      <h1 class="heading-brand text-5xl mb-4">Create Account</h1>
+      <p class="text-muted-foreground mb-8">Save your details and keep every drop order in one place.</p>
+
+      {%- form 'create_customer', class: 'account-form' -%}
+        {%- if form.errors -%}
+          <div class="form-alert">{{ form.errors | default_errors }}</div>
+        {%- endif -%}
+
+        <label class="form-label" for="RegisterFirstName">First name</label>
+        <input id="RegisterFirstName" class="input-brand" type="text" name="customer[first_name]" autocomplete="given-name">
+
+        <label class="form-label" for="RegisterLastName">Last name</label>
+        <input id="RegisterLastName" class="input-brand" type="text" name="customer[last_name]" autocomplete="family-name">
+
+        <label class="form-label" for="RegisterEmail">Email</label>
+        <input id="RegisterEmail" class="input-brand" type="email" name="customer[email]" autocomplete="email" required>
+
+        <label class="form-label" for="RegisterPassword">Password</label>
+        <input id="RegisterPassword" class="input-brand" type="password" name="customer[password]" autocomplete="new-password" required>
+
+        <button class="button-brand primary w-full" type="submit">Create Account</button>
+      {%- endform -%}
+
+      <div class="account-link-row">
+        <a href="{{ routes.account_login_url }}">Already have an account?</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Customer Register",
+  "settings": []
+}
+{% endschema %}

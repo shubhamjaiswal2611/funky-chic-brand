@@ -1,28 +1,28 @@
 <section 
   data-ocid="home.hero_section"
-  class="relative overflow-hidden flex items-center"
-  style="min-height: 85vh; background: linear-gradient(145deg, oklch(0.08 0.015 280) 0%, oklch(0.12 0.03 280) 100%);"
+  class="relative overflow-hidden"
+  style="min-height: 90vh; background: linear-gradient(145deg, oklch(0.05 0.02 280) 0%, oklch(0.08 0.04 280) 50%, oklch(0.06 0.03 210) 100%);"
 >
   <!-- Background grid texture -->
   <div 
-    class="absolute inset-0 pointer-events-none pattern-grid"
-    style="opacity: 0.4;"
+    class="absolute inset-0 pointer-events-none"
+    style="background-image: linear-gradient(oklch(var(--obsession) / 0.06) 1px, transparent 1px), linear-gradient(90deg, oklch(var(--obsession) / 0.06) 1px, transparent 1px); background-size: 60px 60px; opacity: 0.5;"
   ></div>
 
   <!-- Ambient glow orbs -->
   <div 
     class="absolute pointer-events-none"
-    style="top: -10%; right: -5%; width: 50vw; height: 50vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--primary) / 0.15) 0%, transparent 70%);"
+    style="top: -10%; right: -5%; width: 50vw; height: 50vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--obsession) / 0.13) 0%, transparent 70%);"
   ></div>
   <div 
     class="absolute pointer-events-none"
-    style="bottom: -5%; left: -5%; width: 40vw; height: 40vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--secondary) / 0.1) 0%, transparent 70%);"
+    style="bottom: -5%; left: -5%; width: 40vw; height: 40vw; border-radius: 50%; background: radial-gradient(circle, oklch(var(--isolation) / 0.13) 0%, transparent 70%);"
   ></div>
 
-  <div class="container relative py-20 z-10">
-    <div style="max-w: 800px;">
+  <div class="container relative z-10 flex flex-col justify-center" style="min-height: 90vh; padding-top: 80px; padding-bottom: 80px;">
+    <div style="max-width: 900px;">
       <!-- Diagnostic indicator -->
-      <div class="flex items-center gap-3 mb-8" style="color: oklch(var(--primary));">
+      <div class="flex items-center gap-3 mb-8" style="color: oklch(var(--obsession));">
         <span 
           class="inline-block w-2.5 h-2.5 rounded-full animate-pulse" 
           style="background-color: currentColor; box-shadow: 0 0 10px currentColor;"
@@ -35,15 +35,15 @@
       <!-- Title display -->
       <h1 
         class="font-display font-black uppercase leading-none mb-6 heading-brand"
-        style="font-size: clamp(3rem, 10vw, 8rem); color: oklch(var(--foreground));"
+        style="font-size: clamp(3.5rem, 12vw, 10rem); color: oklch(var(--foreground)); letter-spacing: -0.03em;"
       >
-        {{ section.settings.title_part1 }}<span style="color: oklch(var(--primary));">{{ section.settings.title_part2 }}</span>
+        {{ section.settings.title_part1 }}<span style="color: oklch(var(--obsession));">{{ section.settings.title_part2 }}</span>
       </h1>
 
       <!-- Description paragraph -->
       <p 
         class="font-body text-base md:text-xl mb-10 leading-relaxed"
-        style="color: oklch(var(--foreground) / 0.7); max-w: 600px;"
+        style="color: oklch(var(--foreground) / 0.65); max-width: 680px;"
       >
         {{ section.settings.description }}
       </p>
@@ -54,19 +54,22 @@
           <a 
             href="{{ section.settings.btn_primary_url }}"
             class="button-brand primary"
-            data-ocid="home.hero_cta_primary"
-          >
+          data-ocid="home.hero_cta_primary"
+          style="background-color: oklch(var(--obsession)); color: oklch(0.08 0.02 280); box-shadow: 0 0 24px oklch(var(--obsession) / 0.4), 4px 4px 0 oklch(0.08 0.02 280 / 0.3);"
+        >
             {{ section.settings.btn_primary_text }}
+            <span aria-hidden="true" style="margin-left: 8px;">-&gt;</span>
           </a>
         {%- endif -%}
 
         {%- if section.settings.btn_secondary_text != blank -%}
           <a 
             href="{{ section.settings.btn_secondary_url }}"
-            class="button-brand secondary"
-            data-ocid="home.hero_cta_secondary"
-          >
+          class="button-brand secondary"
+          data-ocid="home.hero_cta_secondary"
+        >
             {{ section.settings.btn_secondary_text }}
+            <span aria-hidden="true" style="margin-left: 6px;">&gt;</span>
           </a>
         {%- endif -%}
       </div>
@@ -81,7 +84,7 @@
     {
       "type": "text",
       "id": "diagnostic_text",
-      "default": "SYSTEM_SIGNAL_ACTIVE",
+      "default": "SIGNAL_ACTIVE",
       "label": "Diagnostic Status Label"
     },
     {

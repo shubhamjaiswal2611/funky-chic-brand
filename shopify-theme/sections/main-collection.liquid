@@ -120,7 +120,7 @@
             data-mood="{{ mood | downcase }}"
             data-title="{{ title | downcase }}"
             data-desc=""
-            style="animation-delay: {{ idx | multiply: 0.08 }}s;"
+            style="animation-delay: {{ idx | times: 0.08 }}s;"
           >
             <div class="relative w-full overflow-hidden" style="aspect-ratio: 3/4; background-color: oklch(var(--muted) / 0.15);">
               <a href="#" class="block w-full h-full transition-smooth group-hover:scale-105">

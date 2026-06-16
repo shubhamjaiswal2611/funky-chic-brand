@@ -1,0 +1,35 @@
+{
+  "sections": {
+    "main": {
+      "type": "support-page",
+      "settings": {
+        "kicker": "RETURN_SYSTEM",
+        "heading": "Returns",
+        "lede": "Return and exchange guidance for order support."
+      },
+      "blocks": {
+        "item_1": {
+          "type": "item",
+          "settings": {
+            "title": "Return requests",
+            "text": "<p>Contact support with your order number, email, and reason for return. Items should be unused and in original condition unless the product arrived damaged.</p>"
+          }
+        },
+        "item_2": {
+          "type": "item",
+          "settings": {
+            "title": "Damaged or incorrect item",
+            "text": "<p>Send photos and order details through the contact page so support can review and resolve the issue quickly.</p>"
+          }
+        }
+      },
+      "block_order": [
+        "item_1",
+        "item_2"
+      ]
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

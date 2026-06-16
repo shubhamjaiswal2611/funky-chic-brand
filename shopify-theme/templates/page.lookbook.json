@@ -1,0 +1,18 @@
+{
+  "sections": {
+    "main": {
+      "type": "lookbook-archive"
+    },
+    "reels": {
+      "type": "cinematic-reels",
+      "settings": {
+        "prefix_text": "ARCHIVE_REELS",
+        "title": "CINEMATIC ARCHIVE"
+      }
+    }
+  },
+  "order": [
+    "main",
+    "reels"
+  ]
+}

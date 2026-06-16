@@ -1,0 +1,10 @@
+{
+  "sections": {
+    "main": {
+      "type": "newsletter-form"
+    }
+  },
+  "order": [
+    "main"
+  ]
+}

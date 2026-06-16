@@ -1,0 +1,144 @@
+<section
+  data-ocid="home.collections_section"
+  class="py-20"
+  style="background-color: oklch(var(--background));"
+>
+  <div class="container">
+    <div class="mb-12">
+      <p class="font-mono text-xs uppercase tracking-[0.2em] mb-3" style="color: oklch(var(--obsession));">
+        ARCHIVE_INDEX
+      </p>
+      <h2 class="font-display font-black uppercase text-foreground" style="font-size: clamp(1.8rem, 5vw, 3rem); letter-spacing: -0.02em;">
+        THE ARCHIVES
+      </h2>
+    </div>
+
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+      {%- assign titles = 'Emotional Archive,Dreamstate Division,Human Error Series,Instinct Protocol,Memory Corruption' | split: ',' -%}
+      {%- assign subtitles = 'Chaos - Isolation - Escape,Surreal architecture - Dream dimensions,System failures - Emotional reports,Obsession - Signal - Silence,VHS textures - Corrupted identity' | split: ',' -%}
+      {%- assign tags = 'Featured,New Drop,Fan Fav,Signature,Limited' | split: ',' -%}
+      {%- assign moods = 'overthinking,isolation,chaos,obsession,burnout' | split: ',' -%}
+      {%- for title in titles -%}
+        {%- assign idx = forloop.index0 -%}
+        {%- assign mood = moods[idx] -%}
+        <a href="{{ section.settings.archive_url | default: '/pages/lookbook' }}" class="block">
+          <div
+            data-ocid="home.collection.item.{{ forloop.index }}"
+            class="group relative overflow-hidden rounded-xl cursor-pointer transition-smooth archive-tile"
+            style="aspect-ratio: 4/3; background: linear-gradient(135deg, oklch(var(--{{ mood }}) / 0.28) 0%, oklch(0.08 0.02 280) 100%); border: 1px solid oklch(var(--{{ mood }}) / 0.27);"
+          >
+            <div class="absolute inset-0 pointer-events-none" style="background-image: linear-gradient(oklch(var(--{{ mood }}) / 0.13) 1px, transparent 1px), linear-gradient(90deg, oklch(var(--{{ mood }}) / 0.13) 1px, transparent 1px); background-size: 24px 24px;"></div>
+            <div class="absolute inset-0 archive-tile-glow transition-smooth" style="background: radial-gradient(circle at 50% 50%, oklch(var(--{{ mood }}) / 0.13) 0%, transparent 70%);"></div>
+            <div class="absolute top-0 left-0 right-0 h-px" style="background-color: oklch(var(--{{ mood }}));"></div>
+            <div class="absolute bottom-0 left-0 right-0 p-5">
+              <span class="badge mb-2" style="background-color: oklch(var(--{{ mood }}) / 0.13); color: oklch(var(--{{ mood }})); border-color: oklch(var(--{{ mood }}) / 0.27);">
+                {{ tags[idx] }}
+              </span>
+              <p class="font-display font-black text-xl uppercase tracking-tight text-foreground">{{ title }}</p>
+              <p class="font-mono text-xs mt-1 truncate" style="color: oklch(var(--foreground) / 0.5);">{{ subtitles[idx] }}</p>
+            </div>
+          </div>
+        </a>
+      {%- endfor -%}
+    </div>
+
+    <div class="flex justify-center mt-10">
+      <a href="{{ section.settings.archive_url | default: '/pages/lookbook' }}" class="button-brand secondary" data-ocid="home.view_all_button" style="border-color: oklch(var(--obsession)); color: oklch(var(--obsession));">
+        OPEN FULL ARCHIVE <span aria-hidden="true" style="margin-left: 8px;">-&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section
+  data-ocid="home.brand_callout_section"
+  class="py-20"
+  style="background-color: oklch(var(--muted) / 0.3); border-top: 1px solid oklch(var(--obsession) / 0.4);"
+>
+  <div class="container">
+    <div class="manifesto-callout text-center">
+      <div class="flex justify-center gap-8 mb-10 opacity-30" aria-hidden="true">
+        <svg class="w-12 h-12" viewBox="0 0 80 80" fill="none" style="color: oklch(var(--obsession));"><path d="M0 20h80M0 40h80M0 60h80M20 0v80M40 0v80M60 0v80" stroke="currentColor" stroke-width=".6" opacity=".45"/><circle cx="40" cy="40" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="40" cy="40" r="2" fill="currentColor"/></svg>
+        <svg class="w-12 h-12" viewBox="0 0 80 80" fill="none" style="color: oklch(var(--obsession));"><rect x="8" y="55" width="10" height="17" rx="1" fill="currentColor"/><rect x="23" y="42" width="10" height="30" rx="1" fill="currentColor" opacity=".7"/><rect x="38" y="28" width="10" height="44" rx="1" fill="currentColor" opacity=".5"/><rect x="53" y="14" width="10" height="58" rx="1" fill="currentColor" opacity=".3"/></svg>
+        <svg class="w-12 h-12" viewBox="0 0 80 80" fill="none" style="color: oklch(var(--obsession));"><path d="M0 20h80M0 40h80M0 60h80M20 0v80M40 0v80M60 0v80" stroke="currentColor" stroke-width=".6" opacity=".45"/><circle cx="40" cy="40" r="10" stroke="currentColor" stroke-width="1.5"/><circle cx="40" cy="40" r="2" fill="currentColor"/></svg>
+      </div>
+
+      <p class="font-mono text-xs uppercase tracking-[0.2em] mb-6" style="color: oklch(var(--obsession));">MANIFESTO_v2.0</p>
+      <h2 class="font-display font-black uppercase text-foreground mb-2 manifesto-line">EMOTIONS ARE SYSTEMS.</h2>
+      <h2 class="font-display font-black uppercase mb-2 manifesto-line" style="color: oklch(var(--obsession));">IDENTITY IS THE SIGNAL.</h2>
+      <h2 class="font-display font-black uppercase text-foreground mb-10 manifesto-line">ALTINSTINCT IS THE ARCHIVE.</h2>
+
+      <div class="flex flex-wrap justify-center gap-3 mb-10">
+        {%- assign badges = 'EMOTIONAL,FUTURISTIC,ALTERNATIVE,CINEMATIC,SYMBOLIC' | split: ',' -%}
+        {%- for badge in badges -%}
+          <span data-ocid="home.manifesto_badge.{{ forloop.index }}" class="font-mono text-xs uppercase tracking-[0.15em] rounded-full" style="padding: 0.5rem 1rem; background-color: oklch(var(--obsession) / 0.08); color: oklch(var(--obsession)); border: 1px solid oklch(var(--obsession) / 0.27);">
+            {{ badge }}
+          </span>
+        {%- endfor -%}
+      </div>
+
+      <a href="{{ section.settings.brand_url | default: '/pages/brand-story' }}" class="button-brand primary" data-ocid="home.brand_story_cta" style="background-color: oklch(var(--obsession)); color: oklch(0.08 0.02 280);">
+        READ THE MANIFESTO <span aria-hidden="true" style="margin-left: 6px;">-&gt;</span>
+      </a>
+    </div>
+  </div>
+</section>
+
+<section
+  data-ocid="home.newsletter_teaser_section"
+  class="relative py-24 overflow-hidden"
+  style="background-color: oklch(var(--background)); border-top: 1px solid oklch(var(--obsession) / 0.4);"
+>
+  <div class="container text-center relative z-10">
+    <p class="font-mono text-xs uppercase tracking-[0.2em] mb-4" style="color: oklch(var(--obsession));">SIGNAL_BROADCAST</p>
+    <h2 class="font-display font-black uppercase text-foreground mb-2" style="font-size: clamp(2rem, 6vw, 4.5rem); letter-spacing: -0.03em;">
+      JOIN THE SIGNAL
+    </h2>
+    <p class="font-body text-sm mb-8 mx-auto" style="max-width: 390px; color: oklch(var(--foreground) / 0.55);">
+      Drop alerts, archive releases, and early access to limited-run pieces - delivered straight to your inbox.
+    </p>
+    <a href="{{ section.settings.newsletter_url | default: '/pages/newsletter' }}" class="button-brand primary" data-ocid="home.newsletter_join_button" style="background-color: oklch(var(--obsession)); color: oklch(0.08 0.02 280); box-shadow: 0 0 28px oklch(var(--obsession) / 0.33), 4px 4px 0 oklch(0.08 0.02 280 / 0.2);">
+      SUBSCRIBE TO SIGNAL
+    </a>
+
+    <div class="flex justify-center items-center gap-4 mt-8 flex-wrap">
+      {%- assign mood_labels = 'CHAOS,ISOLATION,OBSESSION,ESCAPE,OVERTHINKING,BURNOUT' | split: ',' -%}
+      {%- assign mood_keys = 'chaos,isolation,obsession,escape,overthinking,burnout' | split: ',' -%}
+      {%- for label in mood_labels -%}
+        {%- assign key = mood_keys[forloop.index0] -%}
+        <div class="flex items-center gap-1.5">
+          <span class="inline-block w-2 h-2 rounded-full" style="background-color: oklch(var(--{{ key }}));"></span>
+          <span class="font-mono text-xs uppercase tracking-widest" style="color: oklch(var(--foreground) / 0.4);">{{ label }}</span>
+        </div>
+      {%- endfor -%}
+    </div>
+  </div>
+</section>
+
+{% schema %}
+{
+  "name": "Archive Manifesto Teaser",
+  "settings": [
+    {
+      "type": "url",
+      "id": "archive_url",
+      "label": "Archive / Lookbook URL"
+    },
+    {
+      "type": "url",
+      "id": "brand_url",
+      "label": "Brand story URL"
+    },
+    {
+      "type": "url",
+      "id": "newsletter_url",
+      "label": "Newsletter URL"
+    }
+  ],
+  "presets": [
+    {
+      "name": "Archive Manifesto Teaser"
+    }
+  ]
+}
+{% endschema %}

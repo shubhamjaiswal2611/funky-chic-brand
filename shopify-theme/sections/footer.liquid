@@ -11,7 +11,37 @@
     </div>
   </div>
 
-  <div class="container text-center mt-6">
+  <div class="container footer-grid mt-8">
+    <div>
+      <p class="font-display font-black uppercase text-lg mb-3">AltInstinct</p>
+      <p class="font-body text-sm text-muted-foreground">Alternative digital emotion culture, built into wearable signals.</p>
+    </div>
+    <div>
+      <p class="footer-title">Shop</p>
+      <a href="{{ routes.all_products_collection_url }}">All Products</a>
+      <a href="/pages/lookbook">Lookbook</a>
+      <a href="/pages/size-guide">Size Guide</a>
+      <a href="/pages/wishlist">Wishlist</a>
+    </div>
+    <div>
+      <p class="footer-title">Support</p>
+      <a href="/pages/track-order">Track Order</a>
+      <a href="/pages/contact">Contact</a>
+      <a href="/pages/faq">FAQ</a>
+      <a href="/pages/shipping">Shipping</a>
+      <a href="/pages/returns">Returns</a>
+    </div>
+    <div>
+      <p class="footer-title">Account</p>
+      <a href="{{ routes.account_login_url }}">Login</a>
+      <a href="{{ routes.account_register_url }}">Create Account</a>
+      <a href="{{ routes.account_url }}">My Orders</a>
+      <a href="/pages/privacy">Privacy</a>
+      <a href="/pages/terms">Terms</a>
+    </div>
+  </div>
+
+  <div class="container text-center mt-8">
     <p class="font-mono text-[10px] text-muted-foreground" style="opacity: 0.6;">
       &copy; {{ 'now' | date: '%Y' }} {{ shop.name }}. ALL TRANSMISSIONS SECURED.
     </p>
